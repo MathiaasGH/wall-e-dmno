@@ -13,6 +13,7 @@ public class Robot {
 	private DifferentialPilot mcQueen; 
 	private int vitesse; 
 
+
 	/** Méthode qui fait avancer le robot 
 	*/
 	public void avancer () {}
