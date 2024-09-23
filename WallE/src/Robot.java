@@ -12,7 +12,6 @@ public class Robot {
 	private Motor d;
 	private DifferentialPilot mcQueen; 
 	private int vitesse; 
-	aegr*bzvbe
 
 	/** Méthode qui fait avancer le robot 
 	*/
