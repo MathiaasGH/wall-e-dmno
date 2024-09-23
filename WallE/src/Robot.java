@@ -12,6 +12,7 @@ public class Robot {
 	private Motor d;
 	private DifferentialPilot mcQueen; 
 	private int vitesse; 
+	iohuo;
 
 	/** Méthode qui fait avancer le robot 
 	*/
