@@ -1,3 +1,4 @@
 -Revoir comment aller derriere la lgine blanche
     -> implémenter ca dans l'AEF 
 -Revoir les méthodes dans le CDC
+-Modifier l'AEF : une fleche si CC = 1 directement de Recherche RNJ au truc a droite de "avancer tant que"
