@@ -1,6 +1,6 @@
--Revoir comment aller derriere la lgine blanche
+- ❌ Revoir comment aller derriere la lgine blanche
     -> implémenter ca dans l'AEF 
--Revoir les méthodes dans le CDC
--Modifier l'AEF : une fleche si CC = 1 directement de Recherche RNJ au truc a droite de "avancer tant que"
--Modifier l'AEF : regler la boucle infinie entre avancer tant que et recherche rnj 
+- ❌ Revoir les méthodes dans le CDC
+- ✔️ Modifier l'AEF : une fleche si CC = 1 directement de Recherche RNJ au truc a droite de "avancer tant que"
+- ✔️ Modifier l'AEF : regler la boucle infinie entre avancer tant que et recherche rnj 
      → pourquoi pas rajouter une condition EB (etat des bras) avec 0 si fermés et 1 si ouverts 
