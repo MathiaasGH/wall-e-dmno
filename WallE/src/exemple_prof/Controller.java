@@ -1,7 +1,17 @@
 package exemple_prof;
+import java.util.Arrays;
+
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
+import lejos.hardware.motor.Motor;
+import lejos.hardware.port.BasicMotorPort;
+import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.Port;
+import lejos.hardware.port.SensorPort;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.remote.nxt.NXTCommand;
+import lejos.remote.nxt.RemoteNXTPort;
+import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
 
 public class Controller
@@ -23,7 +33,7 @@ public class Controller
     {
         log("Initializing Controller");
 
-        sensor = new ColorSensor(sensor_port);
+       // sensor = new ColorSensor(sensor_port);
         drive = new DifferentialDrive(left_port, right_port);
     }
 
@@ -85,6 +95,12 @@ public class Controller
         for (int i = 0; i < duration; i++)
         {
             delay();
+            
+            //TEST ASYNCHRONIE
+            
+            System.out.print("GO");
+            
+            // FIN DU TEST
         }
 
         drive.stop();
@@ -120,6 +136,8 @@ public class Controller
 
     private boolean sweep(int rot_limit)
     {
+
+    	
         for (int i = 0; i < (rot_limit * DELAYS_PER_DEG); i++)
         {
             delay();
@@ -150,6 +168,41 @@ public class Controller
 
         log("Program ends");
     }
+    
+   public static float min(float[] tab) {
+	   float min=100000;
+	   for(int i=0;i<tab.length;i++) {
+		   if(tab[i]!=0 && tab[i]<min) {
+			   min=tab[i];
+		   }
+	   }
+	   return min;
+   }
+    
+    private void cherchePlusProcheObj(int duration) {
+    	
+    	drive.rotateClockwise();
+    	EV3UltrasonicSensor us = new EV3UltrasonicSensor(SensorPort.S4);
+		SampleProvider dp = us.getDistanceMode();
+		float[] valeurs = new float[125];
+		for (int i = 0; i < duration; i++)
+        {
+            delay();
+            System.out.println(i);
+            if(i%2==0) {
+            dp.fetchSample(valeurs, i);
+            delay();
+            }
+            
+            if(i==duration-1) {
+            	us.close();
+            }
+        }
+		System.out.println("Le minimum est : " + min(valeurs));
+		//System.out.println(Arrays.toString(valeurs));
+		Delay.msDelay(10000);
+        drive.stop();
+    }
 
     private void delay()
     {
@@ -160,4 +213,13 @@ public class Controller
     {
         System.out.println("log>\t" + msg);
     }
+    
+    public static void main(String[] args) {
+		
+    	Controller c = new Controller(SensorPort.S2, MotorPort.A, MotorPort.B);
+    	//c.sweepClockwise(300);
+ 
+    	c.cherchePlusProcheObj(DELAY*5);
+
+	}
 }

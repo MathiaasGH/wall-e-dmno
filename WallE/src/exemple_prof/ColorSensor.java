@@ -1,6 +1,8 @@
 package exemple_prof;
 import lejos.hardware.Button;
+import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.Port;
+import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
 import lejos.robotics.SampleProvider;
@@ -43,4 +45,9 @@ public class ColorSensor
 				Math.pow(v1[2] - v2[2], 2.0));
 	}
     
+ public static void main(String[] args) {
+		
+    	ColorSensor c = new ColorSensor(SensorPort.S2);
+
+	}
 }
