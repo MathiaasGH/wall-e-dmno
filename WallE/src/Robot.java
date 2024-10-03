@@ -14,6 +14,7 @@ public class Robot {
 	private int vitesse; 
 
 
+	
 	/** Méthode qui fait avancer le robot 
 	*/
 	public void avancer () {}
@@ -55,23 +56,30 @@ public class Robot {
 	*le capteur
 	* @return int le code correspondant à la couleur perçu
 	*/
-	public int capteurCouleur () {}
+	public int capteurCouleur() {
+		return 0;
+	}
 
 	/** Méthode qui fait renvoie true si un ennemi est en vue
 	* @return boolean true si ennemi détecté
 	*/
-	 public boolean ennemi() {}
+	 public boolean ennem() {
+		 return true;
+	 }
 
 	/** Méthode qui fait renvoie true si le capteur tactile est enfoncé
 	* @return boolean true si capteur tactile enfoncé
 	*/
-	public boolean tactileControle () {}
+	public boolean tactileControle() {
+		return true;
+	}
 
 
 	/** Méthode qui fait tourner le robot sans avancer d’un angle
 	* @param int angle en degré du tour que doit faire le robot
 	*/
-	public void tourner (int angle) {}
+	public void tourner (int angle) {
+	}
 		
 	/** Méthode qui fait avancer le robot en suivant un arc d’un radius donnée sur une distance donnée
 	* @param int radius de l’arc, int distance parcouru
@@ -81,6 +89,8 @@ public class Robot {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
+		
 	}
 
 }
