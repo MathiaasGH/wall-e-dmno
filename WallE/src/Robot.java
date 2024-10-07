@@ -8,12 +8,16 @@ import lejos.robotics.navigation.DifferentialPilot;
 public class Robot {
 
 	private Orientation orientation;
-	private Touch touchS;
-	private Motor d;
-	private DifferentialPilot mcQueen; 
-	private int vitesse; 
+	private Capteurs capteurs;
 
-
+	public Robot() {
+		orientation = new Orientation(this);
+		capteurs = new Capteurs(this);
+	}
+	
+	public Capteurs getCapteurs() {
+		return capteurs;
+	}
 	
 	/** Méthode qui fait avancer le robot 
 	*/
@@ -86,11 +90,13 @@ public class Robot {
 	*/
 	public void arc (int radius, int distance){}
 
+	public void recherche(int duration) {
+		orientation.recherche(duration);
+	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-		
+		Robot r= new Robot();
+		r.recherche(125);
 	}
 
 }
