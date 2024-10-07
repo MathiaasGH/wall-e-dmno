@@ -31,7 +31,7 @@ public class Orientation {
 	public void avancer() {
 		dd.forward();
 	}
-
+	
 	public void tourneDr() {
 		dd.rotateCounterClockwise();
 	}
@@ -61,6 +61,25 @@ public class Orientation {
 
 	private void stop() {
 		dd.stop();
+	}
+	
+	public boolean isMoving() {
+		return dd.isMoving();
+	}
+	
+	public void rechercheAngle(int angle) {
+		Capteurs cpt = robot.getCapteurs();
+		tournerDe(angle);
+		float[] valeurs = new float[0];
+		int indice = 0;
+		while(isMoving()) {
+			System.out.println(indice);
+			valeurs = cpt.regarde(valeurs);
+			indice++;
+		}
+		float[] min = min(valeurs);
+		int angleMin = (int)min[1] * (int)angle / (int)indice;
+		System.out.println("Le minimum est : " + min[0] + " que j'ai à " + angleMin + "°");
 	}
 
 	public void recherche(int duration) {

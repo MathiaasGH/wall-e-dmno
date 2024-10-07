@@ -18,71 +18,12 @@ public class Robot {
 	public Capteurs getCapteurs() {
 		return capteurs;
 	}
-	
-	/** Méthode qui fait avancer le robot 
-	*/
-	public void avancer () {}
-
-	/** Méthode qui fait avancer le robot d’une distance d en cm
-	* @param d une distance en cm
-	*/
-	public void avancerDe (int d) {}
-
-	/** Méthode qui fait avancer le robot jusqu’à un évènements b 
-	* @param b boolean état d’un évènements
-	*/
-	public void avancerJusqua (boolean b) {}
-
-	/** Méthode qui fait reculer le robot 
-	*/
-	public void reculer () {}
-
-	/** Méthode qui fait reculer le robot d’une distance de d cm
-	* @param int d la distance à parcourir
-	*/
-	public void reculerDe (int d) {}
-
-	/** Méthode qui permet d’ouvrir la pince du robot
-	*/
-	public void ouverture () {}
-
-	/** Méthode qui permet de fermer la pince du robot
-	*/
-		public void fermeture () {}
-
-		/** Méthode qui fait permet de modifier la vitesse de déplacement du robot
-	* @param int v la nouvelle vitesse du robot
-	*/
-	public void setVitesse (int v) {}
-
-
-	/** Méthode qui fait permet de renvoyer l’entier qui correspond à la couleur perçu par
-	*le capteur
-	* @return int le code correspondant à la couleur perçu
-	*/
-	public int capteurCouleur() {
-		return 0;
-	}
-
-	/** Méthode qui fait renvoie true si un ennemi est en vue
-	* @return boolean true si ennemi détecté
-	*/
-	 public boolean ennem() {
-		 return true;
-	 }
-
-	/** Méthode qui fait renvoie true si le capteur tactile est enfoncé
-	* @return boolean true si capteur tactile enfoncé
-	*/
-	public boolean tactileControle() {
-		return true;
-	}
-
 
 	/** Méthode qui fait tourner le robot sans avancer d’un angle
 	* @param int angle en degré du tour que doit faire le robot
 	*/
 	public void tourner (int angle) {
+		orientation.tourneDr();
 	}
 		
 	/** Méthode qui fait avancer le robot en suivant un arc d’un radius donnée sur une distance donnée
@@ -96,7 +37,7 @@ public class Robot {
 	
 	public static void main(String[] args) {
 		Robot r= new Robot();
-		r.recherche(125);
+		r.tourner(0);
 	}
 
 }

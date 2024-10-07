@@ -27,6 +27,12 @@ public class DifferentialDrive
         mLeftMotor.forward();
         mRightMotor.forward();
     }
+    
+    public void tourne360() {
+    	for(int i=0;i<2000;i++) {
+    		rotateCounterClockwise();
+    	}
+    }
 
 
     public void stop()
@@ -47,6 +53,10 @@ public class DifferentialDrive
     {
         mLeftMotor.backward();
         mRightMotor.forward();
+    }
+    
+    public boolean isMoving() {
+    	return mLeftMotor.isMoving() || mRightMotor.isMoving();
     }
     
  public static void main(String[] args) {
