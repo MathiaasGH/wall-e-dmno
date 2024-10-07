@@ -7,12 +7,13 @@ import lejos.robotics.SampleProvider;
 public class Capteurs {
 
 	private EV3UltrasonicSensor vue;
-	private SampleProvider sp = vue.getDistanceMode();
+	private SampleProvider sp;
 	private Robot robot;
 	
 	public Capteurs(Robot r) {
 		robot = r;
 		vue = new EV3UltrasonicSensor(SensorPort.S4);
+		sp = vue.getDistanceMode();
 	}
 	
 	public float[] regarde(float[] tab) {

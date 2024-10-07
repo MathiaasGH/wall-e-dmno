@@ -54,6 +54,10 @@ public class Orientation {
 		return min;
 	}
 
+	private void stop() {
+		dd.stop();
+	}
+
 	public void recherche(int duration) {
 		Capteurs cpt = robot.getCapteurs();
 		tourneDr();
@@ -62,11 +66,10 @@ public class Orientation {
 		for(int i=0;i<duration;i++) {
 			delay();
 			System.out.println(i);
-			if(i%2==0) {
-				valeurs = cpt.regarde(valeurs);
-				delay();
-			}
+			valeurs = cpt.regarde(valeurs);
+			delay();
 		}
+		stop();
 		System.out.println("Le minimum est : " + min(valeurs));
 		//System.out.println(Arrays.toString(valeurs));
 		Delay.msDelay(10000);
