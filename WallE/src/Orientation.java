@@ -20,7 +20,7 @@ public class Orientation {
 	private Robot robot;
 	private String face; //valeur possible : devant, derrière, neutre. 
 	private String cote; //valeur possible : gauche, droite, neutre. 
-	private DifferentialDrive dd;
+	//private DifferentialDrive dd;
 	
 	private Wheel wheel1;
 	private Wheel wheel2;
@@ -31,12 +31,14 @@ public class Orientation {
 		robot = r;
 		face =NEUTRE;
 		cote =NEUTRE;
-		dd = new DifferentialDrive(MotorPort.A, MotorPort.B);
+		//dd = new DifferentialDrive(MotorPort.A, MotorPort.B);
 		
-		wheel1 = WheeledChassis.modelWheel(Motor.A, 1.5).offset(-72);
-		wheel2 = WheeledChassis.modelWheel(Motor.D, 1.5).offset(72);
+		wheel1 = WheeledChassis.modelWheel(Motor.A, 1.5).offset(-5.5);
+		wheel2 = WheeledChassis.modelWheel(Motor.D, 1.5).offset(5.5);
 		chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, WheeledChassis.TYPE_DIFFERENTIAL); 
 		pilot = new MovePilot(chassis);
+		
+		System.out.println("Classe orientation instanciee");
 	}
 
 	/** Méthode qui renvoie la nouvelle position d’un objet
@@ -46,15 +48,15 @@ public class Orientation {
 	public void actualiser(){}
 
 	public void avancer() {
-		dd.forward();
+		pilot.travel(10); // A VOIR
 	}
 
 	public void tourneDr() {
-		dd.rotateCounterClockwise();
+		pilot.rotateRight();
 	}
 
 	public void tournerGa() {
-		dd.rotateClockwise();
+		pilot.rotateLeft();
 	}
 
 	private void delay(){
@@ -77,11 +79,11 @@ public class Orientation {
 	}
 
 	private void stop() {
-		dd.stop();
+		pilot.stop();
 	}
 
 	public boolean isMoving() {
-		return dd.isMoving();
+		return pilot.isMoving();
 	}
 
 	public void tournerDe(int angle) {
@@ -125,7 +127,9 @@ public class Orientation {
 	}*/
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
+		Orientation o = new Orientation(null);
+		
 
 	}
 

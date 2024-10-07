@@ -25,6 +25,10 @@ public class Robot {
 	public void tournerDe (int angle) {
 		orientation.tournerDe(angle);
 	}
+	
+	public void avancer() {
+		orientation.avancer();
+	}
 		
 	/** Méthode qui fait avancer le robot en suivant un arc d’un radius donnée sur une distance donnée
 	* @param int radius de l’arc, int distance parcouru
@@ -42,7 +46,8 @@ public class Robot {
 	public static void main(String[] args) {
 		Robot r= new Robot();
 		//r.rechercheA(330);
-		r.tournerDe(180);
+		//r.tournerDe(180);
+		r.avancer();
 	}
 
 }
