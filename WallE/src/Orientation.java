@@ -120,8 +120,14 @@ public class Orientation {
 		System.out.println("Le minimum est : " + min[0] + " que j'ai vu la " + min[1] + "ème fois sur " + duration);
 		//System.out.println(Arrays.toString(valeurs));
 		Delay.msDelay(10000);
+<<<<<<< HEAD
 
 	}*/
+=======
+	}
+	
+	
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
