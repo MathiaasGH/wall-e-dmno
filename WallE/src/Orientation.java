@@ -33,11 +33,11 @@ public class Orientation {
 	}
 
 	public void tourneDr() {
-		dd.rotateClockwise();
+		dd.rotateCounterClockwise();
 	}
 
 	public void tournerGa() {
-		dd.rotateCounterClockwise();
+		dd.rotateClockwise();
 	}
 
 	private void delay(){
