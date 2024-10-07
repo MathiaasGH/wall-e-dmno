@@ -85,7 +85,7 @@ public class Orientation {
 	}
 
 	public void tournerDe(int angle) {
-		pilot.rotate(-90);       
+		pilot.rotate(angle);       
 	}
 
 	public void rechercheAngle(int angle) {
@@ -123,11 +123,6 @@ public class Orientation {
 <<<<<<< HEAD
 
 	}*/
-=======
-	}
-	
-	
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
