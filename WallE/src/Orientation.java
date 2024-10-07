@@ -44,14 +44,19 @@ public class Orientation {
 		Delay.msDelay(DELAY);
 	}
 
-	public static float min(float[] tab) {
+	public static float[] min(float[] tab) {
 		float min=100000;
+		int indice=-1;
 		for(int i=0;i<tab.length;i++) {
 			if(tab[i]!=0 && tab[i]<min) {
 				min=tab[i];
+				indice=i;
 			}
 		}
-		return min;
+		float[] tabR = new float[2];
+		tabR[0] = min;
+		tabR[1] = indice;
+		return tabR;
 	}
 
 	private void stop() {
@@ -71,9 +76,10 @@ public class Orientation {
 		}
 		stop();
 		cpt.fermeLesYeux();
-		System.out.println("Le minimum est : " + min(valeurs));
+		float[] min = min(valeurs);
+		System.out.println("Le minimum est : " + min[0] + " que j'ai vu la " + min[1] + "ème fois sur " + duration);
 		//System.out.println(Arrays.toString(valeurs));
-		Delay.msDelay(10000);
+		Delay.msDelay(10000);c
 
 	}
 
