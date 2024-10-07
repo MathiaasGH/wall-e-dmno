@@ -1,5 +1,12 @@
+import lejos.robotics.navigation.MovePilot;
+import lejos.hardware.motor.Motor;
 import lejos.hardware.port.MotorPort;
+import lejos.robotics.chassis.*;
+import lejos.robotics.chassis.Wheel;
+import lejos.robotics.chassis.WheeledChassis;
+import lejos.robotics.navigation.DifferentialPilot;
 import lejos.utility.Delay;
+
 
 public class Orientation {
 
@@ -8,18 +15,28 @@ public class Orientation {
 	private final static String DERRIERE = "derriere";
 	private final static String NEUTRE = "neutre";
 	private final static String GAUCHE = "gauche";
-	private final static String DROITE = "droite";
+	private final static String DROITE = "droite";	
 
 	private Robot robot;
 	private String face; //valeur possible : devant, derrière, neutre. 
 	private String cote; //valeur possible : gauche, droite, neutre. 
 	private DifferentialDrive dd;
+	
+	private Wheel wheel1;
+	private Wheel wheel2;
+	private Chassis chassis;
+	private MovePilot pilot;
 
 	public Orientation(Robot r) {
 		robot = r;
 		face =NEUTRE;
 		cote =NEUTRE;
 		dd = new DifferentialDrive(MotorPort.A, MotorPort.B);
+		
+		wheel1 = WheeledChassis.modelWheel(Motor.A, 1.5).offset(-72);
+		wheel2 = WheeledChassis.modelWheel(Motor.D, 1.5).offset(72);
+		chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, WheeledChassis.TYPE_DIFFERENTIAL); 
+		pilot = new MovePilot(chassis);
 	}
 
 	/** Méthode qui renvoie la nouvelle position d’un objet
@@ -31,7 +48,7 @@ public class Orientation {
 	public void avancer() {
 		dd.forward();
 	}
-	
+
 	public void tourneDr() {
 		dd.rotateCounterClockwise();
 	}
@@ -62,11 +79,15 @@ public class Orientation {
 	private void stop() {
 		dd.stop();
 	}
-	
+
 	public boolean isMoving() {
 		return dd.isMoving();
 	}
-	
+
+	public void tournerDe(int angle) {
+		pilot.rotate(-90);       
+	}
+
 	public void rechercheAngle(int angle) {
 		Capteurs cpt = robot.getCapteurs();
 		tournerDe(angle);
@@ -82,7 +103,7 @@ public class Orientation {
 		System.out.println("Le minimum est : " + min[0] + " que j'ai à " + angleMin + "°");
 	}
 
-	public void recherche(int duration) {
+	/**public void recherche(int duration) {
 		Capteurs cpt = robot.getCapteurs();
 		tourneDr();
 		float[] valeurs = new float[0];
@@ -100,7 +121,7 @@ public class Orientation {
 		//System.out.println(Arrays.toString(valeurs));
 		Delay.msDelay(10000);
 
-	}
+	}*/
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

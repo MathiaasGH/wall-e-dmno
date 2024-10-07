@@ -22,8 +22,8 @@ public class Robot {
 	/** Méthode qui fait tourner le robot sans avancer d’un angle
 	* @param int angle en degré du tour que doit faire le robot
 	*/
-	public void tourner (int angle) {
-		orientation.tourneDr();
+	public void tournerDe (int angle) {
+		orientation.tournerDe(angle);
 	}
 		
 	/** Méthode qui fait avancer le robot en suivant un arc d’un radius donnée sur une distance donnée
@@ -31,13 +31,18 @@ public class Robot {
 	*/
 	public void arc (int radius, int distance){}
 
-	public void recherche(int duration) {
+	/**public void recherche(int duration) {
 		orientation.recherche(duration);
+	}*/
+	
+	public void rechercheA(int ang) {
+		orientation.rechercheAngle(ang);
 	}
 	
 	public static void main(String[] args) {
 		Robot r= new Robot();
-		r.tourner(0);
+		//r.rechercheA(330);
+		r.tournerDe(180);
 	}
 
 }
