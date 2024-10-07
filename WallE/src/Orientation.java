@@ -33,8 +33,8 @@ public class Orientation {
 		cote =NEUTRE;
 		//dd = new DifferentialDrive(MotorPort.A, MotorPort.B);
 		
-		wheel1 = WheeledChassis.modelWheel(Motor.A, 1.5).offset(-5.5);
-		wheel2 = WheeledChassis.modelWheel(Motor.D, 1.5).offset(5.5);
+		wheel1 = WheeledChassis.modelWheel(Motor.A, 56).offset(-62);
+		wheel2 = WheeledChassis.modelWheel(Motor.B, 56).offset(62);
 		chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, WheeledChassis.TYPE_DIFFERENTIAL); 
 		pilot = new MovePilot(chassis);
 		
@@ -47,8 +47,8 @@ public class Orientation {
 	 */
 	public void actualiser(){}
 
-	public void avancer() {
-		pilot.travel(10); // A VOIR
+	public void avancer(int dist) {
+		pilot.travel(dist); // A VOIR
 	}
 
 	public void tourneDr() {
@@ -86,13 +86,15 @@ public class Orientation {
 		return pilot.isMoving();
 	}
 
-	public void tournerDe(int angle) {
-		pilot.rotate(angle);       
+	public void tournerDe(int angle, boolean asynchrone) {
+		pilot.rotate(angle, asynchrone);       
 	}
 
 	public void rechercheAngle(int angle) {
+		//System.out.println(pilot.getAngularSpeed());
+		pilot.setAngularSpeed(200);
 		Capteurs cpt = robot.getCapteurs();
-		tournerDe(angle);
+		tournerDe(angle, true);
 		float[] valeurs = new float[0];
 		int indice = 0;
 		while(isMoving()) {
@@ -101,8 +103,14 @@ public class Orientation {
 			indice++;
 		}
 		float[] min = min(valeurs);
-		int angleMin = (int)min[1] * (int)angle / (int)indice;
-		System.out.println("Le minimum est : " + min[0] + " que j'ai à " + angleMin + "°");
+		int angleMin = ((int)min[1] * angle ) / (int)indice;
+		System.out.println("Le minimum est : " + min[0] + " que j'ai a " + angleMin + " degres.");
+		System.out.println("J'ai prit " + indice + " données");
+		this.tournerDe(angleMin + 4,false);
+		delay();
+		this.avancer((int)(1000*min[0]) + 2);
+		Delay.msDelay(10000);
+
 	}
 
 	/**public void recherche(int duration) {

@@ -23,11 +23,11 @@ public class Robot {
 	* @param int angle en degré du tour que doit faire le robot
 	*/
 	public void tournerDe (int angle) {
-		orientation.tournerDe(angle);
+		orientation.tournerDe(angle, false);
 	}
 	
 	public void avancer() {
-		orientation.avancer();
+		orientation.avancer(100);
 	}
 		
 	/** Méthode qui fait avancer le robot en suivant un arc d’un radius donnée sur une distance donnée
@@ -45,9 +45,10 @@ public class Robot {
 	
 	public static void main(String[] args) {
 		Robot r= new Robot();
-		//r.rechercheA(330);
-		//r.tournerDe(180);
-		r.avancer();
+		r.rechercheA(360);
+		//r.tournerDe(360);
+		//r.avancer();
+		//r.avancer();
 	}
 
 }
