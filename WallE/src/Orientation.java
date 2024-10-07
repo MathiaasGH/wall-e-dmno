@@ -79,7 +79,7 @@ public class Orientation {
 		float[] min = min(valeurs);
 		System.out.println("Le minimum est : " + min[0] + " que j'ai vu la " + min[1] + "ème fois sur " + duration);
 		//System.out.println(Arrays.toString(valeurs));
-		Delay.msDelay(10000);c
+		Delay.msDelay(10000);
 
 	}
 
