@@ -70,6 +70,7 @@ public class Orientation {
 			delay();
 		}
 		stop();
+		cpt.fermeLesYeux();
 		System.out.println("Le minimum est : " + min(valeurs));
 		//System.out.println(Arrays.toString(valeurs));
 		Delay.msDelay(10000);

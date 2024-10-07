@@ -16,6 +16,9 @@ public class Capteurs {
 		sp = vue.getDistanceMode();
 	}
 	
+	public void fermeLesYeux() {
+		vue.close();
+	}
 	public float[] regarde(float[] tab) {
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
 		vue.fetchSample(newTab, newTab.length-1);
