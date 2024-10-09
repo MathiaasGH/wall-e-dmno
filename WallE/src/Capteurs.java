@@ -26,11 +26,13 @@ public class Capteurs {
 		spCouleur = couleur.getColorIDMode();
 	}
 	
-	public float[] touche(float[] tab){
-		float[] newTab = Arrays.copyOf(tab, tab.length+1);
-		touche.fetchSample(newTab, newTab.length-1);
-		return newTab;
-	}
+    public boolean isPressed()
+    {
+        float[] sample = new float[1];
+        touche.fetchSample(sample, 0);
+
+        return sample[0] != 0;
+    }
 	
 	public float[] capteCouleur(float[] tab) {
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
