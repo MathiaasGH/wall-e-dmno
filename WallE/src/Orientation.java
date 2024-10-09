@@ -106,7 +106,12 @@ public class Orientation {
 		int angleMin = ((int)min[1] * angle ) / (int)indice;
 		System.out.println("Le minimum est : " + min[0] + " que j'ai a " + angleMin + " degres.");
 		System.out.println("J'ai prit " + indice + " données");
-		this.tournerDe(angleMin + 4,false);
+		if (angle > 0) {
+			this.tournerDe(-(Math.abs(angleMin-angle) + 4),false);
+		}
+		else {
+			this.tournerDe(angleMin-angle+4, false);
+		}
 		delay();
 		this.avancer((int)(1000*min[0]) + 2);
 		Delay.msDelay(10000);

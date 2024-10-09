@@ -18,7 +18,7 @@ public class Capteurs {
 	
 	public Capteurs(Robot r) {
 		robot = r;
-		touche = new EV3TouchSensor (SensorPort.S1);
+		touche = new EV3TouchSensor (SensorPort.S3);
 		vue = new EV3UltrasonicSensor(SensorPort.S4);
 		couleur = new EV3ColorSensor(SensorPort.S2);
 		spVue = vue.getDistanceMode();
