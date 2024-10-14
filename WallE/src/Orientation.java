@@ -8,7 +8,7 @@ import lejos.robotics.navigation.DifferentialPilot;
 import lejos.utility.Delay;
 
 
-public class Mouvements {
+public class Orientation {
 
 	private final static int DELAY = 25;
 	private final static String DEVANT = "devant";
@@ -21,23 +21,23 @@ public class Mouvements {
 	private String face; //valeur possible : devant, derrière, neutre. 
 	private String cote; //valeur possible : gauche, droite, neutre. 
 	//private DifferentialDrive dd;
-
+	
 	private Wheel wheel1;
 	private Wheel wheel2;
 	private Chassis chassis;
 	private MovePilot pilot;
 
-	public Mouvements(Robot r) {
+	public Orientation(Robot r) {
 		robot = r;
 		face =NEUTRE;
 		cote =NEUTRE;
 		//dd = new DifferentialDrive(MotorPort.A, MotorPort.B);
-
+		
 		wheel1 = WheeledChassis.modelWheel(Motor.A, 56).offset(-62);
 		wheel2 = WheeledChassis.modelWheel(Motor.B, 56).offset(62);
 		chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, WheeledChassis.TYPE_DIFFERENTIAL); 
 		pilot = new MovePilot(chassis);
-
+		
 		System.out.println("Classe orientation instanciee");
 	}
 
@@ -48,11 +48,7 @@ public class Mouvements {
 	public void actualiser(){}
 
 	public void avancer(int dist) {
-		pilot.travel(dist,true); // A VOIR
-	}
-	
-	public void avancer() {
-		pilot.forward(); // A VOIR
+		pilot.travel(dist); // A VOIR
 	}
 
 	public void tourneDr() {
@@ -78,7 +74,6 @@ public class Mouvements {
 		}
 		float[] tabR = new float[2];
 		tabR[0] = min;
-		System.out.println("L'indice : " + indice);
 		tabR[1] = indice;
 		return tabR;
 	}
@@ -94,27 +89,10 @@ public class Mouvements {
 	public void tournerDe(int angle, boolean asynchrone) {
 		pilot.rotate(angle, asynchrone);       
 	}
-	
-	public void avancerWhileIsNotPressed(int dist) {
-		Capteurs cpt = robot.getCapteurs();
-		this.avancer(dist+10000);
-		int i=0;
-		while(isMoving() && !cpt.isPressed()) {
-			if(cpt.isPressed())
-			try {
-	            Thread.sleep(50); // délai de 50 ms
-	        } catch (InterruptedException e) {
-	            e.printStackTrace();
-	        }
-			i++;
-		}
-		pilot.stop();
-	}
 
 	public void rechercheAngle(int angle) {
-		robot.ouvreBras();
 		//System.out.println(pilot.getAngularSpeed());
-		pilot.setAngularSpeed(70);
+		pilot.setAngularSpeed(200);
 		Capteurs cpt = robot.getCapteurs();
 		tournerDe(angle, true);
 		float[] valeurs = new float[0];
@@ -125,51 +103,21 @@ public class Mouvements {
 			indice++;
 		}
 		float[] min = min(valeurs);
-		System.out.println((int)min[1] + " " + angle + " " + indice);
 		int angleMin = ((int)min[1] * angle ) / (int)indice;
 		System.out.println("Le minimum est : " + min[0] + " que j'ai a " + angleMin + " degres.");
-		//System.out.println("J'ai prit " + indice + " données");
-		if(angleMin<angle/2) {
-			this.tournerDe(angleMin, false);
+		System.out.println("J'ai prit " + indice + " données");
+		if (angle > 0) {
+			this.tournerDe(-(Math.abs(angleMin-angle) + 4),false);
 		}
-		else this.tournerDe(-(angle-angleMin),false);
-		//chercherpalet((int)(1000*min[0]) + 2);
-		avancerWhileIsNotPressed((int)(1000*min[0]));
-		robot.fermeBras();
+		else {
+			this.tournerDe(angleMin-angle+4, false);
+		}
+		delay();
+		this.avancer((int)(1000*min[0]) + 2);
 		Delay.msDelay(10000);
-		
 
 	}
 
-	public void chercherpalet(int d) {
-		Capteurs cpt = robot.getCapteurs();
-		float[] valeurs = new float[2];
-		valeurs[0] = 1000000;
-		valeurs[1] = 1000000;
-		robot.avancer(d);
-		while(isMoving() && (valeurs[valeurs.length-1]<= valeurs[valeurs.length-2]) && !cpt.isPressed()) {
-			valeurs = cpt.regarde(valeurs);
-			System.out.println(valeurs[valeurs.length-1]);	
-		}
-		pilot.stop();
-
-	}
-
-	/*public void chercherpalet(int d) {
-		Capteurs cpt = robot.getCapteurs();
-		float[] valeurs = new float[2];
-		valeurs[0] = 1000000;
-		valeurs[1] = 1000000;
-		robot.avancer(d);
-		int indice = 0;
-		while(isMoving() && (valeurs[valeurs.length-1]<= valeurs[valeurs.length-2]) && !robot.isPressed()) {
-			valeurs = cpt.regarde(valeurs);
-			System.out.println(valeurs[valeurs.length-1]);	
-		}
-		pilot.stop();
-		
-		
-		}
 	/**public void recherche(int duration) {
 		Capteurs cpt = robot.getCapteurs();
 		tourneDr();
@@ -192,9 +140,9 @@ public class Mouvements {
 	}*/
 
 	public static void main(String[] args) {
-
-		Mouvements o = new Mouvements(null);
-
+		
+		Orientation o = new Orientation(null);
+		
 
 	}
 
