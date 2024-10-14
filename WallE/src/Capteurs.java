@@ -28,6 +28,7 @@ public class Capteurs {
 	
     public boolean isPressed()
     {
+    	System.out.println("TEST");
         float[] sample = new float[1];
         touche.fetchSample(sample, 0);
 
