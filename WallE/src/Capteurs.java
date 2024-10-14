@@ -1,5 +1,6 @@
 import java.util.Arrays;
 
+import lejos.hardware.motor.Motor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.EV3TouchSensor;
@@ -18,7 +19,7 @@ public class Capteurs {
 	
 	public Capteurs(Robot r) {
 		robot = r;
-		touche = new EV3TouchSensor (SensorPort.S1);
+		touche = new EV3TouchSensor (SensorPort.S3);
 		vue = new EV3UltrasonicSensor(SensorPort.S4);
 		couleur = new EV3ColorSensor(SensorPort.S2);
 		spVue = vue.getDistanceMode();
@@ -28,13 +29,21 @@ public class Capteurs {
 	
     public boolean isPressed()
     {
-    	System.out.println("TEST");
         float[] sample = new float[1];
         touche.fetchSample(sample, 0);
 
         return sample[0] != 0;
     }
+    
+    public void ouvreBras() {
+    	Motor.D.setSpeed(150000);
+    	Motor.D.rotate(2000);
+    }
 	
+    public void fermeBras() {
+    	Motor.D.setSpeed(150000);
+    	Motor.D.rotate(-2000);
+    }
 	public float[] capteCouleur(float[] tab) {
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
 		couleur.fetchSample(newTab, newTab.length-1);
@@ -44,9 +53,18 @@ public class Capteurs {
 	public void fermeLesYeux() {
 		vue.close();
 	}
+	public float[] regarde2(float[] tab) {
+		float[] newTab = Arrays.copyOf(tab, tab.length+3);
+		vue.fetchSample(newTab, newTab.length-3);
+		vue.fetchSample(newTab, newTab.length-2);
+		vue.fetchSample(newTab, newTab.length-1);
+		return newTab;
+	}
 	public float[] regarde(float[] tab) {
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
 		vue.fetchSample(newTab, newTab.length-1);
 		return newTab;
 	}
+	
+	
 }

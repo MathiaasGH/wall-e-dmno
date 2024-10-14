@@ -48,7 +48,7 @@ public class Mouvements {
 	public void actualiser(){}
 
 	public void avancer(int dist) {
-		pilot.travel(dist); // A VOIR
+		pilot.travel(dist,true); // A VOIR
 	}
 	
 	public void avancer() {
@@ -78,6 +78,7 @@ public class Mouvements {
 		}
 		float[] tabR = new float[2];
 		tabR[0] = min;
+		System.out.println("L'indice : " + indice);
 		tabR[1] = indice;
 		return tabR;
 	}
@@ -94,13 +95,12 @@ public class Mouvements {
 		pilot.rotate(angle, asynchrone);       
 	}
 	
-	public void avancerWhileIsNotPressed() {
+	public void avancerWhileIsNotPressed(int dist) {
 		Capteurs cpt = robot.getCapteurs();
-		this.avancer();
+		this.avancer(dist+10000);
 		int i=0;
-		while(isMoving() && !cpt.isPressed() && i<10000) {
+		while(isMoving() && !cpt.isPressed()) {
 			if(cpt.isPressed())
-				System.out.println("oui");
 			try {
 	            Thread.sleep(50); // délai de 50 ms
 	        } catch (InterruptedException e) {
@@ -112,8 +112,9 @@ public class Mouvements {
 	}
 
 	public void rechercheAngle(int angle) {
+		robot.ouvreBras();
 		//System.out.println(pilot.getAngularSpeed());
-		pilot.setAngularSpeed(200);
+		pilot.setAngularSpeed(70);
 		Capteurs cpt = robot.getCapteurs();
 		tournerDe(angle, true);
 		float[] valeurs = new float[0];
@@ -124,14 +125,17 @@ public class Mouvements {
 			indice++;
 		}
 		float[] min = min(valeurs);
+		System.out.println((int)min[1] + " " + angle + " " + indice);
 		int angleMin = ((int)min[1] * angle ) / (int)indice;
 		System.out.println("Le minimum est : " + min[0] + " que j'ai a " + angleMin + " degres.");
-		System.out.println("J'ai prit " + indice + " données");
-		if(angleMin-angle>angle/2) {
-			this.tournerDe(-(angle-angleMin + 4), false);
+		//System.out.println("J'ai prit " + indice + " données");
+		if(angleMin<angle/2) {
+			this.tournerDe(angleMin, false);
 		}
-		else this.tournerDe(angleMin-angle + 4,false);
-		chercherpalet((int)(1000*min[0]) + 2);
+		else this.tournerDe(-(angle-angleMin),false);
+		//chercherpalet((int)(1000*min[0]) + 2);
+		avancerWhileIsNotPressed((int)(1000*min[0]));
+		robot.fermeBras();
 		Delay.msDelay(10000);
 		
 
