@@ -151,6 +151,21 @@ public class Mouvements {
 
 	}
 
+	/*public void chercherpalet(int d) {
+		Capteurs cpt = robot.getCapteurs();
+		float[] valeurs = new float[2];
+		valeurs[0] = 1000000;
+		valeurs[1] = 1000000;
+		robot.avancer(d);
+		int indice = 0;
+		while(isMoving() && (valeurs[valeurs.length-1]<= valeurs[valeurs.length-2]) && !robot.isPressed()) {
+			valeurs = cpt.regarde(valeurs);
+			System.out.println(valeurs[valeurs.length-1]);	
+		}
+		pilot.stop();
+		
+		
+		}
 	/**public void recherche(int duration) {
 		Capteurs cpt = robot.getCapteurs();
 		tourneDr();
