@@ -1,6 +1,6 @@
 
 public class Position {
-	private int x, y; 
+	private double x, y; 
 	private double degres; 
 	private char startSide; //b ou g pour blueSide ou greenSide
 	
@@ -13,17 +13,14 @@ public class Position {
 	}
 	public double getX() {
 		return this.x;
-		
 	}
 	
 	public double getY() {
 		return this.y;
-		
 	}
 	
 	public double getDegres() {
 		return this.degres;
-		
 	}
 	
 	public void updateOrientation(double distanceTourne) {
@@ -57,21 +54,15 @@ public class Position {
 	 this.degres=d ;
 	}
 	
-	public void  UpdatePosition( int d ) {
+	public void  updatePosition( double d ) {
 		double a,o;
 		double degresrad= degres*Math.PI/180;
 		a= Math.cos(degresrad) * d ;
 		o= Math.sin(degresrad) * d ;
 		this.setX(a);
 		this.setY(o);
-		
-		
 		}
 	
 	public static void main(String[] args) {
-
-	
-
-
 	}
 }

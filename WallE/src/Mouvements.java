@@ -113,6 +113,7 @@ public class Mouvements {
 
 	public void rechercheAngle(int angle) {
 		//System.out.println(pilot.getAngularSpeed());
+		cpt.ouvreBras();
 		pilot.setAngularSpeed(200);
 		Capteurs cpt = robot.getCapteurs();
 		tournerDe(angle, true);
