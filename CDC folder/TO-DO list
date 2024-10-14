@@ -11,6 +11,11 @@ Position :
 - ❌ Modifier les méthodes de déplacement pour renvoyer les distance parcourue
 - ❌ Méthodes qui update l'orientation quand on arrive en face du mur du camp adverse pour poser un palet
 
+Capteur : 
+- ❌ Méthodes pour capter et renvoyer la couleur vue
+- 
+
+
 
 AEF : 
 - ✔️ Revoir comment aller derriere la ligne blanche
