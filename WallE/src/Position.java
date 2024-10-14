@@ -4,7 +4,7 @@ public class Position {
 	private double degres; 
 	private char startSide; //b ou g pour blueSide ou greenSide
 	
-	
+	//dhqethzs
 	public Position(int x, int y, char startSide) {
 		this.x=x; 
 		this.y=y;
