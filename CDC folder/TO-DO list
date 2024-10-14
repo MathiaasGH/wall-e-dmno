@@ -9,7 +9,7 @@ Position :
 - ✔️ méthodes de mise à jour des position et de l'orientation en fonction des mouvement
 - ❌ Méthodes pour mettre à jour les positions en fonction des couleurs rencontré (en fonciton du startSide) 
 - ❌ Modifier les méthodes de déplacement pour renvoyer les distance parcourue
-- ❌ Méthodes qui update l'oreintaiton quand on arrive en face du mur du camp adverse pour poser un palet
+- ❌ Méthodes qui update l'orientation quand on arrive en face du mur du camp adverse pour poser un palet
 
 
 AEF : 

@@ -48,9 +48,9 @@ public class Mouvements {
 	public void actualiser(){}
 
 	public void avancer(int dist) {
-		pilot.travel(dist); // A VOIR
+		pilot.travel(dist,true); // A VOIR
 	}
-	
+
 	public void avancer() {
 		pilot.forward(); // A VOIR
 	}
@@ -78,6 +78,7 @@ public class Mouvements {
 		}
 		float[] tabR = new float[2];
 		tabR[0] = min;
+		System.out.println("L'indice : " + indice);
 		tabR[1] = indice;
 		return tabR;
 	}
@@ -93,28 +94,36 @@ public class Mouvements {
 	public void tournerDe(int angle, boolean asynchrone) {
 		pilot.rotate(angle, asynchrone);       
 	}
-	
-	public void avancerWhileIsNotPressed() {
+
+	public void avancerWhileIsNotPressed(int dist) {
 		Capteurs cpt = robot.getCapteurs();
-		this.avancer();
+		float[] distance = new float[0];
+		this.avancer(dist+5000);
 		int i=0;
-		while(isMoving() && !cpt.isPressed() && i<10000) {
+		while(isMoving() && !cpt.isPressed() && distanceDiminue()) {
 			if(cpt.isPressed())
-				System.out.println("oui");
-			try {
-	            Thread.sleep(50); // délai de 50 ms
-	        } catch (InterruptedException e) {
-	            e.printStackTrace();
-	        }
+				try {
+					Thread.sleep(50); // délai de 50 ms
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			cpt.regarde(distance);
+			if(distance[distance.length-1]<30)
+				cpt.ouvreBrasAsynchrone();
 			i++;
 		}
 		pilot.stop();
 	}
 
 	public void rechercheAngle(int angle) {
+
 		//System.out.println(pilot.getAngularSpeed());
+<<<<<<< HEAD
 		cpt.ouvreBras();
 		pilot.setAngularSpeed(200);
+=======
+		pilot.setAngularSpeed(70);
+>>>>>>> refs/remotes/origin/main
 		Capteurs cpt = robot.getCapteurs();
 		tournerDe(angle, true);
 		float[] valeurs = new float[0];
@@ -125,16 +134,25 @@ public class Mouvements {
 			indice++;
 		}
 		float[] min = min(valeurs);
+		System.out.println((int)min[1] + " " + angle + " " + indice);
 		int angleMin = ((int)min[1] * angle ) / (int)indice;
 		System.out.println("Le minimum est : " + min[0] + " que j'ai a " + angleMin + " degres.");
-		System.out.println("J'ai prit " + indice + " données");
-		if(angleMin-angle>angle/2) {
-			this.tournerDe(-(angle-angleMin + 4), false);
+		//System.out.println("J'ai prit " + indice + " données");
+		if(angleMin<angle/2) {
+			this.tournerDe(angleMin, false);
 		}
-		else this.tournerDe(angleMin-angle + 4,false);
-		chercherpalet((int)(1000*min[0]) + 2);
+		else this.tournerDe(-(angle-angleMin),false);
+		//chercherpalet((int)(1000*min[0]) + 2);
+
+		float[] valeurApresOrientation = new float[0];
+		cpt.regarde(valeurApresOrientation);
+		if(valeurApresOrientation[0]>=min[0]-0.05 && valeurApresOrientation[0]<=min[0]+0.05) {
+			avancerWhileIsNotPressed((int)(1000*min[0]));
+			robot.fermeBras();
+		}
+		else rechercheAngle(360);
 		Delay.msDelay(10000);
-		
+
 
 	}
 
@@ -164,8 +182,8 @@ public class Mouvements {
 			System.out.println(valeurs[valeurs.length-1]);	
 		}
 		pilot.stop();
-		
-		
+
+
 		}
 	/**public void recherche(int duration) {
 		Capteurs cpt = robot.getCapteurs();
