@@ -44,6 +44,11 @@ public class Capteurs {
     	Motor.D.setSpeed(150000);
     	Motor.D.rotate(-2000);
     }
+    
+    public void ouvreBrasAsynchrone() {
+    	Motor.D.setSpeed(15000);
+    	Motor.D.rotate(2000,true);
+    }
 	public float[] capteCouleur(float[] tab) {
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
 		couleur.fetchSample(newTab, newTab.length-1);

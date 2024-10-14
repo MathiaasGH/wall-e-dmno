@@ -56,6 +56,7 @@ public class Robot {
 	}
 	
 	public void ouvreBras() {
+		
 		capteurs.ouvreBras();
 	}
 	
