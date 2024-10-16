@@ -1,6 +1,6 @@
 
 public class Position {
-	private int x, y; 
+	private double x, y; 
 	private double degres; 
 	private char startSide; //b ou g pour blueSide ou greenSide
 	

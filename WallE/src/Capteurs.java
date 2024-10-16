@@ -31,21 +31,22 @@ public class Capteurs {
     {
         float[] sample = new float[1];
         touche.fetchSample(sample, 0);
-
+        System.out.println(sample[0]!=0);
         return sample[0] != 0;
     }
     
     public void ouvreBras() {
     	Motor.D.setSpeed(150000);
-    	Motor.D.rotate(2000);
+    	Motor.D.rotate(1700);
     }
 	
     public void fermeBras() {
     	Motor.D.setSpeed(150000);
-    	Motor.D.rotate(-2000);
+    	Motor.D.rotate(-1700);
     }
     
     public void ouvreBrasAsynchrone() {
+    	System.out.println("J'ouvre les bras");
     	Motor.D.setSpeed(15000);
     	Motor.D.rotate(2000,true);
     }
@@ -66,6 +67,7 @@ public class Capteurs {
 		return newTab;
 	}
 	public float[] regarde(float[] tab) {
+		System.out.println("Je regarde de nouveau");
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
 		vue.fetchSample(newTab, newTab.length-1);
 		return newTab;

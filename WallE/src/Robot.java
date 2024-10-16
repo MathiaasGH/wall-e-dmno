@@ -30,8 +30,14 @@ public class Robot {
 		mouvements.avancer(dist);
 	}
 	
+	public void avancer(int dist, boolean b) {
+		mouvements.avancer(dist,b);
+	}
+	
 	public void avancerIsPressed() {
-		mouvements.avancerWhileIsNotPressed(100);
+		float[] dist = new float[0];
+		dist=capteurs.regarde(dist);
+		mouvements.avancerWhileIsNotPressed((int)(1000*dist[0]));
 	}
 		
 	/** Méthode qui fait avancer le robot en suivant un arc d’un radius donnée sur une distance donnée
@@ -62,15 +68,17 @@ public class Robot {
 	
 	public static void main(String[] args) {
 		Robot r= new Robot();
-		//r.ouvreBras();
+		r.ouvreBras();
 		//r.fermeBras();
-		r.rechercheA(360);
+		//r.avancer(10);
+		//r.avancerIsPressed();
+		//r.rechercheA(360);
 		//r.tournerDe(360);
 		//r.avancer();
-		//r.avancer(2000);
+		//r.avancer(100, false);
 		//r.avancerIsPressed();
 		//System.out.println(r.isPressed());
-		//Delay.msDelay(5000);
+		Delay.msDelay(5000);
 	}
 
 }
