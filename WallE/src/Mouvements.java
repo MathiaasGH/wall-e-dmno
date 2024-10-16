@@ -135,8 +135,19 @@ public class Mouvements {
 	}
 
 	public void rechercheAngle(int angle) {
+<<<<<<< HEAD
 		pilot.setAngularSpeed(100);
 		//Je cherche la référence des capteurs
+=======
+
+		//System.out.println(pilot.getAngularSpeed());
+<<<<<<< HEAD
+		cpt.ouvreBras();
+		pilot.setAngularSpeed(200);
+=======
+		pilot.setAngularSpeed(70);
+>>>>>>> refs/remotes/origin/main
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 		Capteurs cpt = robot.getCapteurs();
 		//Je ferme les bras
 		cpt.fermeBras();

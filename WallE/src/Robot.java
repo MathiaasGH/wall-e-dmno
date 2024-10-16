@@ -7,12 +7,15 @@ import lejos.robotics.navigation.DifferentialPilot;
 
 public class Robot {
 
-	private Mouvements mouvements;
+	private Orientation orientation;
 	private Capteurs capteurs;
+	private Position position;
+
 
 	public Robot() {
-		mouvements = new Mouvements(this);
+		orientation = new Orientation(this);
 		capteurs = new Capteurs(this);
+		position = new Position (0,0,'b');
 	}
 	
 	public Capteurs getCapteurs() {
