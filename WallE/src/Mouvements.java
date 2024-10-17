@@ -120,8 +120,9 @@ public class Mouvements {
 	        if (distance.length > 0) {
 	            float derniereDistance = distance[distance.length - 1];
 
-	            // Vérifie si la distance est inférieure à 20 cm pour ouvrir les bras
-	            if (derniereDistance < 0.3) {
+	            // Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
+	            System.out.println(derniereDistance);
+	            if (derniereDistance < 0.35) {
 	                cpt.ouvreBrasAsynchrone();
 	            }
 	        }
@@ -135,10 +136,8 @@ public class Mouvements {
 	}
 
 	public void rechercheAngle(int angle) {
-		pilot.setAngularSpeed(70);
+		pilot.setAngularSpeed(100);
 		Capteurs cpt = robot.getCapteurs();
-		//Je ferme les bras
-		cpt.fermeBras();
 		//Je tourne de angle de manière asynchrone
 		tournerDe(angle, true);
 		//J'initialise un tableau dans lequel on range les distances que l'on voit

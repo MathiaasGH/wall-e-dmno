@@ -37,12 +37,12 @@ public class Capteurs {
     
     public void ouvreBras() {
     	Motor.D.setSpeed(150000);
-    	Motor.D.rotate(1700);
+    	Motor.D.rotate(1500);
     }
 	
     public void fermeBras() {
     	Motor.D.setSpeed(150000);
-    	Motor.D.rotate(-1700);
+    	Motor.D.rotate(-1500);
     }
     
     public void ouvreBrasAsynchrone() {

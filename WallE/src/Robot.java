@@ -7,13 +7,13 @@ import lejos.robotics.navigation.DifferentialPilot;
 
 public class Robot {
 
-	private Orientation orientation;
+	private Mouvements mouvements;
 	private Capteurs capteurs;
 	private Position position;
 
 
 	public Robot() {
-		orientation = new Orientation(this);
+		mouvements = new Mouvements(this);
 		capteurs = new Capteurs(this);
 		position = new Position (0,0,'b');
 	}
@@ -53,6 +53,7 @@ public class Robot {
 	}*/
 	
 	public void rechercheA(int ang) {
+		capteurs.fermeBras();
 		mouvements.rechercheAngle(ang);
 	}
 	
@@ -71,11 +72,11 @@ public class Robot {
 	
 	public static void main(String[] args) {
 		Robot r= new Robot();
-		r.ouvreBras();
+		//r.ouvreBras();
 		//r.fermeBras();
 		//r.avancer(10);
 		//r.avancerIsPressed();
-		//r.rechercheA(360);
+		r.rechercheA(360);
 		//r.tournerDe(360);
 		//r.avancer();
 		//r.avancer(100, false);
