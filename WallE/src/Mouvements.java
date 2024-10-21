@@ -33,8 +33,8 @@ public class Mouvements {
 		cote =NEUTRE;
 		//dd = new DifferentialDrive(MotorPort.A, MotorPort.B);
 
-		wheel1 = WheeledChassis.modelWheel(Motor.A, 56).offset(-62);
-		wheel2 = WheeledChassis.modelWheel(Motor.B, 56).offset(62);
+		wheel1 = WheeledChassis.modelWheel(Motor.B, 56).offset(-62);
+		wheel2 = WheeledChassis.modelWheel(Motor.C, 56).offset(62);
 		chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, WheeledChassis.TYPE_DIFFERENTIAL); 
 		pilot = new MovePilot(chassis);
 
@@ -49,6 +49,10 @@ public class Mouvements {
 
 	public void avancer(int dist) {
 		pilot.travel(dist,true); // A VOIR
+	}
+	
+	public void avancer(int dist,boolean b) {
+		pilot.travel(dist,b); // A VOIR
 	}
 
 	public void avancer() {
@@ -94,59 +98,87 @@ public class Mouvements {
 	public void tournerDe(int angle, boolean asynchrone) {
 		pilot.rotate(angle, asynchrone);       
 	}
-
-	public void avancerWhileIsNotPressed(int dist) {
-		Capteurs cpt = robot.getCapteurs();
-		float[] distance = new float[0];
-		this.avancer(dist+5000);
-		int i=0;
-		while(isMoving() && !cpt.isPressed() && distanceDiminue()) {
-			if(cpt.isPressed())
-				try {
-					Thread.sleep(50); // délai de 50 ms
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			cpt.regarde(distance);
-			if(distance[distance.length-1]<30)
-				cpt.ouvreBrasAsynchrone();
-			i++;
-		}
-		pilot.stop();
+	
+	public boolean distanceDiminue(float[] tab) {
+		if(tab.length>=2)
+			return tab[tab.length-1]<=tab[tab.length-2];
+		return true;
 	}
 
-	public void rechercheAngle(int angle) {
+	public void avancerWhileIsNotPressed(int dist) {
+	    // Initialisation des capteurs et des distances
+	    Capteurs cpt = robot.getCapteurs();
+	    float[] distance = cpt.regarde(new float[0]);
 
 		//System.out.println(pilot.getAngularSpeed());
 		cpt.ouvreBras();
 		pilot.setAngularSpeed(200);
 		pilot.setAngularSpeed(70);
+	    // Avancer de manière asynchrone sur la distance spécifiée + 5 cm
+	    this.avancer(dist + 100);
+	    
+	    // Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
+	    while (isMoving() && !cpt.isPressed()) {
+	        // Vérifie les distances uniquement si elles sont disponibles
+	        distance = cpt.regarde(distance);
+	        if (distance.length > 0) {
+	            float derniereDistance = distance[distance.length - 1];
+
+	            // Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
+	            System.out.println(derniereDistance);
+	            if (derniereDistance < 0.35) {
+	                cpt.ouvreBrasAsynchrone();
+	            }
+	        }
+
+	       
+	    }
+
+	    // Arrête le robot et ferme les bras une fois la boucle terminée
+	    robot.fermeBras();
+	    pilot.stop();
+	}
+
+	public void rechercheAngle(int angle) {
+		pilot.setAngularSpeed(100);
 		Capteurs cpt = robot.getCapteurs();
+		//Je tourne de angle de manière asynchrone
 		tournerDe(angle, true);
+		//J'initialise un tableau dans lequel on range les distances que l'on voit
 		float[] valeurs = new float[0];
 		int indice = 0;
+		//Tant que le robot bouge...
 		while(isMoving()) {
-			System.out.println(indice);
+			//System.out.println(indice);
+			//On remplit le tableau de distances
 			valeurs = cpt.regarde(valeurs);
 			indice++;
 		}
+		//Je récupère la plus petite distane ainsi que l'indice de cette distance dans le tableau
 		float[] min = min(valeurs);
 		System.out.println((int)min[1] + " " + angle + " " + indice);
+		//Je déduis l'angle grâce à un produit en croix
 		int angleMin = ((int)min[1] * angle ) / (int)indice;
-		System.out.println("Le minimum est : " + min[0] + " que j'ai a " + angleMin + " degres.");
+		float dist = min[0];
+		//System.out.println("Le minimum est : " + min[0] + " que j'ai a " + angleMin + " degres.");
 		//System.out.println("J'ai prit " + indice + " données");
+		//J'optimise l'angle à tourner pour que le robot s'aligne avec l'objet
 		if(angleMin<angle/2) {
 			this.tournerDe(angleMin, false);
 		}
 		else this.tournerDe(-(angle-angleMin),false);
 		//chercherpalet((int)(1000*min[0]) + 2);
 
+		//Je crée un tableau dans lequel je range la distance entre le robot et l'objet le plus proche de lui
+		//après s'être ré-orienté
 		float[] valeurApresOrientation = new float[0];
-		cpt.regarde(valeurApresOrientation);
-		if(valeurApresOrientation[0]>=min[0]-0.05 && valeurApresOrientation[0]<=min[0]+0.05) {
-			avancerWhileIsNotPressed((int)(1000*min[0]));
-			robot.fermeBras();
+		valeurApresOrientation = cpt.regarde(valeurApresOrientation);
+		//Si la distance est la même à +/- 10cm que ce que le robot voyait en tourant...
+		if(valeurApresOrientation[0]>=dist-0.1 && valeurApresOrientation[0]<=dist+0.1) {
+			//...le robot avance de la distance.
+			avancerWhileIsNotPressed((int)(1000*dist));
 		}
+		//Sinon le robot re-recherche.
 		else rechercheAngle(360);
 		Delay.msDelay(10000);
 
@@ -199,7 +231,7 @@ public class Mouvements {
 		System.out.println("Le minimum est : " + min[0] + " que j'ai vu la " + min[1] + "ème fois sur " + duration);
 		//System.out.println(Arrays.toString(valeurs));
 		Delay.msDelay(10000);
-<<<<<<< HEAD
+
 
 	}*/
 
