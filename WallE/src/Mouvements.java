@@ -118,12 +118,9 @@ public class Mouvements {
 	public void rechercheAngle(int angle) {
 
 		//System.out.println(pilot.getAngularSpeed());
-<<<<<<< HEAD
 		cpt.ouvreBras();
 		pilot.setAngularSpeed(200);
-=======
 		pilot.setAngularSpeed(70);
->>>>>>> refs/remotes/origin/main
 		Capteurs cpt = robot.getCapteurs();
 		tournerDe(angle, true);
 		float[] valeurs = new float[0];
