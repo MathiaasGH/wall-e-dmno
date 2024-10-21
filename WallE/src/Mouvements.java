@@ -96,6 +96,7 @@ public class Mouvements {
 	}
 
 	public void tournerDe(int angle, boolean asynchrone) {
+		pilot.setAngularSpeed(100);
 		pilot.rotate(angle, asynchrone);       
 	}
 	
@@ -106,17 +107,15 @@ public class Mouvements {
 	}
 
 	public void avancerWhileIsNotPressed(int dist) {
+		// Creation d'un boolean pour ouvrir les bras une seule fois
+		boolean dejaOuvert = false;
 	    // Initialisation des capteurs et des distances
 	    Capteurs cpt = robot.getCapteurs();
 	    float[] distance = cpt.regarde(new float[0]);
-
 		//System.out.println(pilot.getAngularSpeed());
-		cpt.ouvreBras();
-		pilot.setAngularSpeed(200);
 		pilot.setAngularSpeed(70);
 	    // Avancer de manière asynchrone sur la distance spécifiée + 5 cm
 	    this.avancer(dist + 100);
-	    
 	    // Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
 	    while (isMoving() && !cpt.isPressed()) {
 	        // Vérifie les distances uniquement si elles sont disponibles
@@ -126,21 +125,19 @@ public class Mouvements {
 
 	            // Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
 	            System.out.println(derniereDistance);
-	            if (derniereDistance < 0.35) {
+	            if (derniereDistance < 0.35 && !dejaOuvert) {
 	                cpt.ouvreBrasAsynchrone();
+	                dejaOuvert=true;
 	            }
-	        }
-
-	       
+	        }       
 	    }
-
 	    // Arrête le robot et ferme les bras une fois la boucle terminée
 	    robot.fermeBras();
 	    pilot.stop();
 	}
 
 	public void rechercheAngle(int angle) {
-		pilot.setAngularSpeed(100);
+		pilot.setAngularSpeed(50);
 		Capteurs cpt = robot.getCapteurs();
 		//Je tourne de angle de manière asynchrone
 		tournerDe(angle, true);
@@ -167,8 +164,6 @@ public class Mouvements {
 			this.tournerDe(angleMin, false);
 		}
 		else this.tournerDe(-(angle-angleMin),false);
-		//chercherpalet((int)(1000*min[0]) + 2);
-
 		//Je crée un tableau dans lequel je range la distance entre le robot et l'objet le plus proche de lui
 		//après s'être ré-orienté
 		float[] valeurApresOrientation = new float[0];

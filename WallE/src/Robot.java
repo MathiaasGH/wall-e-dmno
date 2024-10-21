@@ -72,8 +72,10 @@ public class Robot {
 	
 	public static void main(String[] args) {
 		Robot r= new Robot();
-		//r.ouvreBras();
+		//for(int i=0;i<3;i++) {
 		//r.fermeBras();
+		//r.ouvreBras();
+		//}
 		//r.avancer(10);
 		//r.avancerIsPressed();
 		r.rechercheA(360);
@@ -82,7 +84,7 @@ public class Robot {
 		//r.avancer(100, false);
 		//r.avancerIsPressed();
 		//System.out.println(r.isPressed());
-		Delay.msDelay(5000);
+		//Delay.msDelay(5000);
 	}
 
 }
