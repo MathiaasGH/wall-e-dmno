@@ -62,7 +62,45 @@ public class Position {
 		this.setX(a);
 		this.setY(o);
 	}
-
+	/*public void MiseAjour(String couleur) {
+	if (!(startSide)) {
+		if (couleur== "Rouge") {
+			this.x=150;
+		}
+		if (couleur== "Vert") {
+			this.y=180;
+		}
+		if (couleur== "Bleue") {
+			this.y=60;
+		}
+		if (couleur== "Jaune") {
+			this.x=50;
+		}
+		if (couleur== "Blanc") {
+			this.y=30;
+		}
+	}
+	else {
+		if (couleur== "Rouge") {
+			this.x=50;
+		}
+		if (couleur== "Vert") {
+			this.y=60;
+		}
+		if (couleur== "Bleue") {
+			this.y=180;
+		}
+		if (couleur== "Jaune") {
+			this.x=150;
+		}
+		if (couleur== "Blanc") {
+			this.y=30;
+		}
+	}
+}
+*/
+	
+	
 	public double degresAuCampAdverse() {
 		if (degres!=0) {
 			return -degres;

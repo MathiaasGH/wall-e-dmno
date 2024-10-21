@@ -26,6 +26,8 @@ public class Mouvements {
 	private Wheel wheel2;
 	private Chassis chassis;
 	private MovePilot pilot;
+	/*private Capteurs capteurs;
+	private Position position;*/
 
 	public Mouvements(Robot r) {
 		robot = r;
