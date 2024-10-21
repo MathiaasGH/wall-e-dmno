@@ -21,6 +21,10 @@ public class Robot {
 	public Capteurs getCapteurs() {
 		return capteurs;
 	}
+	
+	public Position getPosition() {
+		return position; 
+	}
 
 	/** Méthode qui fait tourner le robot sans avancer d’un angle
 	* @param int angle en degré du tour que doit faire le robot

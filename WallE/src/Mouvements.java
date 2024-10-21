@@ -50,9 +50,11 @@ public class Mouvements {
 	public void avancer(int dist) {
 		pilot.travel(dist,true); // A VOIR
 	}
-	
+
 	public void avancer(int dist,boolean b) {
-		pilot.travel(dist,b); // A VOIR
+		Position pos = robot.getPosition();  
+		pilot.travel(dist,b);             // A VOIR
+		pos.updatePosition(dist);
 	}
 
 	public void avancer() {
@@ -97,9 +99,12 @@ public class Mouvements {
 
 	public void tournerDe(int angle, boolean asynchrone) {
 		pilot.setAngularSpeed(100);
-		pilot.rotate(angle, asynchrone);       
-	}
-	
+		Position pos = robot.getPosition();
+		pilot.rotate(angle, asynchrone); 
+		pos.updateOrientation(angle);
+
+	}   
+
 	public boolean distanceDiminue(float[] tab) {
 		if(tab.length>=2)
 			return tab[tab.length-1]<=tab[tab.length-2];
@@ -109,31 +114,31 @@ public class Mouvements {
 	public void avancerWhileIsNotPressed(int dist) {
 		// Creation d'un boolean pour ouvrir les bras une seule fois
 		boolean dejaOuvert = false;
-	    // Initialisation des capteurs et des distances
-	    Capteurs cpt = robot.getCapteurs();
-	    float[] distance = cpt.regarde(new float[0]);
+		// Initialisation des capteurs et des distances
+		Capteurs cpt = robot.getCapteurs();
+		float[] distance = cpt.regarde(new float[0]);
 		//System.out.println(pilot.getAngularSpeed());
 		pilot.setAngularSpeed(70);
-	    // Avancer de manière asynchrone sur la distance spécifiée + 5 cm
-	    this.avancer(dist + 100);
-	    // Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
-	    while (isMoving() && !cpt.isPressed()) {
-	        // Vérifie les distances uniquement si elles sont disponibles
-	        distance = cpt.regarde(distance);
-	        if (distance.length > 0) {
-	            float derniereDistance = distance[distance.length - 1];
+		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
+		this.avancer(dist + 100);
+		// Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
+		while (isMoving() && !cpt.isPressed()) {
+			// Vérifie les distances uniquement si elles sont disponibles
+			distance = cpt.regarde(distance);
+			if (distance.length > 0) {
+				float derniereDistance = distance[distance.length - 1];
 
-	            // Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
-	            System.out.println(derniereDistance);
-	            if (derniereDistance < 0.35 && !dejaOuvert) {
-	                cpt.ouvreBrasAsynchrone();
-	                dejaOuvert=true;
-	            }
-	        }       
-	    }
-	    // Arrête le robot et ferme les bras une fois la boucle terminée
-	    robot.fermeBras();
-	    pilot.stop();
+				// Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
+				System.out.println(derniereDistance);
+				if (derniereDistance < 0.35 && !dejaOuvert) {
+					cpt.ouvreBrasAsynchrone();
+					dejaOuvert=true;
+				}
+			}       
+		}
+		// Arrête le robot et ferme les bras une fois la boucle terminée
+		robot.fermeBras();
+		pilot.stop();
 	}
 
 	public void rechercheAngle(int angle) {
@@ -192,6 +197,53 @@ public class Mouvements {
 		}
 		pilot.stop();
 
+	}
+
+	/**
+	 * A TESTER 
+	 * Méthode qui permet de regarder le mur en face quand on pose un palet dans le camp adverse afin de retrouver l'angle 0 pour se 
+	 * replacer bien en face
+	 */
+	public void reOrientationMur() {
+		Position pos = robot.getPosition();
+		Capteurs cpt = robot.getCapteurs();
+		tournerDe(-45, false);
+		pilot.setAngularSpeed(100);
+		//Je tourne de angle de manière asynchrone
+		tournerDe(90, true);
+		//J'initialise un tableau dans lequel on range les distances que l'on voit
+		float[] valeurs = new float[0];
+		int indice = 0;
+		//Tant que le robot bouge...
+		while(isMoving()) {
+			//System.out.println(indice);
+			//On remplit le tableau de distances
+			valeurs = cpt.regarde(valeurs);
+			indice++;
+		}
+		//Je récupère la plus petite distane ainsi que l'indice de cette distance dans le tableau
+		float[] min = min(valeurs);
+		//Je déduis l'angle grâce à un produit en croix
+		int angleMin = ((int)min[1] * 90 ) / (int)indice;
+		tournerDe(-angleMin,false);
+		pos.setDegres(0);
+	}
+
+	/**
+	 * A TESTER
+	 * Méthode qui fait tourner le robot vers le camp adverse puis qui avance jusqu'à la ligne blanche. Il lache le palet, recule
+	 * de 5 cm puis fait un demi tour complet
+	 * 
+	 */
+	public void allerChezAdversaire() {
+		Capteurs cpt = robot.getCapteurs();
+		Position pos=robot.getPosition(); 
+		robot.tournerDe((int)pos.degresAuCampAdverse());
+		//avancerWhileIsNotWhite(); ------------------------------> faut créer cette méthodes
+		cpt.ouvreBras();
+		reOrientationMur();
+		robot.avancer(-5);
+		robot.tournerDe(180);
 	}
 
 	/*public void chercherpalet(int d) {
