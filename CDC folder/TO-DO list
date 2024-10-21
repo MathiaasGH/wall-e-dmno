@@ -11,6 +11,10 @@ Position :
 - ❌ Modifier les méthodes de déplacement pour renvoyer les distance parcourue
 - ❌ Méthodes qui update l'orientation quand on arrive en face du mur du camp adverse pour poser un palet
 
+Mouvement : 
+- ❌ Méthodes pour aller dans la camp adverse après avoir récupérer un palet
+- ❌Dans chercher palet, regardez les discontinuité plutôt que le minimum seul
+
 Capteur : 
 - ❌ Méthodes pour capter et renvoyer la couleur vue
 - 
