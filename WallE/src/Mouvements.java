@@ -51,6 +51,17 @@ public class Mouvements {
 
 	public void avancer(int dist) {
 		pilot.travel(dist,true); // A VOIR
+		/*
+		 while (isMoving()){
+			 String couleur;
+			 do {
+				 float tabcapteurs = capteurs.capteurDeCouleur();
+				 couleur = Convertioncouleur(tabcapteurs);				
+				} while (couleur=="neutre");
+			 position.MiseAjour(couleur);
+		 }
+		 
+		*/
 	}
 
 	public void avancer(int dist,boolean b) {
