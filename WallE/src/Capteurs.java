@@ -62,8 +62,9 @@ public class Capteurs {
 			colorSensor.setFloodlight(Color.WHITE);
 			path_color = new float[average.sampleSize()];
 			average.fetchSample(path_color, 0);
+			// System.out.print(path_colors[0]+path_colors[1]+path_colors[2]);
 			return path_color;
-	    }
+			}
 	*/
 	
 	/*	public String Convertioncouleur(float [] tabCouleurs) {
