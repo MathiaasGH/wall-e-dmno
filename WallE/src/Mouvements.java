@@ -110,6 +110,10 @@ public class Mouvements {
 	    Capteurs cpt = robot.getCapteurs();
 	    float[] distance = cpt.regarde(new float[0]);
 
+		//System.out.println(pilot.getAngularSpeed());
+		cpt.ouvreBras();
+		pilot.setAngularSpeed(200);
+		pilot.setAngularSpeed(70);
 	    // Avancer de manière asynchrone sur la distance spécifiée + 5 cm
 	    this.avancer(dist + 100);
 	    
@@ -227,7 +231,7 @@ public class Mouvements {
 		System.out.println("Le minimum est : " + min[0] + " que j'ai vu la " + min[1] + "ème fois sur " + duration);
 		//System.out.println(Arrays.toString(valeurs));
 		Delay.msDelay(10000);
-<<<<<<< HEAD
+
 
 	}*/
 
