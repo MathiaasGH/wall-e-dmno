@@ -26,6 +26,8 @@ public class Mouvements {
 	private Wheel wheel2;
 	private Chassis chassis;
 	private MovePilot pilot;
+	/*private Capteurs capteurs;
+	private Position position;*/
 
 	public Mouvements(Robot r) {
 		robot = r;
@@ -49,6 +51,17 @@ public class Mouvements {
 
 	public void avancer(int dist) {
 		pilot.travel(dist,true); // A VOIR
+		/*
+		 while (isMoving()){
+			 String couleur;
+			 do {
+				 float tabcapteurs = capteurs.capteurDeCouleur();
+				 couleur = Convertioncouleur(tabcapteurs);				
+				} while (couleur=="neutre");
+			 position.MiseAjour(couleur);
+		 }
+		 
+		*/
 	}
 
 	public void avancer(int dist,boolean b) {

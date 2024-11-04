@@ -56,6 +56,41 @@ public class Capteurs {
 		return newTab; 
 	}
 	
+	/* public float[] capteurDeCouleur() {
+	    	colorSensor = new EV3ColorSensor(SensorPort.S2);
+	    	average = new MeanFilter(colorSensor.getRGBMode(), 1);
+			colorSensor.setFloodlight(Color.WHITE);
+			path_color = new float[average.sampleSize()];
+			average.fetchSample(path_color, 0);
+			// System.out.print(path_colors[0]+path_colors[1]+path_colors[2]);
+			return path_color;
+			}
+	*/
+	
+	/*	public String Convertioncouleur(float [] tabCouleurs) {
+			double r = couleurs[0];
+			double v = couleurs[1];
+			double b = couleurs[2];
+			if (r>230,v<25,b<25) {
+				return "Rouge";
+			}
+			if (r<25,v>230,b<25) {
+				return "Vert";
+			}
+			if (r<25,v<25,b>230) {
+				return "Bleu"; 
+			}
+			if (r>230,v>230,b<25) {
+				return "Jaune";
+			}
+				if (r>230,v>230,b>230) {
+				return "Blanc"; 
+			}
+			
+			else return "neutre";
+		}
+		*/
+	
 	public void fermeLesYeux() {
 		vue.close();
 	}
