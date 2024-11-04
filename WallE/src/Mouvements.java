@@ -200,7 +200,6 @@ public class Mouvements {
 	}
 
 	/**
-	 * A TESTER 
 	 * Méthode qui permet de regarder le mur en face quand on pose un palet dans le camp adverse afin de retrouver l'angle 0 pour se 
 	 * replacer bien en face
 	 */
