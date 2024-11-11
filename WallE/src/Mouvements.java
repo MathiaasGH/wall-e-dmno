@@ -1,5 +1,3 @@
-package wallHeredite;
-
 import lejos.robotics.navigation.MovePilot;
 
 import java.util.Arrays;
@@ -28,7 +26,7 @@ public class Mouvements extends Position{
 		wheel2 = WheeledChassis.modelWheel(Motor.C, 56).offset(62);
 		chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, WheeledChassis.TYPE_DIFFERENTIAL); 
 		pilot = new MovePilot(chassis);
-		System.out.println("Classe orientation instanciee");
+		System.out.println("Classe mouvement instanciee");
 	}
 
 	/** Méthode qui renvoie la nouvelle position d’un objet
@@ -45,11 +43,7 @@ public class Mouvements extends Position{
 		avancer(dist,true); // A VOIR
 	}
 
-<<<<<<< HEAD
-	public void avancer(int dist,boolean b) {
-		pilot.travel(dist,b); // A VOIR
-=======
-	
+		
 	/**
 	 * Méthode qui permet d'avancer de dist et de manière asynchrone ou non en fonction de b
 	 * @param dist en cm
@@ -58,7 +52,7 @@ public class Mouvements extends Position{
 	public void avancer(int dist,boolean b) { // A VOIR
 		pilot.travel(dist,b);                 
 		updatePosition(dist);
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
+
 	}
 
 	/**
@@ -79,6 +73,18 @@ public class Mouvements extends Position{
 		updateOrientation(angle);
 	}
 
+	/**
+	 * Méthode qui permet de fermer les bras si ils ne sont pas déjà fermé
+	 */
+	public void fermeBras() {
+		if (brasOuvert==false) {
+			return;
+		}
+		Motor.D.setSpeed(150000);
+		Motor.D.rotate(-1500);
+		brasOuvert=false;
+	}
+	
 	/**
 	 * Méthode qui permet d'ouvrir les bras si ils ne sont pas déjà ouvert
 	 */
@@ -103,17 +109,7 @@ public class Mouvements extends Position{
 		brasOuvert=true;
 	}
 
-	/**
-	 * Méthode qui permet de fermer les bras si ils ne sont pas déjà fermé
-	 */
-	public void fermeBras() {
-		if (brasOuvert==false) {
-			return;
-		}
-		Motor.D.setSpeed(150000);
-		Motor.D.rotate(-1500);
-		brasOuvert=false;
-	}
+	
 
 	/**
 	 * Méthode qui permet de savoir si le robot est en mouvement 
@@ -158,27 +154,12 @@ public class Mouvements extends Position{
 		return tabR;
 	}
 
-<<<<<<< HEAD
-	private void stop() {
-		pilot.stop();
-	}
-
-	public boolean isMoving() {
-		return pilot.isMoving();
-	}
-
-	public void tournerDe(int angle, boolean asynchrone) {
-		pilot.setAngularSpeed(100);
-		pilot.rotate(angle, asynchrone);       
-	}
-
-=======
 	/**
 	 * Méthode qui renvoie un boolean qui indique si la distance à un objet diminue.
 	 * @param tab tableau de float
 	 * @return true si la distance diminue, false sinon
 	 */
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
+
 	public boolean distanceDiminue(float[] tab) {
 		if(tab.length>=2)
 			return tab[tab.length-1]<=tab[tab.length-2];
@@ -193,18 +174,7 @@ public class Mouvements extends Position{
 		// Creation d'un boolean pour ouvrir les bras une seule fois
 		boolean dejaOuvert = false;
 		// Initialisation des capteurs et des distances
-<<<<<<< HEAD
-		Capteurs cpt = robot.getCapteurs();
-		float[] distance = cpt.regarde(new float[0]);
-		//System.out.println(pilot.getAngularSpeed());
-		pilot.setAngularSpeed(70);
-		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
-		this.avancer(dist + 100);
-		// Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
-		while (isMoving() && !cpt.isPressed()) {
-			// Vérifie les distances uniquement si elles sont disponibles
-			distance = cpt.regarde(distance);
-=======
+
 		float[] distance = regarde(new float[0]);
 		//System.out.println(pilot.getAngularSpeed());
 		pilot.setAngularSpeed(70);
@@ -214,41 +184,23 @@ public class Mouvements extends Position{
 		while (isMoving() && !isPressed()) {
 			// Vérifie les distances uniquement si elles sont disponibles
 			distance = regarde(distance);
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
+
 			if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
 
 				// Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
 				System.out.println(derniereDistance);
-<<<<<<< HEAD
+
 				if (derniereDistance < 0.35 && !dejaOuvert) {
-					cpt.ouvreBrasAsynchrone();
+					ouvreBrasAsynchrone();
 					dejaOuvert=true;
 				}
 			}       
 		}
 		// Arrête le robot et ferme les bras une fois la boucle terminée
-		robot.fermeBras();
-=======
-				if (derniereDistance < 0.35) {
-					ouvreBrasAsynchrone();
-					dejaOuvert=true;
-				}
-			}
-
-
+		fermeBras();
 		}
 
-		// Arrête le robot et ferme les bras une fois la boucle terminée
-		fermeBras();
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
-		pilot.stop();
-	}
-
-<<<<<<< HEAD
-	public void rechercheAngle(int angle) {
-		Capteurs cpt = robot.getCapteurs();
-=======
 	/**
 	 * Méthode qui permet de rechercher un angle où il y aurait un palet, ce positionné en face et aller le toucher
 	 * @param angle int en degrès, l'angle sur lequel le robot vas faire la recherche
@@ -256,7 +208,7 @@ public class Mouvements extends Position{
 	public void rechercheAngle(int angle) {
 		fermeBras();
 		pilot.setAngularSpeed(100);
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
+
 		//Je tourne de angle de manière asynchrone
 		tournerDe(angle, true);
 		//J'initialise un tableau dans lequel on range les distances que l'on voit
@@ -269,7 +221,7 @@ public class Mouvements extends Position{
 			indice++;
 		}
 		System.out.println("Nombre de regard : " + valeurs.length);
-		/**
+		
 		//Je récupère la plus petite distance ainsi que l'indice de cette distance dans le tableau
 		float[] min = min(valeurs);
 		System.out.println((int)min[1] + " " + angle + " " + indice);
@@ -294,18 +246,14 @@ public class Mouvements extends Position{
 		//Sinon le robot re-recherche.
 		else rechercheAngle(360);
 		Delay.msDelay(10000);
-<<<<<<< HEAD
-		 */
-
-=======
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 	}
 
-<<<<<<< HEAD
+
 	public static boolean isDifferent(float v1, float v2) {
 		//10 cm
 		return Math.abs(v1-v2)>=10;
-=======
+	}
+
 	/**
 	 * Méthode qui permet d'avancer vers un palet tant que le robot ne le touche pas en vérifiant que la distnace diminue
 	 * @param d int en cm, distance maximum à parcourir
@@ -355,12 +303,12 @@ public class Mouvements extends Position{
 	 */
 	public void allerChezAdversaire() {
 		tournerDe((int)degresAuCampAdverse(),false);
-		//avancerWhileIsNotWhite(); ------------------------------> faut créer cette méthodes
+		//avancerWhileIsNotWhite(); ------------------------------> faut créer cette méthode
 		ouvreBras();
 		reOrientationMur();
 		avancer(-5);
 		tournerDe(180,false);
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
+
 	}
 
 	public static int minAngle(int[] tab) {
@@ -386,31 +334,19 @@ public class Mouvements extends Position{
 	}
 
 	public void rechercheAngle2(int angle) {
-		Capteurs cpt = robot.getCapteurs();
 		tournerDe(angle, true);
 		float[] valeurs = new float[0];
 		while(isMoving()) {
 			//System.out.println(indice);
 			//On remplit le tableau de distances
-			valeurs = cpt.regarde(valeurs);
+			valeurs = regarde(valeurs);
 		}		
 		float[][] potentielsPalets = new float[0][];
 		for(int i=0;i<valeurs.length;i++) {
 			//On arrondit et on met en CM
 			valeurs[i]=(int)(100*valeurs[i]);
 		}
-<<<<<<< HEAD
-=======
-		stop();
-		cpt.fermeLesYeux();
-		float[] min = min(valeurs);
-		System.out.println("Le minimum est : " + min[0] + " que j'ai vu la " + min[1] + "ème fois sur " + duration);
-		//System.out.println(Arrays.toString(valeurs));
-		Delay.msDelay(10000);
-	}*/
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 
-<<<<<<< HEAD
 		System.out.println("Le nombre de valeurs : " + valeurs.length);
 
 		float actuelleValeur = valeurs[0];
@@ -457,7 +393,7 @@ public class Mouvements extends Position{
 
 
 		float[] valeurApresOrientation = new float[0];
-		valeurApresOrientation = cpt.regarde(valeurApresOrientation);
+		valeurApresOrientation = regarde(valeurApresOrientation);
 		//Si la distance est la même à +/- 10cm que ce que le robot voyait en tourant...
 		if((int)(100)*valeurApresOrientation[0]>=dist-5 && (int)(100)*valeurApresOrientation[0]<=dist+5) {
 			//...le robot avance de la distance.
@@ -473,11 +409,7 @@ public class Mouvements extends Position{
 
 	public static void main(String[] args) {
 
-		Mouvements o = new Mouvements(null);
-
-=======
-	public static void main(String[] args) { 
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
+		//Mouvements o = new Mouvements();
 	}
 
 }

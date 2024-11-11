@@ -11,6 +11,7 @@ public class Position extends Capteurs{
 		this.y=y;
 		degres = 0;
 		this.startSide=startSide; 
+		System.out.println("Classe position instanciée");
 	}
 	/**
 	 * Méthode qui renvoie la valeur de x

@@ -29,6 +29,7 @@ public class Capteurs {
 		colorSensor = new EV3ColorSensor(SensorPort.S2);
 		spVue = vue.getDistanceMode();
 		spTouche = touche.getTouchMode();
+		System.out.println("Classe capteurs instanciée");
 	}
 
 	/**
