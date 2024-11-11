@@ -7,39 +7,22 @@ import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.utility.Delay;
 
-
-public class Mouvements {
+public class Mouvements extends Position{
 
 	private final static int DELAY = 25;
-	private final static String DEVANT = "devant";
-	private final static String DERRIERE = "derriere";
-	private final static String NEUTRE = "neutre";
-	private final static String GAUCHE = "gauche";
-	private final static String DROITE = "droite";	
-
-	private Robot robot;
-	private String face; //valeur possible : devant, derrière, neutre. 
-	private String cote; //valeur possible : gauche, droite, neutre. 
-	//private DifferentialDrive dd;
-
 	private Wheel wheel1;
 	private Wheel wheel2;
 	private Chassis chassis;
 	private MovePilot pilot;
-	/*private Capteurs capteurs;
-	private Position position;*/
+	private boolean brasOuvert;
 
-	public Mouvements(Robot r) {
-		robot = r;
-		face =NEUTRE;
-		cote =NEUTRE;
-		//dd = new DifferentialDrive(MotorPort.A, MotorPort.B);
-
+	public Mouvements(int x, int y, char StartSide, boolean etatBras) {
+		super(x, y, StartSide);
+		brasOuvert = etatBras;
 		wheel1 = WheeledChassis.modelWheel(Motor.B, 56).offset(-62);
 		wheel2 = WheeledChassis.modelWheel(Motor.C, 56).offset(62);
 		chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, WheeledChassis.TYPE_DIFFERENTIAL); 
 		pilot = new MovePilot(chassis);
-
 		System.out.println("Classe orientation instanciee");
 	}
 
@@ -50,37 +33,58 @@ public class Mouvements {
 	public void actualiser(){}
 
 	public void avancer(int dist) {
-		pilot.travel(dist,true); // A VOIR
-		/*
-		 while (isMoving()){
-			 String couleur;
-			 do {
-				 float tabcapteurs = capteurs.capteurDeCouleur();
-				 couleur = Convertioncouleur(tabcapteurs);				
-				} while (couleur=="neutre");
-			 position.MiseAjour(couleur);
-		 }
-		 
-		*/
+		avancer(dist,true); // A VOIR
 	}
 
-	public void avancer(int dist,boolean b) {
-		Position pos = robot.getPosition();  
-		pilot.travel(dist,b);             // A VOIR
-		pos.updatePosition(dist);
+	public void avancer(int dist,boolean b) { // A VOIR
+		pilot.travel(dist,b);                 
+		updatePosition(dist);
 	}
 
-	public void avancer() {
-		pilot.forward(); // A VOIR
+	public void tournerDe(int angle) {
+		tournerDe(angle, true);
 	}
 
-	public void tourneDr() {
-		pilot.rotateRight();
+	public void tournerDe(int angle, boolean asynchrone) {
+		pilot.rotate(angle, asynchrone); 
+		updateOrientation(angle);
 	}
 
-	public void tournerGa() {
-		pilot.rotateLeft();
+	public void ouvreBras() {
+		if (brasOuvert==true) {
+			return;
+		}
+		Motor.D.setSpeed(150000);
+		Motor.D.rotate(1500);
+		brasOuvert=true;
 	}
+
+	public void ouvreBrasAsynchrone() {
+		if (brasOuvert==true) {
+			return;
+		}
+		Motor.D.setSpeed(15000);
+		Motor.D.rotate(2000,true);
+		brasOuvert=true;
+	}
+
+	public void fermeBras() {
+		if (brasOuvert==false) {
+			return;
+		}
+		Motor.D.setSpeed(150000);
+		Motor.D.rotate(-1500);
+		brasOuvert=false;
+	}
+
+	public boolean isMoving() {
+		return pilot.isMoving();
+	}
+
+	private void stop() {
+		pilot.stop();
+	}
+
 
 	private void delay(){
 		Delay.msDelay(DELAY);
@@ -102,22 +106,6 @@ public class Mouvements {
 		return tabR;
 	}
 
-	private void stop() {
-		pilot.stop();
-	}
-
-	public boolean isMoving() {
-		return pilot.isMoving();
-	}
-
-	public void tournerDe(int angle, boolean asynchrone) {
-		pilot.setAngularSpeed(100);
-		Position pos = robot.getPosition();
-		pilot.rotate(angle, asynchrone); 
-		pos.updateOrientation(angle);
-
-	}   
-
 	public boolean distanceDiminue(float[] tab) {
 		if(tab.length>=2)
 			return tab[tab.length-1]<=tab[tab.length-2];
@@ -128,35 +116,37 @@ public class Mouvements {
 		// Creation d'un boolean pour ouvrir les bras une seule fois
 		boolean dejaOuvert = false;
 		// Initialisation des capteurs et des distances
-		Capteurs cpt = robot.getCapteurs();
-		float[] distance = cpt.regarde(new float[0]);
+		float[] distance = regarde(new float[0]);
 		//System.out.println(pilot.getAngularSpeed());
 		pilot.setAngularSpeed(70);
 		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
 		this.avancer(dist + 100);
 		// Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
-		while (isMoving() && !cpt.isPressed()) {
+		while (isMoving() && !isPressed()) {
 			// Vérifie les distances uniquement si elles sont disponibles
-			distance = cpt.regarde(distance);
+			distance = regarde(distance);
 			if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
 
 				// Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
 				System.out.println(derniereDistance);
-				if (derniereDistance < 0.35 && !dejaOuvert) {
-					cpt.ouvreBrasAsynchrone();
+				if (derniereDistance < 0.35) {
+					ouvreBrasAsynchrone();
 					dejaOuvert=true;
 				}
-			}       
+			}
+
+
 		}
+
 		// Arrête le robot et ferme les bras une fois la boucle terminée
-		robot.fermeBras();
+		fermeBras();
 		pilot.stop();
 	}
 
 	public void rechercheAngle(int angle) {
-		pilot.setAngularSpeed(50);
-		Capteurs cpt = robot.getCapteurs();
+		fermeBras();
+		pilot.setAngularSpeed(100);
 		//Je tourne de angle de manière asynchrone
 		tournerDe(angle, true);
 		//J'initialise un tableau dans lequel on range les distances que l'on voit
@@ -164,9 +154,8 @@ public class Mouvements {
 		int indice = 0;
 		//Tant que le robot bouge...
 		while(isMoving()) {
-			//System.out.println(indice);
 			//On remplit le tableau de distances
-			valeurs = cpt.regarde(valeurs);
+			valeurs = regarde(valeurs);
 			indice++;
 		}
 		//Je récupère la plus petite distane ainsi que l'indice de cette distance dans le tableau
@@ -175,17 +164,16 @@ public class Mouvements {
 		//Je déduis l'angle grâce à un produit en croix
 		int angleMin = ((int)min[1] * angle ) / (int)indice;
 		float dist = min[0];
-		//System.out.println("Le minimum est : " + min[0] + " que j'ai a " + angleMin + " degres.");
-		//System.out.println("J'ai prit " + indice + " données");
 		//J'optimise l'angle à tourner pour que le robot s'aligne avec l'objet
 		if(angleMin<angle/2) {
 			this.tournerDe(angleMin, false);
 		}
 		else this.tournerDe(-(angle-angleMin),false);
+		//chercherpalet((int)(1000*min[0]) + 2);
 		//Je crée un tableau dans lequel je range la distance entre le robot et l'objet le plus proche de lui
 		//après s'être ré-orienté
 		float[] valeurApresOrientation = new float[0];
-		valeurApresOrientation = cpt.regarde(valeurApresOrientation);
+		valeurApresOrientation = regarde(valeurApresOrientation);
 		//Si la distance est la même à +/- 10cm que ce que le robot voyait en tourant...
 		if(valeurApresOrientation[0]>=dist-0.1 && valeurApresOrientation[0]<=dist+0.1) {
 			//...le robot avance de la distance.
@@ -194,33 +182,26 @@ public class Mouvements {
 		//Sinon le robot re-recherche.
 		else rechercheAngle(360);
 		Delay.msDelay(10000);
-
-
 	}
 
 	public void chercherpalet(int d) {
-		Capteurs cpt = robot.getCapteurs();
 		float[] valeurs = new float[2];
 		valeurs[0] = 1000000;
 		valeurs[1] = 1000000;
-		robot.avancer(d);
-		while(isMoving() && (valeurs[valeurs.length-1]<= valeurs[valeurs.length-2]) && !cpt.isPressed()) {
-			valeurs = cpt.regarde(valeurs);
-			System.out.println(valeurs[valeurs.length-1]);	
+		avancer(d);
+		while(isMoving() && (valeurs[valeurs.length-1]<= valeurs[valeurs.length-2]) && !isPressed()) {
+			valeurs = regarde(valeurs);
 		}
 		pilot.stop();
-
 	}
-
 	/**
 	 * Méthode qui permet de regarder le mur en face quand on pose un palet dans le camp adverse afin de retrouver l'angle 0 pour se 
-	 * replacer bien en face
+	 * replacer bien en face. 
+	 * Ce place tout droit devant le mur et met à jour l'orientation à 0 degrès. 
 	 */
 	public void reOrientationMur() {
-		Position pos = robot.getPosition();
-		Capteurs cpt = robot.getCapteurs();
 		tournerDe(-45, false);
-		pilot.setAngularSpeed(100);
+		pilot.setAngularSpeed(40);
 		//Je tourne de angle de manière asynchrone
 		tournerDe(90, true);
 		//J'initialise un tableau dans lequel on range les distances que l'on voit
@@ -228,34 +209,31 @@ public class Mouvements {
 		int indice = 0;
 		//Tant que le robot bouge...
 		while(isMoving()) {
-			//System.out.println(indice);
 			//On remplit le tableau de distances
-			valeurs = cpt.regarde(valeurs);
+			valeurs = regarde(valeurs);
 			indice++;
 		}
 		//Je récupère la plus petite distane ainsi que l'indice de cette distance dans le tableau
 		float[] min = min(valeurs);
 		//Je déduis l'angle grâce à un produit en croix
 		int angleMin = ((int)min[1] * 90 ) / (int)indice;
-		tournerDe(-angleMin,false);
-		pos.setDegres(0);
+		tournerDe(angleMin-85,false);
+		setDegres(0);
 	}
 
 	/**
 	 * A TESTER
 	 * Méthode qui fait tourner le robot vers le camp adverse puis qui avance jusqu'à la ligne blanche. Il lache le palet, recule
-	 * de 5 cm puis fait un demi tour complet
+	 * de 5 cm puis fait un demi tour complet arpès avoir appelé reOrientationMur() pour update l'orientation. 
 	 * 
 	 */
 	public void allerChezAdversaire() {
-		Capteurs cpt = robot.getCapteurs();
-		Position pos=robot.getPosition(); 
-		robot.tournerDe((int)pos.degresAuCampAdverse());
+		tournerDe((int)degresAuCampAdverse(),false);
 		//avancerWhileIsNotWhite(); ------------------------------> faut créer cette méthodes
-		cpt.ouvreBras();
+		ouvreBras();
 		reOrientationMur();
-		robot.avancer(-5);
-		robot.tournerDe(180);
+		avancer(-5);
+		tournerDe(180,false);
 	}
 
 	/*public void chercherpalet(int d) {
@@ -290,15 +268,9 @@ public class Mouvements {
 		System.out.println("Le minimum est : " + min[0] + " que j'ai vu la " + min[1] + "ème fois sur " + duration);
 		//System.out.println(Arrays.toString(valeurs));
 		Delay.msDelay(10000);
-
-
 	}*/
 
 	public static void main(String[] args) {
-
-		Mouvements o = new Mouvements(null);
-
-
 	}
 
 }

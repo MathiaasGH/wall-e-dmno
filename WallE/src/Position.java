@@ -1,28 +1,68 @@
 
-public class Position {
+
+public class Position extends Capteurs{
 	private double x, y; 
 	private double degres; 
 	private char startSide; //b ou g pour blueSide ou greenSide
-
-	//dhqethzs
+	
 	public Position(int x, int y, char startSide) {
+		super();
 		this.x=x; 
 		this.y=y;
 		degres = 0;
 		this.startSide=startSide; 
 	}
+	/**
+	 * Méthode qui renvoie la valeur de x
+	 * @return x, la position en abscisse du robot
+	 */
 	public double getX() {
 		return this.x;
 	}
-
+	/**
+	 * Méthode qui renvoie la valeur de y
+	 * @return y, la position en ordonnée du robot
+	 */
 	public double getY() {
 		return this.y;
 	}
-
+	
+	/**
+	 * Méthode qui renvoie la valeur de degres
+	 * @return degres, l'orientation en degrès du robot
+	 */
 	public double getDegres() {
 		return this.degres;
 	}
+	
+	/**
+	 * Méthode qui permet de modifier la valeur de x qui représente la position en abscisse du robot
+	 * @param a la nouvelle valeur de x
+	 */
+	public void setX (double a) {
+		x = a;
+	}
+	
+	/**
+	 * Méthode qui permet de modifier la valeur de y qui représente la position en ordonnée du robot
+	 * @param b la nouvelle valeur de y
+	 */
+	public void setY (double b) {
+		y = b;
+	}
 
+	/**
+	 * Méthode qui permet de modifier la valeur de degres qui représente l'orientation du robot
+	 * @param d la nouvelle orientation en degrès du robot
+	 */
+	public void setDegres (double d) {
+		this.degres=d ;
+	}
+	
+	/**
+	 * Méthode qui permet de mettre à jour l'orientation du robot en fonction de l'angle duquel il a tourné
+	 * @param distanceTourne, l'angle que le robot a touré
+	 */
 	public void updateOrientation(double distanceTourne) {
 		double distanceAbsolue= Math.abs(distanceTourne);
 		if(distanceAbsolue>360) {
@@ -41,19 +81,10 @@ public class Position {
 		}
 	}
 
-	public void setX (double a) {
-		x = a;
-	}
-
-	public void setY (double b) {
-		y = b;
-	}
-
-
-	public void setDegres (double d) {
-		this.degres=d ;
-	}
-
+	/**
+	 * Méthode qui permet de mettre à jour la position du robot en fonction d'une distance parcours et de son orientation
+	 * @param d, distance en double parcouru par le robot
+	 */
 	public void  updatePosition( double d ) {
 		double a,o;
 		double degresrad= degres*Math.PI/180;
@@ -62,45 +93,11 @@ public class Position {
 		this.setX(a);
 		this.setY(o);
 	}
-	/*public void MiseAjour(String couleur) {
-	if (!(startSide)) {
-		if (couleur== "Rouge") {
-			this.x=150;
-		}
-		if (couleur== "Vert") {
-			this.y=180;
-		}
-		if (couleur== "Bleue") {
-			this.y=60;
-		}
-		if (couleur== "Jaune") {
-			this.x=50;
-		}
-		if (couleur== "Blanc") {
-			this.y=30;
-		}
-	}
-	else {
-		if (couleur== "Rouge") {
-			this.x=50;
-		}
-		if (couleur== "Vert") {
-			this.y=60;
-		}
-		if (couleur== "Bleue") {
-			this.y=180;
-		}
-		if (couleur== "Jaune") {
-			this.x=150;
-		}
-		if (couleur== "Blanc") {
-			this.y=30;
-		}
-	}
-}
-*/
-	
-	
+
+	/**
+	 * Méthode qui renvoie l'angle duquel il faut tourner pour se retrouver face à la base adverse
+	 * @return l'angle en degrès duquel il faut tourner pour être face à la base adverse
+	 */
 	public double degresAuCampAdverse() {
 		if (degres!=0) {
 			return -degres;
