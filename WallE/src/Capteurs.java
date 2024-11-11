@@ -67,7 +67,7 @@ public class Capteurs {
 		return newTab;
 	}
 	public float[] regarde(float[] tab) {
-		System.out.println("Je regarde de nouveau");
+		//System.out.println("Je regarde de nouveau");
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
 		vue.fetchSample(newTab, newTab.length-1);
 		return newTab;
