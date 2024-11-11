@@ -1,3 +1,5 @@
+package wallHeredite;
+
 import lejos.robotics.navigation.MovePilot;
 import lejos.hardware.motor.Motor;
 import lejos.hardware.port.MotorPort;
@@ -32,29 +34,46 @@ public class Mouvements extends Position{
 	 */
 	public void actualiser(){}
 
-	
+	/**
+	 * Méthode qui permet d'avancer de dist de manière asynchrone
+	 * @param dist en cm
+	 */
 	public void avancer(int dist) {
 		avancer(dist,true); // A VOIR
 	}
 
 	
+	/**
+	 * Méthode qui permet d'avancer de dist et de manière asynchrone ou non en fonction de b
+	 * @param dist en cm
+	 * @param b si true asynchrone sinon non asynchrone
+	 */
 	public void avancer(int dist,boolean b) { // A VOIR
 		pilot.travel(dist,b);                 
 		updatePosition(dist);
 	}
-	
-	
+
+	/**
+	 * Permet de tourner de angle de manière asynchrone
+	 * @param angle en degrés
+	 */
 	public void tournerDe(int angle) {
 		tournerDe(angle, true);
 	}
-	
-	
+
+	/**
+	 * Méthode qui permet de tourner de angle de manière asynchrone ou non en fonction de b
+	 * @param angle en degrés 
+	 * @param asynchrone si true asynchrone sinon non asynchrone
+	 */
 	public void tournerDe(int angle, boolean asynchrone) {
 		pilot.rotate(angle, asynchrone); 
 		updateOrientation(angle);
 	}
 
-	
+	/**
+	 * Méthode qui permet d'ouvrir les bras si ils ne sont pas déjà ouvert
+	 */
 	public void ouvreBras() {
 		if (brasOuvert==true) {
 			return;
@@ -64,7 +83,9 @@ public class Mouvements extends Position{
 		brasOuvert=true;
 	}
 
-	
+	/**
+	 * Méthode qui permet d'ouvrir les bras si ils ne sont pas déjà ouvert de manière asynchrone
+	 */
 	public void ouvreBrasAsynchrone() {
 		if (brasOuvert==true) {
 			return;
@@ -74,7 +95,9 @@ public class Mouvements extends Position{
 		brasOuvert=true;
 	}
 
-	
+	/**
+	 * Méthode qui permet de fermer les bras si ils ne sont pas déjà fermé
+	 */
 	public void fermeBras() {
 		if (brasOuvert==false) {
 			return;
@@ -84,21 +107,33 @@ public class Mouvements extends Position{
 		brasOuvert=false;
 	}
 
-	
+	/**
+	 * Méthode qui permet de savoir si le robot est en mouvement 
+	 * @return boolean true si le robot bouge, false sinon
+	 */
 	public boolean isMoving() {
 		return pilot.isMoving();
 	}
-	
-	
+
+	/**
+	 * Méthode qui permet de faire stopper les mouvement du robot
+	 */
 	private void stop() {
 		pilot.stop();
 	}
 
-	
+	/**
+	 * Méthode qui permet de créer un délaie
+	 */
 	private void delay(){
 		Delay.msDelay(DELAY);
 	}
-	
+
+	/**
+	 * Méthode qui renvoie le minimum d'un tableau de float ainsi que l'indice auquel il à été trouvé
+	 * @param tab tableau de float avec des distance et les indices auquel elles ont été trouvé
+	 * @return tableau de float avec le minimum de tab et l'indice auquel le robot la trouvé
+	 */
 	public static float[] min(float[] tab) {
 		float min=100000;
 		int indice=-1;
@@ -115,12 +150,21 @@ public class Mouvements extends Position{
 		return tabR;
 	}
 
+	/**
+	 * Méthode qui renvoie un boolean qui indique si la distance à un objet diminue.
+	 * @param tab tableau de float
+	 * @return true si la distance diminue, false sinon
+	 */
 	public boolean distanceDiminue(float[] tab) {
 		if(tab.length>=2)
 			return tab[tab.length-1]<=tab[tab.length-2];
 		return true;
 	}
 
+	/**
+	 * Méthode qui recherche un palet et avance tant que le palet n'a pas toucher le capteur de toucher
+	 * @param dist un int, la distance maximum à parcourir
+	 */
 	public void avancerWhileIsNotPressed(int dist) {
 		// Creation d'un boolean pour ouvrir les bras une seule fois
 		boolean dejaOuvert = false;
@@ -153,6 +197,10 @@ public class Mouvements extends Position{
 		pilot.stop();
 	}
 
+	/**
+	 * Méthode qui permet de rechercher un angle où il y aurait un palet, ce positionné en face et aller le toucher
+	 * @param angle int en degrès, l'angle sur lequel le robot vas faire la recherche
+	 */
 	public void rechercheAngle(int angle) {
 		fermeBras();
 		pilot.setAngularSpeed(100);
@@ -193,6 +241,10 @@ public class Mouvements extends Position{
 		Delay.msDelay(10000);
 	}
 
+	/**
+	 * Méthode qui permet d'avancer vers un palet tant que le robot ne le touche pas en vérifiant que la distnace diminue
+	 * @param d int en cm, distance maximum à parcourir
+	 */
 	public void chercherpalet(int d) {
 		float[] valeurs = new float[2];
 		valeurs[0] = 1000000;

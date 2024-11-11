@@ -11,6 +11,9 @@ public class Robot extends Mouvements{
 		super(x, y, StartSide, etatBras);
 	}
 	
+	/**
+	 * Méthode qui permet de récupérer le premier palet, qui sera directement en face du robot au début de l'épreuve
+	 */
 	public void premierPalet() {
 		ouvreBras();
 		avancerWhileIsNotPressed(65);
