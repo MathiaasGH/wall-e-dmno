@@ -331,7 +331,7 @@ public class Mouvements extends Position{
 		Delay.msDelay(10000);
 	}*/
 
-	public static void main(String[] args) {
+	public static void main(String[] args) { 
 	}
 
 }
