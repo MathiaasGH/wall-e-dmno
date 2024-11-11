@@ -1,25 +1,27 @@
 CLASSE 
-- ❌ Modification proposé pour la classe Orientation en classe Position avec comme attribut l’orientation en degrès + une position relative en x et y mise à jour au 
+- ✔️ Modification proposé pour la classe Orientation en classe Position avec comme attribut l’orientation en degrès + une position relative en x et y mise à jour au 
 fur et a mesure des déplacement + remise à jour quand on rencontre certaines couleur de ligne
-- ❌ Deux méthode avancerTantQue : avancerTantQue(la distance diminue) , avancerJusqua(isPressed())
+- ✔️ Deux méthode avancerTantQue : avancerTantQue(la distance diminue) , avancerJusqua(isPressed())
 - ❌ Revoir les méthodes dans le CDC
 
 Position : 
 - ✔️ Les getter, les setteur.
 - ✔️ méthodes de mise à jour des position et de l'orientation en fonction des mouvement
 - ❌ Méthodes pour mettre à jour les positions en fonction des couleurs rencontré (en fonciton du startSide) 
-- ❌ Modifier les méthodes de déplacement pour renvoyer les distance parcourue
-- ❌ Méthodes qui update l'orientation quand on arrive en face du mur du camp adverse pour poser un palet
+- ✔️ Modifier les méthodes de déplacement pour renvoyer les distance parcourue
+- ✔️ Méthodes qui update l'orientation quand on arrive en face du mur du camp adverse pour poser un palet
 
 Mouvement : 
-- ❌ Méthodes pour aller dans la camp adverse après avoir récupérer un palet
-- ❌Dans chercher palet, regardez les discontinuité plutôt que le minimum seul
+- ✔️ Méthodes pour aller dans la camp adverse après avoir récupérer un palet
+- ❌ Dans chercher palet, regardez les discontinuité plutôt que le minimum seul
+- ❌ Chnager avancerWhileIsNotTouch(int) -> ça fait une recherche donc pas juste avancer tant que (chercherPalet c'est pareil, ça fait plus que ce qu'on veut, à voir pour plus découper) 
+- ❌ Chnager avancer(int dist) -> avancerDe(int dist); 
 
 Capteur : 
 - ❌ Méthodes pour capter et renvoyer la couleur vue
-- 
 
-
+ROBOT : 
+- ❌ Ajouter un attribut boolean pour connaitre l'état des bras (ouvert, pas ouvert)
 
 AEF : 
 - ✔️ Revoir comment aller derriere la ligne blanche

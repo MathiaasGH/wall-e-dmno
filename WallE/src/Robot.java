@@ -7,23 +7,36 @@ import lejos.utility.Delay;
 import lejos.robotics.*;
 import lejos.robotics.navigation.DifferentialPilot;
 
-public class Robot {
+public class Robot extends Mouvements{
 
-	private Mouvements mouvements;
-	private Capteurs capteurs;
-	private Position position;
-
-
-	public Robot() {
-		mouvements = new Mouvements(this);
-		capteurs = new Capteurs(this);
-		position = new Position (0,0,'b');
+	public Robot(int x, int y, char StartSide, boolean etatBras) {
+		super(x, y, StartSide, etatBras);
 	}
+<<<<<<< HEAD
 
 	public Capteurs getCapteurs() {
 		return capteurs;
+=======
+	
+	/**
+	 * Méthode qui permet de récupérer le premier palet, qui sera directement en face du robot au début de l'épreuve
+	 */
+	public void premierPalet() {
+		ouvreBras();
+		avancerWhileIsNotPressed(65);
+		fermeBras();
+		tournerDe(20);
+		avancer(10);
+		tournerDe(-20);
+		//avancerWhileIsNotWhite();
+		reOrientationMur();
+		ouvreBras();
+		avancer(-10);
+		tournerDe(180);
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 	}
 
+<<<<<<< HEAD
 	/** Méthode qui fait tourner le robot sans avancer d’un angle
 	 * @param int angle en degré du tour que doit faire le robot
 	 */
@@ -83,7 +96,10 @@ public class Robot {
 		System.out.println(Arrays.toString(regard));
 	}
 
+=======
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		Robot r= new Robot();
 		//for(int i=0;i<3;i++) {
 		//r.fermeBras();
@@ -92,15 +108,29 @@ public class Robot {
 		//r.avancer(10);
 
 		//r.regarde();
+=======
+		Robot r= new Robot(0,0,'b', false);
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 		//r.avancerIsPressed();
+<<<<<<< HEAD
 		r.rechercheA2(360);
 		//r.rechercheA(360);
+=======
+		//.rechercheAngle(360);
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 		//r.tournerDe(360);
 		//r.avancer();
 		//r.avancer(100, false);
 		//r.avancerIsPressed();
 		//System.out.println(r.isPressed());
+<<<<<<< HEAD
 		Delay.msDelay(20000);
+=======
+		//Delay.msDelay(5000);
+		//r.reOrientationMur();
+		r.capteurDeCouleur(); 
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 	}
 
 }
+
