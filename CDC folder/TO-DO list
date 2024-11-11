@@ -19,7 +19,8 @@ Capteur :
 - ❌ Méthodes pour capter et renvoyer la couleur vue
 - 
 
-
+ROBOT : 
+- Ajouter un attribut boolean pour connaitre l'état des bras (ouvert, pas ouvert)
 
 AEF : 
 - ✔️ Revoir comment aller derriere la ligne blanche
