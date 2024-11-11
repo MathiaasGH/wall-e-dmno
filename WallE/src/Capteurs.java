@@ -76,7 +76,7 @@ public class Capteurs {
 	 * Méthode qui arrête les capteur d'ultraSon
 	 */
 	public void fermeLesYeux() {
-		vue.close();
+		vue.close(); 
 	}
 
 

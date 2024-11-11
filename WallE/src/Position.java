@@ -107,5 +107,5 @@ public class Position extends Capteurs{
 	}
 
 	public static void main(String[] args) {
-	}
+	} 
 }

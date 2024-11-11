@@ -36,7 +36,7 @@ public class Robot extends Mouvements{
 		//System.out.println(r.isPressed());
 		//Delay.msDelay(5000);
 		//r.reOrientationMur();
-		r.capteurDeCouleur();
+		r.capteurDeCouleur(); 
 	}
 
 }

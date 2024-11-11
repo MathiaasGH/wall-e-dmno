@@ -32,24 +32,29 @@ public class Mouvements extends Position{
 	 */
 	public void actualiser(){}
 
+	
 	public void avancer(int dist) {
 		avancer(dist,true); // A VOIR
 	}
 
+	
 	public void avancer(int dist,boolean b) { // A VOIR
 		pilot.travel(dist,b);                 
 		updatePosition(dist);
 	}
-
+	
+	
 	public void tournerDe(int angle) {
 		tournerDe(angle, true);
 	}
-
+	
+	
 	public void tournerDe(int angle, boolean asynchrone) {
 		pilot.rotate(angle, asynchrone); 
 		updateOrientation(angle);
 	}
 
+	
 	public void ouvreBras() {
 		if (brasOuvert==true) {
 			return;
@@ -59,6 +64,7 @@ public class Mouvements extends Position{
 		brasOuvert=true;
 	}
 
+	
 	public void ouvreBrasAsynchrone() {
 		if (brasOuvert==true) {
 			return;
@@ -68,6 +74,7 @@ public class Mouvements extends Position{
 		brasOuvert=true;
 	}
 
+	
 	public void fermeBras() {
 		if (brasOuvert==false) {
 			return;
@@ -77,19 +84,21 @@ public class Mouvements extends Position{
 		brasOuvert=false;
 	}
 
+	
 	public boolean isMoving() {
 		return pilot.isMoving();
 	}
-
+	
+	
 	private void stop() {
 		pilot.stop();
 	}
 
-
+	
 	private void delay(){
 		Delay.msDelay(DELAY);
 	}
-
+	
 	public static float[] min(float[] tab) {
 		float min=100000;
 		int indice=-1;
