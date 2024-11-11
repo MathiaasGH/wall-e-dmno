@@ -14,6 +14,7 @@ Position :
 Mouvement : 
 - ✔️ Méthodes pour aller dans la camp adverse après avoir récupérer un palet
 - ❌ Dans chercher palet, regardez les discontinuité plutôt que le minimum seul
+- ❌ Chnager avancerWhileIsNotTouch(int) -> ça fait une recherche donc pas juste avancer tant que
 
 Capteur : 
 - ❌ Méthodes pour capter et renvoyer la couleur vue
