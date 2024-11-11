@@ -15,7 +15,7 @@ public class Mouvements extends Position{
 	private Wheel wheel1;
 	private Wheel wheel2;
 	private Chassis chassis;
-	private MovePilot pilot;
+	private MovePilot pilot; 
 	private boolean brasOuvert;
 
 	public Mouvements(int x, int y, char StartSide, boolean etatBras) {
