@@ -119,7 +119,7 @@ public class Mouvements extends Position{
 	 * Méthode qui permet de faire stopper les mouvement du robot
 	 */
 	private void stop() {
-		pilot.stop();
+		pilot.stop(); 
 	}
 
 	/**
