@@ -14,7 +14,7 @@ Position :
 Mouvement : 
 - ✔️ Méthodes pour aller dans la camp adverse après avoir récupérer un palet
 - ❌ Dans chercher palet, regardez les discontinuité plutôt que le minimum seul
-- ❌ Chnager avancerWhileIsNotTouch(int) -> ça fait une recherche donc pas juste avancer tant que
+- ❌ Chnager avancerWhileIsNotTouch(int) -> ça fait une recherche donc pas juste avancer tant que (chercherPalet c'est pareil, ça fait plus que ce qu'on veut, à voir pour plus découper) 
 - ❌ Chnager avancer(int dist) -> avancerDe(int dist); 
 
 Capteur : 
