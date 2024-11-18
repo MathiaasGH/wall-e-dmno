@@ -16,7 +16,8 @@ Mouvement :
 - ❌ Dans chercher palet, regardez les discontinuité plutôt que le minimum seul
 - ❌ Chnager avancerWhileIsNotTouch(int) -> ça fait une recherche donc pas juste avancer tant que (chercherPalet c'est pareil, ça fait plus que ce qu'on veut, à voir pour plus découper) 
 - ✔️ Chnager avancer(int dist) -> avancerDe(int dist); 
-- ❌ Ne pas prendre les palets dans aucun des camps. (Solution, prendre un compte la position des palet en fonction de notre propre postion pour savoir si ils sont dans les camps ou pas) 
+- ✔️ PaletValide() -> revnoie true si le palets n'est pas dans un camp
+- ❌ Implémenter paletValide() dans les méthodes de recherche Ne pas prendre les palets dans aucun des camps 
 - ❌ allerAuCentre() Si le robot trouve rien, il vas au centre et il cherche à 360°
 - ❌ Comment on escive les robots pour de vrai (si y'en a un qui apparait sur notre chemin au hasard) 
 
