@@ -39,8 +39,8 @@ public class Mouvements extends Position{
 	 * Méthode qui permet d'avancer de dist de manière asynchrone
 	 * @param dist en cm
 	 */
-	public void avancer(int dist) {
-		avancer(dist,true); // A VOIR
+	public void avancerDe(int dist) {
+		avancerDe(dist,true); // A VOIR
 	}
 
 		
@@ -49,7 +49,7 @@ public class Mouvements extends Position{
 	 * @param dist en cm
 	 * @param b si true asynchrone sinon non asynchrone
 	 */
-	public void avancer(int dist,boolean b) { // A VOIR
+	public void avancerDe(int dist,boolean b) { // A VOIR
 		pilot.travel(dist,b);                 
 		updatePosition(dist);
 
@@ -108,8 +108,6 @@ public class Mouvements extends Position{
 		Motor.D.rotate(2000,true);
 		brasOuvert=true;
 	}
-
-	
 
 	/**
 	 * Méthode qui permet de savoir si le robot est en mouvement 
@@ -179,7 +177,7 @@ public class Mouvements extends Position{
 		//System.out.println(pilot.getAngularSpeed());
 		pilot.setAngularSpeed(70);
 		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
-		this.avancer(dist + 100);
+		this.avancerDe(dist + 100);
 		// Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
 		while (isMoving() && !isPressed()) {
 			// Vérifie les distances uniquement si elles sont disponibles
@@ -262,7 +260,7 @@ public class Mouvements extends Position{
 		float[] valeurs = new float[2];
 		valeurs[0] = 1000000;
 		valeurs[1] = 1000000;
-		avancer(d);
+		avancerDe(d);
 		while(isMoving() && (valeurs[valeurs.length-1]<= valeurs[valeurs.length-2]) && !isPressed()) {
 			valeurs = regarde(valeurs);
 		}
@@ -306,7 +304,7 @@ public class Mouvements extends Position{
 		//avancerWhileIsNotWhite(); ------------------------------> faut créer cette méthode
 		ouvreBras();
 		reOrientationMur();
-		avancer(-5);
+		avancerDe(-5);
 		tournerDe(180,false);
 
 	}
