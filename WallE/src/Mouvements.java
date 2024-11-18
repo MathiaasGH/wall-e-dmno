@@ -316,7 +316,7 @@ public class Mouvements extends Position{
 		double degresrad= degres*Math.PI/180;
 		double posX = Math.cos(degresrad) * tab[0] ;
 		if (posX<240 && posX>0) {
-			return true;
+			return true; 
 		}
 		return false;
 	}
