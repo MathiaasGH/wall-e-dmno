@@ -60,6 +60,7 @@ public class Capteurs {
 			Delay.msDelay(5000);
 		}
 		*/
+		//tester ca :
 		
 		while (Button.ESCAPE.isUp()){
 			colorProvider.fetchSample(colorSample,0);
