@@ -22,7 +22,6 @@ public class Capteurs {
 	private SampleProvider spTouche;
 	private SampleProvider colorProvider;
 
-
 	public Capteurs() {
 		touche = new EV3TouchSensor (SensorPort.S3);
 		vue = new EV3UltrasonicSensor(SensorPort.S4);
