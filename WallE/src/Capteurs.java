@@ -51,7 +51,7 @@ public class Capteurs {
 	public void capteurDeCouleur() {
 		colorProvider =  colorSensor.getRGBMode();
 		float[] colorSample = new float[colorProvider.sampleSize()];
-
+		/*
 		while (Button.ESCAPE.isUp()){
 			colorProvider.fetchSample(colorSample,0);
 			System.out.println("R" + colorSample [0]);
@@ -59,6 +59,15 @@ public class Capteurs {
 			System.out.println("B" + colorSample[2]);
 			Delay.msDelay(5000);
 		}
+		*/
+		
+		while (Button.ESCAPE.isUp()){
+			colorProvider.fetchSample(colorSample,0);
+			String couleur = Convertioncouleur(colorSample);
+			System.out.println(couleur);
+			Delay.msDelay(5000);
+		}
+		
 	}
 
 	/**
