@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 import lejos.hardware.*;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.motor.Motor;
@@ -12,7 +10,6 @@ public class Robot extends Mouvements{
 	public Robot(int x, int y, char StartSide, boolean etatBras) {
 		super(x, y, StartSide, etatBras);
 	}
-	
 	/**
 	 * Méthode qui permet de récupérer le premier palet, qui sera directement en face du robot au début de l'épreuve
 	 */
@@ -27,6 +24,7 @@ public class Robot extends Mouvements{
 		reOrientationMur();
 		ouvreBras();
 		avancer(-10);
+<<<<<<< HEAD
 		tournerDe(180);
 	}
 
@@ -39,21 +37,33 @@ public class Robot extends Mouvements{
 		//r.avancer(10);
 
 		//r.regarde();
+=======
+		tournerDe(180);
+	}
+
+	public static void main(String[] args) {
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 		Robot r= new Robot(0,0,'b', false);
 		//r.avancerIsPressed();
+<<<<<<< HEAD
 		r.rechercheAngle2(360);
 		//r.rechercheA(360);
+=======
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 		//.rechercheAngle(360);
 		//r.tournerDe(360);
 		//r.avancer();
 		//r.avancer(100, false);
 		//r.avancerIsPressed();
 		//System.out.println(r.isPressed());
-		Delay.msDelay(20000);
 		//Delay.msDelay(5000);
 		//r.reOrientationMur();
+<<<<<<< HEAD
 	
 		//r.capteurDeCouleur(); 
+=======
+		r.capteurDeCouleur();
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 	}
 
 }
