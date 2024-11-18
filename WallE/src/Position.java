@@ -86,7 +86,7 @@ public class Position extends Capteurs{
 	 * Méthode qui permet de mettre à jour la position du robot en fonction d'une distance parcours et de son orientation
 	 * @param d, distance en double parcouru par le robot
 	 */
-	public void  updatePosition( double d ) {
+	public void  updatePosition(double d) {
 		double a,o;
 		double degresrad= degres*Math.PI/180;
 		a= Math.cos(degresrad) * d ;

@@ -48,6 +48,7 @@ public class Robot extends Mouvements{
 		//r.reOrientationMur();
 		//r.capteurDeCouleur(); 
 		r.capteurDeCouleur();
+		r.fermeBras();
 	}
 
 }

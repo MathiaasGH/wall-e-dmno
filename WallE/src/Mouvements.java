@@ -305,10 +305,23 @@ public class Mouvements extends Position{
 		ouvreBras();
 		reOrientationMur();
 		avancerDe(-5);
-		tournerDe(180,false);
-
+		tournerDe(90,false);
 	}
-
+	
+	/**
+	 * Méthode qui renvoie true si le palet est accessible (en dehors des camp) 
+	 */
+	public boolean paletValide(int[] tab, int orientationAvantDeTourner) {
+		double degres = tab[1]+ orientationAvantDeTourner;
+		double degresrad= degres*Math.PI/180;
+		double posY = (Math.cos(degresrad) * tab[0])+getY() ;
+		if (posY<240 && posY>0) {
+			return true;
+		}
+		return false;
+	}
+	
+	
 	public static int minAngle(int[] tab) {
 		int min = tab[0];
 		for(int i=1;i<tab.length;i++) {
