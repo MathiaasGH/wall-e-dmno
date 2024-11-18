@@ -314,13 +314,14 @@ public class Mouvements extends Position{
 	public boolean paletValide(int[] tab, int orientationAvantDeTourner) {
 		double degres = tab[1]+ orientationAvantDeTourner;
 		double degresrad= degres*Math.PI/180;
-		double posX = Math.cos(degresrad) * tab[0] ;
-		if (posX<240 && posX>0) {
-			return true; 
+		double posY = (Math.cos(degresrad) * tab[0])+getY() ;
+		if (posY<240 && posY>0) {
+			return true;
 		}
 		return false;
 	}
-
+	
+	
 	public static int minAngle(int[] tab) {
 		int min = tab[0];
 		for(int i=1;i<tab.length;i++) {
