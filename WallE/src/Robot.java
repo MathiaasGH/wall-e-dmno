@@ -24,32 +24,15 @@ public class Robot extends Mouvements{
 		reOrientationMur();
 		ouvreBras();
 		avancer(-10);
-<<<<<<< HEAD
 		tournerDe(180);
 	}
 
-	public static void main(String[] args) {
-		//Robot r= new Robot();
-		//for(int i=0;i<3;i++) {
-		//r.fermeBras();
-		//r.ouvreBras();
-		//}
-		//r.avancer(10);
-
-		//r.regarde();
-=======
-		tournerDe(180);
-	}
 
 	public static void main(String[] args) {
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 		Robot r= new Robot(0,0,'b', false);
 		//r.avancerIsPressed();
-<<<<<<< HEAD
 		r.rechercheAngle2(360);
-		//r.rechercheA(360);
-=======
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
+		////r.rechercheA(360);
 		//.rechercheAngle(360);
 		//r.tournerDe(360);
 		//r.avancer();
@@ -58,12 +41,8 @@ public class Robot extends Mouvements{
 		//System.out.println(r.isPressed());
 		//Delay.msDelay(5000);
 		//r.reOrientationMur();
-<<<<<<< HEAD
-	
 		//r.capteurDeCouleur(); 
-=======
 		r.capteurDeCouleur();
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 	}
 
 }
