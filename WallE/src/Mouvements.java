@@ -309,7 +309,10 @@ public class Mouvements extends Position{
 	}
 	
 	/**
-	 * Méthode qui renvoie true si le palet est accessible (en dehors des camp) 
+	 * Méthode qui renvoie true si le palet est accessible (en dehors des camp)
+	 * @param tab int[] qui contient la distance au palet en [0] et l'angle où on la vue en [1]
+	 * 		  orientaitonAvantDeTourner renvoie l'angle auquel était le robot avant de chercher
+	 * @return boolean true si le palet n'est pas dans un camp adverse false sinon 
 	 */
 	public boolean paletValide(int[] tab, int orientationAvantDeTourner) {
 		double degres = tab[1]+ orientationAvantDeTourner;
@@ -320,7 +323,6 @@ public class Mouvements extends Position{
 		}
 		return false;
 	}
-	
 	
 	public static int minAngle(int[] tab) {
 		int min = tab[0];
