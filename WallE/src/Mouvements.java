@@ -324,6 +324,19 @@ public class Mouvements extends Position{
 		return false;
 	}
 	
+	/**
+	 * Méthode qui permet au robot d'aller au centre du terrain
+	 */
+	public void allerAuCentre() { 
+		double[] tab = calculerPositionPoint(10);
+		double m1 = (tab[0]-getX())/(tab[1]-getY());
+		double m2 = (100-getX())/(120-getY());
+		double angle =180-(Math.atan(Math.abs((m1-m2)/(1+m1*m2))));
+		double distAParcourir = Math.sqrt(Math.pow(100-getX(), 2)+Math.pow(120-getY(), 2));
+		tournerDe((int)angle);
+		avancerDe((int)distAParcourir);
+	}
+	
 	public static int minAngle(int[] tab) {
 		int min = tab[0];
 		for(int i=1;i<tab.length;i++) {

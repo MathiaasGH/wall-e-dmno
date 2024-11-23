@@ -87,8 +87,19 @@ public class Position extends Capteurs{
 	 * @param d, distance en double parcouru par le robot
 	 */
 	public void  updatePosition( double d ) {
-		double a,o;
-		double degrespos;
+		double[] tab = calculerPositionPoint(d);
+		this.setX(tab[0]+x);
+		this.setY(tab[1]+y);
+	}
+	
+	/**
+	 * Méthode qui renvoie les coordonné en x et y d'un point en fonction d'un angle et d'une distance. 
+	 * @param d en cm la distance parcourue
+	 * @return tab[] en idx 0 la position en x et en idx 1 la position en y 
+	 */
+	public double[] calculerPositionPoint(double d) {
+		double[] tab = new double[2];
+		double degrespos;  
 		if (degres>0 && degres<90) {
 			degrespos=(-1*degres)+90;
 		}
@@ -115,10 +126,9 @@ public class Position extends Capteurs{
 		}
 		else degrespos=degres;
 		double degresrad= degrespos*Math.PI/180;
-		a= Math.cos(degresrad) * d ;
-		o= Math.sin(degresrad) * d ;
-		this.setX(a+x);
-		this.setY(o+y);
+		tab[0]= Math.cos(degresrad) * d ;
+		tab[1]= Math.sin(degresrad) * d ;
+		return tab;
 	}
 
 	/**
