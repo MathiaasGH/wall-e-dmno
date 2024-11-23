@@ -335,6 +335,8 @@ public class Mouvements extends Position{
 		double distAParcourir = Math.sqrt(Math.pow(100-getX(), 2)+Math.pow(120-getY(), 2));
 		tournerDe((int)angle);
 		avancerDe((int)distAParcourir);
+		updateOrientation(angle);
+		updatePosition(distAParcourir);
 	}
 	
 	public static int minAngle(int[] tab) {

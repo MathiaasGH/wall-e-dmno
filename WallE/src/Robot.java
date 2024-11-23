@@ -23,12 +23,12 @@ public class Robot extends Mouvements{
 		avancerWhileIsNotPressed(65);
 		fermeBras();
 		tournerDe(20);
-		avancer(10);
+		avancerDe(10);
 		tournerDe(-20);
 		//avancerWhileIsNotWhite();
 		reOrientationMur();
 		ouvreBras();
-		avancer(-10);
+		avancerDe(-10);
 		tournerDe(180);
 	}
 
