@@ -7,7 +7,7 @@ fur et a mesure des déplacement + remise à jour quand on rencontre certaines c
 Position : 
 - ✔️ Les getter, les setteur.
 - ✔️ méthodes de mise à jour des position et de l'orientation en fonction des mouvement
-- ❌ Méthodes pour mettre à jour les positions en fonction des couleurs rencontré (en fonciton du startSide) 
+- ❌ Méthodes pour mettre à jour les positions en fonction de notre position dans l'espace par rapport au mur devant/derrière et gauche/droite
 - ✔️ Modifier les méthodes de déplacement pour renvoyer les distance parcourue
 - ✔️ Méthodes qui update l'orientation quand on arrive en face du mur du camp adverse pour poser un palet
 
@@ -18,7 +18,7 @@ Mouvement :
 - ✔️ Chnager avancer(int dist) -> avancerDe(int dist); 
 - ✔️ PaletValide() -> revnoie true si le palets n'est pas dans un camp
 - ❌ Implémenter paletValide() dans les méthodes de recherche Ne pas prendre les palets dans aucun des camps 
-- ❌ allerAuCentre() Si le robot trouve rien, il vas au centre et il cherche à 360°
+- ✔️ allerAuCentre() Si le robot trouve rien, il vas au centre et il cherche à 360°
 - ❌ Comment on escive les robots pour de vrai (si y'en a un qui apparait sur notre chemin au hasard) 
 
 Capteur : 
