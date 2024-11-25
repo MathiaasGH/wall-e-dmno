@@ -130,6 +130,18 @@ public class Position extends Capteurs{
 		tab[1]= Math.sin(degresrad) * d ;
 		return tab;
 	}
+	
+	/**
+	 * Méthode qui permet de savoir si des coordonné sont proche à 2cm près du centre.
+	 * @param tab, tableau de deux double, x et y
+	 * @return true si les coordonné sont proche du centre false sinon 
+	 */
+	public boolean procheDuCentre(double[] tab) {
+		if ((tab[0]<=102 && tab[0]>=98) && (tab[1]<=122 && tab[1]>=118)) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Méthode qui renvoie l'angle duquel il faut tourner pour se retrouver face à la base adverse

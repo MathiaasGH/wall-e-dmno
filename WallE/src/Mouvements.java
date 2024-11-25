@@ -328,13 +328,35 @@ public class Mouvements extends Position{
 	 * Méthode qui permet au robot d'aller au centre du terrain
 	 */
 	public void allerAuCentre() { 
-		double[] tab = calculerPositionPoint(10);
-		double m1 = (tab[0]-getX())/(tab[1]-getY());
-		double m2 = (100-getX())/(120-getY());
-		double angle =180-(Math.atan(Math.abs((m1-m2)/(1+m1*m2))));
+		double[] tab = calculerPositionPoint(10, getDegres());
+		double m1;
+		double m2;
+		if (tab[1]==getY()) {
+			m1=0;
+		}
+		else { m1 = (tab[0]-getX())/(tab[1]-getY());
+		}
+		if (getY()==120) {
+			m2=0;
+		}
+		else { m2 = (100-getX())/(120-getY());
+		}
+		double angle =(Math.atan(Math.abs((m1-m2)/(1+m1*m2))));
+		angle = angle * (180/Math.PI);
 		double distAParcourir = Math.sqrt(Math.pow(100-getX(), 2)+Math.pow(120-getY(), 2));
-		tournerDe((int)angle);
-		avancerDe((int)distAParcourir);
+		if (procheDuCentre(calculerPositionPoint(distAParcourir, (180-angle+getDegres())))) {
+			angle = 180-angle;
+		}
+		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (-angle+getDegres())))) {
+			angle = -angle;
+		}
+		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (-(180-angle)+getDegres())))) {
+			angle =-(180-angle);
+		}
+		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (angle+getDegres())))) {
+		}
+		tournerDe((int)angle, false);
+		avancerDe((int)distAParcourir*10, false);
 		updateOrientation(angle);
 		updatePosition(distAParcourir);
 	}
