@@ -39,7 +39,7 @@ public class Capteurs {
 	public boolean isPressed()	{
 		float[] sample = new float[1];
 		touche.fetchSample(sample, 0);
-		System.out.println(sample[0]!=0);
+		System.out.println(sample[0]!=0); //A retirer ? 
 		return sample[0] != 0;
 	}
 
@@ -77,7 +77,7 @@ public class Capteurs {
 	 * @return le tableau de float contenant les valeur du capteur d'ultraSon
 	 */
 	
-	public String Convertioncouleur(float [] tabCouleurs) {
+	public String conversionCouleur(float [] tabCouleurs) {
 		double r = tabCouleurs[0];
 		double v = tabCouleurs[1];
 		double b = tabCouleurs[2];
