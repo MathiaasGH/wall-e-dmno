@@ -35,15 +35,17 @@ public class Robot extends Mouvements{
 	}
 
 	public static void main(String[] args) {
-		Robot r= new Robot(0,0,'b',false);
+		Robot r= new Robot(50,0,'b',false);
 		//r.fermeBras();
 		//r.avancerIsPressed();
 		//r.fermeBras();
 		//r.avancerDe(100,false);
+		//r.avancerWhileIsNotPressed(300);
+		r.avancerDe(1200,false);
 		r.recherche(360);
 		//System.out.println(r.angleTheorique(30));
 		//r.testTempsRotation(360);
-	/**	r.tournerDe(360,true);
+	/*	r.tournerDe(360,true);
 		while(r.isMoving()) {
 			
 		}

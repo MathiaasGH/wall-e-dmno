@@ -60,10 +60,10 @@ public class Mouvements extends Position{
 	 * @param b si true asynchrone sinon non asynchrone
 	 */
 	public void avancerDe(int dist,boolean b) { // A VOIR
-		pilot.setAngularSpeed(100);
-		pilot.setLinearSpeed(100);
+		pilot.setAngularSpeed(200);
+		pilot.setLinearSpeed(200);
 		pilot.travel(dist,b);                 
-		updatePosition(dist);
+		updatePosition(dist/10);
 
 	}
 
@@ -188,22 +188,28 @@ public class Mouvements extends Position{
 
 		float[] distance = regarde(new float[0]);
 		//System.out.println(pilot.getAngularSpeed());
-		pilot.setAngularSpeed(70);
+		pilot.setAngularSpeed(100);
 		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
 		this.avancerDe(dist + 100);
 		// Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
-		while (isMoving() && !isPressed()) {
+		while (isMoving() && !isPressed() && distanceDiminue(distance)) {
 			// Vérifie les distances uniquement si elles sont disponibles
 			distance = regarde(distance);
-
-			if (distance.length > 0) {
+			System.out.println(Arrays.toString(distance));
+				if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
 
+				//System.out.println(derniereDistance);
 				// Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
 				//System.out.println(derniereDistance);
-
+				
 				if (derniereDistance < 0.35 && !brasOuvert) {
 					ouvreBrasAsynchrone();
+				}
+				
+				if(derniereDistance<0.2) {
+					avancerDe(-1,false);
+					break;
 				}
 			}       
 		}
@@ -471,9 +477,9 @@ public class Mouvements extends Position{
 		float[] valeurApresOrientation = new float[0];
 		valeurApresOrientation = regarde(valeurApresOrientation);
 		int dist = objet[2];
-		if((int)(100*valeurApresOrientation[0])>=dist-10 && (int)(100*valeurApresOrientation[0])<=dist+10) {
+		//if((int)(100*valeurApresOrientation[0])>=dist-10 && (int)(100*valeurApresOrientation[0])<=dist+10) {
 			avancerWhileIsNotPressed((int)(10*dist));
-		}
+		//}
 		//else recherche(360);
 		//Delay.msDelay(10000);
 	}
@@ -505,6 +511,7 @@ public class Mouvements extends Position{
 		double degres = tab[1]+ orientationAvantDeTourner;
 		double degresrad= degres*Math.PI/180;
 		double posY = (Math.cos(degresrad) * tab[0])+getY() ;
+		//System.out.println(posY);
 		if (posY<240 && posY>0) {
 			return true;
 		}
@@ -644,8 +651,10 @@ public class Mouvements extends Position{
 				//Y'avait pas le /2 j'ai fait un test là
 				double angleVuDeCetElem = (sousTab.size()/2)*angle/totalSize;
 				double angleTheorique = angleTheorique(distanceCurrentElem);
-				//occurence/2
-				int angleAtourner = ((idx+occurence/2)*angle/totalSize);
+				//+occurence/2
+				int angleAtourner = ((idx)*angle/totalSize);
+				//System.out.println(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) + " " + distanceCurrentElem +  " " + angleAtourner +  " " + angleDeBase + " fini");
+
 				if(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) && occurence>=5) {
 					resume.add("occurence : " + occurence + " | 1e distance : " + PremdistanceCurrentElem + " | 2e distance : " + DeuxdistanceCurrentElem + " | angle vu : " + angleVuDeCetElem + " | angleTheorique : " + angleTheorique + " | angle a tourner : " + angleAtourner);
 					tabAngle.add((double)angleAtourner);
@@ -670,8 +679,8 @@ public class Mouvements extends Position{
 			}
 		}
 
-		double[] paletTrouve =max(tabAngleTh);
-		float dist = ((tabDist.get((int)(paletTrouve[1]))));
+		//double[] paletTrouve =max(tabAngleTh);
+		//float dist = ((tabDist.get((int)(paletTrouve[1]))));
 		//int angleTrouve = (tabOcc.get((int)paletTrouve[1])*angle/totalSize)%360;
 		//	System.out.println(tabOcc);
 		//	System.out.println(tabOcc.get((int)paletTrouve[1]));
@@ -714,6 +723,7 @@ public class Mouvements extends Position{
 		return idx; // Le calcul de idx donne déjà la bonne taille totale
 	}
 
+	//A REVOIR POUR LES ANGLES < 360
 	private void tourneOptimise(int angle, int angleTrouve, float dist) {
 		if(angleTrouve<angle/2) {
 			this.tournerDe(angleTrouve,false);
@@ -726,7 +736,7 @@ public class Mouvements extends Position{
 			System.out.println("je rentre");
 			avancerWhileIsNotPressed((int)(10*distMtn));
 		}
-		/**	else {
+		/*	else {
 		System.out.println("Je ré-essaye");
 		recherche3(360);
 	}*/
