@@ -155,6 +155,49 @@ public class Position extends Capteurs{
 		else {return degres;
 		}
 	}
+	
+	/**
+	 * Méthode qui permet de renvoyer un angle entre deux point grace à la position du robot
+	 * @param Xb position en x du point B
+	 * @param Yb position en y du point B
+	 * @param Xc position en x du point C
+	 * @param Yc position en y du point C
+	 * @return envoie l'angle entre les point B et C en degrès.
+	 */
+	public double angleEntreDeuxPoint(double Xb, double Yb, double Xc, double Yc) {
+		double Xu = Xb-x, Yu = Yb-y; 
+		double Xv = Xc-x, Yv = Yc-y; 
+		double produitScalaire = Xu*Xv+Yu*Yv;
+		double AB = Math.sqrt(Math.pow(Xu, 2)+Math.pow(Yu, 2));
+		double AC = Math.sqrt(Math.pow(Xv, 2)+Math.pow(Yv, 2));
+		return Math.acos(produitScalaire/(AB*AC));
+	}
+	
+	/**
+	 * Méthode qui renvoie en fonction de l'orientation du robot l'angle dont il faut qu'il tourne pour ce retrouve face au point qui 
+	 * a le plus petit angle avec le robot
+	 * @param Xb Xb position en x du point B
+	 * @param Yb Yb position en y du point B
+	 * @param Xc position en x du point C
+	 * @param Yc Yc position en y du point C
+	 * @return renvoie l'angle entre le robot est l'un des point, celui qui est le plus petit
+	 */
+	public double[] plusPetitAngleAuRobot(double Xb, double Yb, double Xc, double Yc) {
+		double[] res = new double[2];
+		double[] tab = calculerPositionPoint(10, getDegres());
+		double angleAB = angleEntreDeuxPoint(tab[0], tab[1], Xb, Yb);
+		double angleAC = angleEntreDeuxPoint(tab[0], tab[1], Xc, Yc);
+		if (Math.abs(angleAB)>Math.abs(angleAC)) {
+			res[0]=angleAC;
+			res[1]=-1;
+			return res; 
+		}
+		else {
+			res[0]=angleAB;
+			res[1]=1;
+			return res; 
+		}
+	}
 
 	public static void main(String[] args) {
 	} 
