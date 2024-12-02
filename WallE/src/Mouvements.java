@@ -457,12 +457,8 @@ public class Mouvements extends Position{
 		return nouveauTab;
 	}
 
-	public boolean paletValide(double[] tab, double angleDeBase) {
-		return true;
-	}
-
 	/**
-	 * Méthide permettant au robot de tourner d'un certain angle et d'avancer jusqu'à l'objet passé en paramètre
+	 * Méthode permettant au robot de tourner d'un certain angle et d'avancer jusqu'à l'objet passé en paramètre
 	 * @param angle l'angle total duquel le robot a tourné pour trouver l'objet
 	 * @param angleTrouve l'anle vers lequel l'objet doit s'orienter
 	 * @param objet le tableau représentant l'objet à attraper
@@ -498,18 +494,6 @@ public class Mouvements extends Position{
 		return 2*Math.atan(tailleDuPalet/(2*dist)) * 180/Math.PI;
 	}
 
-
-	private float arrondirDist(float dist) {
-		if(dist>100)
-			return dist;
-		int[] tabArrondis = new int[] {30, 50, 60, 80, 90, 100};
-		int min=tabArrondis[0];
-		float ecart = Math.abs(dist-min);
-
-		for(int i=1;i<6;i++) {
-			if(Math.abs(dist-tabArrondis[i]) < min)
-				min=tabArrondis[i];
-=======
 	
 	/**
 	 * Méthode qui renvoie true si le palet est accessible (en dehors des camp)
@@ -569,7 +553,6 @@ public class Mouvements extends Position{
 		for(int i=1;i<tab.length;i++) {
 			if(tab[i]<min)
 				min=tab[i];
->>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 		}
 		return min;
 	}
