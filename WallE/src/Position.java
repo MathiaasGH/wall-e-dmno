@@ -182,15 +182,20 @@ public class Position extends Capteurs{
 	 * @param Yc Yc position en y du point C
 	 * @return renvoie l'angle entre le robot est l'un des point, celui qui est le plus petit
 	 */
-	public double plusPetitAngleAuRobot(double Xb, double Yb, double Xc, double Yc) {
+	public double[] plusPetitAngleAuRobot(double Xb, double Yb, double Xc, double Yc) {
+		double[] res = new double[2];
 		double[] tab = calculerPositionPoint(10, getDegres());
 		double angleAB = angleEntreDeuxPoint(tab[0], tab[1], Xb, Yb);
 		double angleAC = angleEntreDeuxPoint(tab[0], tab[1], Xc, Yc);
 		if (Math.abs(angleAB)>Math.abs(angleAC)) {
-			return angleAC; 
+			res[0]=angleAC;
+			res[1]=-1;
+			return res; 
 		}
 		else {
-			return angleAB;
+			res[0]=angleAB;
+			res[1]=1;
+			return res; 
 		}
 	}
 

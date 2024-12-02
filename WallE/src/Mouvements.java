@@ -792,6 +792,53 @@ public class Mouvements extends Position{
 
 	}
 
+	public double angleDeRechercheOptimise () {
+		double x = getX(); 
+		double y = getY();
+		if ((x>=0 && x<=50) && (y>=0)&&(y<=60)) {
+			double[] tab = plusPetitAngleAuRobot(50,180,150,60);
+			tournerDe((int)tab[0]);
+			return tab[1]*angleEntreDeuxPoint(50,180,150,60);
+		}
+		else if ((x>50&& x<150) && (y>=0)&&(y<=60)) {
+			double[] tab = plusPetitAngleAuRobot(50,60,150,60);
+			tournerDe((int)tab[0]);
+			return tab[1]*angleEntreDeuxPoint(50,60,150,60);
+		}
+		else if ((x>=150&& x<=200) && (y>=0)&&(y<=60)) {
+			double[] tab = plusPetitAngleAuRobot(50,60,150,180);
+			tournerDe((int)tab[0]);
+			return tab[1]*angleEntreDeuxPoint(50,60,150,180);
+		}
+		else if ((x>=150&& x<=200) && (y>60)&&(y<180)) {
+			double[] tab = plusPetitAngleAuRobot(150,60,150,180);
+			tournerDe((int)tab[0]);
+			return tab[1]*angleEntreDeuxPoint(150,60,150,180);
+		}
+		else if ((x>=150&& x<=200) && (y>=180)&&(y<=240)) {
+			double[] tab = plusPetitAngleAuRobot(150,60,50,180);
+			tournerDe((int)tab[0]);
+			return tab[1]*angleEntreDeuxPoint(150,60,50,180);
+		}
+		else if ((x>50&& x<150) && (y>=180)&&(y<=240)) {
+			double[] tab = plusPetitAngleAuRobot(150,180,50,180);
+			tournerDe((int)tab[0]);
+			return tab[1]*angleEntreDeuxPoint(150,180,50,180);
+		}
+		else if ((x>=0&& x<=50) && (y>=180)&&(y<=240)) {
+			double[] tab = plusPetitAngleAuRobot(150,180,50,60);
+			tournerDe((int)tab[0]);
+			return tab[1]*angleEntreDeuxPoint(150,180,50,60);
+		}
+		else if ((x>=0&& x<=50) && (y>60)&&(y<180)) {
+			double[] tab = plusPetitAngleAuRobot(50,180,50,60);
+			tournerDe((int)tab[0]);
+			return tab[1]*angleEntreDeuxPoint(50,180,50,60);
+		}
+		else {
+			return 360;
+		}
+	}
 
 
 	public static void main(String[] args) {
