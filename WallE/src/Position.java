@@ -95,9 +95,10 @@ public class Position extends Capteurs{
 	/**
 	 * Méthode qui renvoie les coordonné en x et y d'un point en fonction d'un angle et d'une distance. 
 	 * @param d en cm la distance parcourue
+	 * @degres le degres sur le plateau
 	 * @return tab[] en idx 0 la position en x et en idx 1 la position en y 
 	 */
-	public double[] calculerPositionPoint(double d) {
+	public double[] calculerPositionPoint(double d, double degres) {
 		double[] tab = new double[2];
 		double degrespos;  
 		if (degres>0 && degres<90) {
@@ -126,8 +127,8 @@ public class Position extends Capteurs{
 		}
 		else degrespos=degres;
 		double degresrad= degrespos*Math.PI/180;
-		tab[0]= Math.cos(degresrad) * d ;
-		tab[1]= Math.sin(degresrad) * d ;
+		tab[0]= Math.cos(degresrad) * d;
+		tab[1]= Math.sin(degresrad) * d;
 		return tab;
 	}
 	
