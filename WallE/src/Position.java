@@ -155,6 +155,23 @@ public class Position extends Capteurs{
 		else {return degres;
 		}
 	}
+	
+	/**
+	 * Méthode qui permet de renvoyer un angle entre deux point grace à la position du robot
+	 * @param Xb position en x du point B
+	 * @param Yb position en y du point B
+	 * @param Xc position en x du point C
+	 * @param Yc position en y du point C
+	 * @return envoie l'angle entre les point B et C en degrès.
+	 */
+	public double angleEntreDeuxPoint(int Xb, int Yb, int Xc, int Yc) {
+		double Xu = Xb-x, Yu = Yb-y; 
+		double Xv = Xc-x, Yv = Yc-y; 
+		double produitScalaire = Xu*Xv+Yu*Yv;
+		double AB = Math.sqrt(Math.pow(Xu, 2)+Math.pow(Yu, 2));
+		double AC = Math.sqrt(Math.pow(Xv, 2)+Math.pow(Yv, 2));
+		return Math.acos(produitScalaire/(AB*AC));
+	}
 
 	public static void main(String[] args) {
 	} 

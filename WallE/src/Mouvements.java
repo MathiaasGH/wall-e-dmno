@@ -693,7 +693,7 @@ public class Mouvements extends Position{
 
 		//	System.out.println(tabAngle);
 		//	tourneOptimise(angle,angleTrouve,min);
-/**
+/*
 		double sommeTourne=0;
 		for(int j=0;j<tabAngle.size();j++) {
 			tournerDe( (int)(tabAngle.get(j) - sommeTourne), false);
@@ -726,7 +726,7 @@ public class Mouvements extends Position{
 			System.out.println("je rentre");
 			avancerWhileIsNotPressed((int)(10*distMtn));
 		}
-		/**	else {
+		/*	else {
 		System.out.println("Je ré-essaye");
 		recherche3(360);
 	}*/
