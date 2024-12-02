@@ -15,6 +15,7 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.port.Port;
 
 public class Capteurs {
+	
 	private EV3UltrasonicSensor vue;
 	private EV3TouchSensor touche;
 	private EV3ColorSensor colorSensor;
@@ -38,7 +39,7 @@ public class Capteurs {
 	public boolean isPressed()	{
 		float[] sample = new float[1];
 		touche.fetchSample(sample, 0);
-		System.out.println(sample[0]!=0);
+		//System.out.println(sample[0]!=0);
 		return sample[0] != 0;
 	}
 
@@ -69,6 +70,8 @@ public class Capteurs {
 		//System.out.println("Je regarde de nouveau");
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
 		vue.fetchSample(newTab, newTab.length-1);
+		Delay.msDelay(25);
+		//System.out.println(newTab[newTab.length-1]);
 		return newTab;
 	}
 
