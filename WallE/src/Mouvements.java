@@ -314,7 +314,7 @@ public class Mouvements extends Position{
 	 * 		  orientaitonAvantDeTourner renvoie l'angle auquel était le robot avant de chercher
 	 * @return boolean true si le palet n'est pas dans un camp adverse false sinon 
 	 */
-	public boolean paletValide(int[] tab, int orientationAvantDeTourner) {
+	public boolean paletValide(double[] tab, double orientationAvantDeTourner) {
 		double degres = tab[1]+ orientationAvantDeTourner;
 		double degresrad= degres*Math.PI/180;
 		double posY = (Math.cos(degresrad) * tab[0])+getY() ;
