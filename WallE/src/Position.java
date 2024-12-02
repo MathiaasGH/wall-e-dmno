@@ -87,12 +87,60 @@ public class Position extends Capteurs{
 	 * @param d, distance en double parcouru par le robot
 	 */
 	public void  updatePosition( double d ) {
-		double a,o;
-		double degresrad= degres*Math.PI/180;
-		a= Math.cos(degresrad) * d ;
-		o= Math.sin(degresrad) * d ;
-		this.setX(a);
-		this.setY(o);
+		double[] tab = calculerPositionPoint(d);
+		this.setX(tab[0]+x);
+		this.setY(tab[1]+y);
+	}
+	
+	/**
+	 * Méthode qui renvoie les coordonné en x et y d'un point en fonction d'un angle et d'une distance. 
+	 * @param d en cm la distance parcourue
+	 * @return tab[] en idx 0 la position en x et en idx 1 la position en y 
+	 */
+	public double[] calculerPositionPoint(double d) {
+		double[] tab = new double[2];
+		double degrespos;  
+		if (degres>0 && degres<90) {
+			degrespos=(-1*degres)+90;
+		}
+		else if (degres>90 && degres<=180) {
+			degrespos=((degres-90)*-1);
+		}
+		else if (degres<0 && degres>-90) {
+			degrespos=(degres*-1)+90;
+		}
+		else if (degres<-90 && degres>=-180) {
+			degrespos=-1*((degres+180)+90);
+		}
+		else if (degres==0.0) {
+			degrespos=90;
+		}
+		else if (degres==90) {
+			degrespos=0;
+		}
+		else if (degres==-90) {
+			degrespos=180;
+		}
+		else if (degres==180||degres==-180) {
+			degrespos=90;
+		}
+		else degrespos=degres;
+		double degresrad= degrespos*Math.PI/180;
+		tab[0]= Math.cos(degresrad) * d ;
+		tab[1]= Math.sin(degresrad) * d ;
+		return tab;
+	}
+	
+	/**
+	 * Méthode qui permet de savoir si des coordonné sont proche à 2cm près du centre.
+	 * @param tab, tableau de deux double, x et y
+	 * @return true si les coordonné sont proche du centre false sinon 
+	 */
+	public boolean procheDuCentre(double[] tab) {
+		if ((tab[0]<=102 && tab[0]>=98) && (tab[1]<=122 && tab[1]>=118)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

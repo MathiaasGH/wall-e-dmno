@@ -1,3 +1,8 @@
+
+import java.util.Arrays;
+
+
+
 import lejos.hardware.*;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.motor.Motor;
@@ -58,7 +63,12 @@ public class Robot extends Mouvements{
 		//Delay.msDelay(5000);
 		//r.reOrientationMur();
 		//r.capteurDeCouleur(); 
+<<<<<<< HEAD
 		//r.capteurDeCouleur();
+=======
+		r.capteurDeCouleur();
+		r.fermeBras();
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 	}
 
 }

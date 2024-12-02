@@ -1,4 +1,5 @@
 import java.util.Arrays;
+
 import lejos.hardware.Button;
 import lejos.hardware.motor.Motor;
 import lejos.hardware.port.SensorPort;
@@ -40,6 +41,7 @@ public class Capteurs {
 		float[] sample = new float[1];
 		touche.fetchSample(sample, 0);
 		//System.out.println(sample[0]!=0);
+		System.out.println(sample[0]!=0); //A retirer ? 
 		return sample[0] != 0;
 	}
 
@@ -51,7 +53,7 @@ public class Capteurs {
 	public void capteurDeCouleur() {
 		colorProvider =  colorSensor.getRGBMode();
 		float[] colorSample = new float[colorProvider.sampleSize()];
-
+		/*
 		while (Button.ESCAPE.isUp()){
 			colorProvider.fetchSample(colorSample,0);
 			System.out.println("R" + colorSample [0]);
@@ -59,6 +61,16 @@ public class Capteurs {
 			System.out.println("B" + colorSample[2]);
 			Delay.msDelay(5000);
 		}
+		*/
+		//tester ca :
+		
+		while (Button.ESCAPE.isUp()){
+			colorProvider.fetchSample(colorSample,0);
+			String couleur = conversionCouleur(colorSample);
+			System.out.println(couleur);
+			Delay.msDelay(5000);
+		}
+		
 	}
 
 	/**
@@ -66,6 +78,35 @@ public class Capteurs {
 	 * @param tab un tableau de float
 	 * @return le tableau de float contenant les valeur du capteur d'ultraSon
 	 */
+	
+	public String conversionCouleur(float [] tabCouleurs) {
+		double r = tabCouleurs[0];
+		double v = tabCouleurs[1];
+		double b = tabCouleurs[2];
+		if ((r>0.03 && r<0.04) && (v>0.06 && v<0.07) && (b>0.03 && b<0.04)) {
+			return "Vert";
+		}
+		if ((r>0.08 && r<0.09) && (v>0.015 && v<0.025) && (b>0.015 && b<0.025)) {
+			return "Rouge";
+		}
+		if ((r>0.01 && r<0.02) && (v>0.02 && v<0.03) && (b>0.045 && b<0.055)) {
+			return "Bleu"; 
+		}
+		if ((r>0.055 && r<0.065) && (v>0.045 && v<0.055) && (b>0.06 && b<0.07)) {
+			return "Gris";
+		}
+			if ((r>0.14 && r<0.17) && (v>0.1 && v<0.15) && (b>0.035 && b<0.045)) {
+			return "Jaune"; 
+		}
+		if ((r>0.0075 && r<0.0085) && (v>0.0065 && v<0.0075) && (b>0.0075 && b<0.0085)) {
+				return "Noir"; 
+			}
+		if ((r>0.15 && r<0.25) && (v>0.135 && v<0.145) && (b>0.155 && b<0.165)) {
+				return "Blanc"; 
+			}
+		else return "Autre";
+	}
+	
 	public float[] regarde(float[] tab) {
 		//System.out.println("Je regarde de nouveau");
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);

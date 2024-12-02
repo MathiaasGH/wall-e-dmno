@@ -124,8 +124,6 @@ public class Mouvements extends Position{
 		brasOuvert=true;
 	}
 
-
-
 	/**
 	 * Méthode qui permet de savoir si le robot est en mouvement 
 	 * @return boolean true si le robot bouge, false sinon
@@ -219,6 +217,27 @@ public class Mouvements extends Position{
 		return Math.abs((int)v1-(int)v2)<=10;
 	}
 
+
+
+	public static boolean isDifferent(float v1, float v2) {
+		//10 cm
+		return Math.abs(v1-v2)>=10;
+	}
+
+	/**
+	 * Méthode qui permet d'avancer vers un palet tant que le robot ne le touche pas en vérifiant que la distnace diminue
+	 * @param d int en cm, distance maximum à parcourir
+	 */
+	public void chercherpalet(int d) {
+		float[] valeurs = new float[2];
+		valeurs[0] = 1000000;
+		valeurs[1] = 1000000;
+		avancerDe(d);
+		while(isMoving() && (valeurs[valeurs.length-1]<= valeurs[valeurs.length-2]) && !isPressed()) {
+			valeurs = regarde(valeurs);
+		}
+		pilot.stop();
+	}
 	/**
 	 * Méthode qui permet de regarder le mur en face quand on pose un palet dans le camp adverse afin de retrouver l'angle 0 pour se 
 	 * replacer bien en face. 
@@ -259,8 +278,8 @@ public class Mouvements extends Position{
 		reOrientationMur();
 		avancerDe(-5);
 		tournerDe(180,false);
-
-	}
+		tournerDe(90,false);
+		}
 
 
 
@@ -490,6 +509,67 @@ public class Mouvements extends Position{
 		for(int i=1;i<6;i++) {
 			if(Math.abs(dist-tabArrondis[i]) < min)
 				min=tabArrondis[i];
+=======
+	
+	/**
+	 * Méthode qui renvoie true si le palet est accessible (en dehors des camp)
+	 * @param tab int[] qui contient la distance au palet en [0] et l'angle où on la vue en [1]
+	 * 		  orientaitonAvantDeTourner renvoie l'angle auquel était le robot avant de chercher
+	 * @return boolean true si le palet n'est pas dans un camp adverse false sinon 
+	 */
+	public boolean paletValide(double[] tab, double orientationAvantDeTourner) {
+		double degres = tab[1]+ orientationAvantDeTourner;
+		double degresrad= degres*Math.PI/180;
+		double posY = (Math.cos(degresrad) * tab[0])+getY() ;
+		if (posY<240 && posY>0) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Méthode qui permet au robot d'aller au centre du terrain
+	 */
+	public void allerAuCentre() { 
+		double[] tab = calculerPositionPoint(10, getDegres());
+		double m1;
+		double m2;
+		if (tab[1]==getY()) {
+			m1=0;
+		}
+		else { m1 = (tab[0]-getX())/(tab[1]-getY());
+		}
+		if (getY()==120) {
+			m2=0;
+		}
+		else { m2 = (100-getX())/(120-getY());
+		}
+		double angle =(Math.atan(Math.abs((m1-m2)/(1+m1*m2))));
+		angle = angle * (180/Math.PI);
+		double distAParcourir = Math.sqrt(Math.pow(100-getX(), 2)+Math.pow(120-getY(), 2));
+		if (procheDuCentre(calculerPositionPoint(distAParcourir, (180-angle+getDegres())))) {
+			angle = 180-angle;
+		}
+		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (-angle+getDegres())))) {
+			angle = -angle;
+		}
+		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (-(180-angle)+getDegres())))) {
+			angle =-(180-angle);
+		}
+		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (angle+getDegres())))) {
+		}
+		tournerDe((int)angle, false);
+		avancerDe((int)distAParcourir*10, false);
+		updateOrientation(angle);
+		updatePosition(distAParcourir);
+	}
+	
+	public static int minAngle(int[] tab) {
+		int min = tab[0];
+		for(int i=1;i<tab.length;i++) {
+			if(tab[i]<min)
+				min=tab[i];
+>>>>>>> branch 'main' of https://github.com/MathiaasGH/wall-e-dmno.git
 		}
 		return min;
 	}

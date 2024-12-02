@@ -7,7 +7,7 @@ fur et a mesure des déplacement + remise à jour quand on rencontre certaines c
 Position : 
 - ✔️ Les getter, les setteur.
 - ✔️ méthodes de mise à jour des position et de l'orientation en fonction des mouvement
-- ❌ Méthodes pour mettre à jour les positions en fonction des couleurs rencontré (en fonciton du startSide) 
+- ❌ Méthodes pour mettre à jour les positions en fonction de notre position dans l'espace par rapport au mur devant/derrière et gauche/droite
 - ✔️ Modifier les méthodes de déplacement pour renvoyer les distance parcourue
 - ✔️ Méthodes qui update l'orientation quand on arrive en face du mur du camp adverse pour poser un palet
 
@@ -15,13 +15,18 @@ Mouvement :
 - ✔️ Méthodes pour aller dans la camp adverse après avoir récupérer un palet
 - ❌ Dans chercher palet, regardez les discontinuité plutôt que le minimum seul
 - ❌ Chnager avancerWhileIsNotTouch(int) -> ça fait une recherche donc pas juste avancer tant que (chercherPalet c'est pareil, ça fait plus que ce qu'on veut, à voir pour plus découper) 
-- ❌ Chnager avancer(int dist) -> avancerDe(int dist); 
+- ✔️ Chnager avancer(int dist) -> avancerDe(int dist); 
+- ✔️ PaletValide() -> revnoie true si le palets n'est pas dans un camp
+- ❌ Implémenter paletValide() dans les méthodes de recherche Ne pas prendre les palets dans aucun des camps 
+- ✔️ allerAuCentre() Si le robot trouve rien, il vas au centre et il cherche à 360°
+- ❌ Comment on escive les robots pour de vrai (si y'en a un qui apparait sur notre chemin au hasard) 
 
 Capteur : 
 - ❌ Méthodes pour capter et renvoyer la couleur vue
 
 ROBOT : 
-- ❌ Ajouter un attribut boolean pour connaitre l'état des bras (ouvert, pas ouvert)
+- ✔️ Ajouter un attribut boolean pour connaitre l'état des bras (ouvert, pas ouvert)
+- ❌ Coder l'algo pour la compète
 
 AEF : 
 - ✔️ Revoir comment aller derriere la ligne blanche
@@ -41,4 +46,7 @@ TEST Wall-E
 Problématique : 
 - En fonction du côté du terrain où on commencer, on rencontre pas les même lignes de couleur
 dans le même ordre. 
+
+
+
 
