@@ -87,7 +87,7 @@ public class Position extends Capteurs{
 	 * @param d, distance en double parcouru par le robot
 	 */
 	public void  updatePosition( double d ) {
-		double[] tab = calculerPositionPoint(d);
+		double[] tab = calculerPositionPoint(d, degres);
 		this.setX(tab[0]+x);
 		this.setY(tab[1]+y);
 	}
