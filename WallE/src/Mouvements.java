@@ -240,7 +240,7 @@ public class Mouvements extends Position {
 			}
 		}
 		setY(240); 
-	)
+	}
 
 	public void avancerJusquaCouleur(String couleur1) {
 		avancerDe(3000,true);
