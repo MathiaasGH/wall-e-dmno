@@ -108,6 +108,14 @@ public class Mouvements extends Position {
 		updateOrientation(angle);
 	}
 
+	public void tournerDeRapide(int angle, boolean asynchrone) {
+		pilot.setAngularSpeed(500);
+		pilot.setLinearSpeed(500);
+		pilot.rotate(angle, asynchrone); 
+		updateOrientation(angle);
+	}
+	
+	
 	/**
 	 * Méthode qui permet de fermer les bras si ils ne sont pas déjà fermé
 	 */
@@ -263,7 +271,7 @@ public class Mouvements extends Position {
 		//System.out.println("Je rentre dans avancerWHile");
 		float[] distance = regarde(new float[0]);
 		//System.out.println(pilot.getAngularSpeed());
-		pilot.setAngularSpeed(100);
+	//	pilot.setAngularSpeed(100);
 		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
 		ouvreBras();
 		long currentTime = this.avancerDe(dist + 50);
@@ -284,7 +292,8 @@ public class Mouvements extends Position {
 					distance = regarde(distance);
 					derniereDistance = distance[distance.length - 1];
 					if (derniereDistance<0.2 && !flag) {
-							
+						
+						tournerDeRapide(180,false);
 						recherche(360);
 						
 					}
