@@ -16,7 +16,7 @@ import lejos.utility.Delay;
 
 public class Mouvements extends Position {
 
-	private final static double vitesse=1338.55/20;
+	private final static double vitesse=20/1338.55;
 	private final static double tailleDuPalet=6;
 	private final static int angleAjustement = 40;
 	private final static int timeToWait = 4000;
@@ -81,7 +81,9 @@ public class Mouvements extends Position {
 	public float calculeDistRestante(long tempsAvantDeRouler, int distanceAavancer) {
 		long tempsMaintenant= System.currentTimeMillis();
 		long diffTemp = tempsMaintenant-tempsAvantDeRouler;
+		System.out.println("temps avant " + tempsAvantDeRouler + " tempsApres : " + tempsMaintenant);
 		int distParcouru = (int)(diffTemp*vitesse);
+		System.out.println("" + distanceAavancer + " " + distParcouru + " " + (distanceAavancer-distParcouru));
 		return distanceAavancer-distParcouru;
 	}
 
@@ -134,7 +136,7 @@ public class Mouvements extends Position {
 	 * Méthode qui permet d'ouvrir les bras si ils ne sont pas déjà ouvert de manière asynchrone
 	 */
 	public void ouvreBrasAsynchrone() {
-		System.out.println("je rentre pour ouvrir les bras asynchrone et " + brasOuvert);
+		//System.out.println("je rentre pour ouvrir les bras asynchrone et " + brasOuvert);
 		if (brasOuvert==true) {
 			return;
 		}
@@ -181,7 +183,7 @@ public class Mouvements extends Position {
 		}
 		float[] tabR = new float[2];
 		tabR[0] = min;
-		System.out.println("L'indice : " + indice);
+		//System.out.println("L'indice : " + indice);
 		tabR[1] = indice;
 		return tabR;
 	}
@@ -201,24 +203,24 @@ public class Mouvements extends Position {
 	public void avancerVigilantAllerAuCamp() {
 		float[] distance = regarde(new float[0]);
 		String couleur="";
-		System.out.println("je suis une grosse merde");
+		//System.out.println("je suis une grosse merde");
 		boolean flag=true;
 		this.avancerDe(3000);
 		while (isMoving() && !(couleur=="Blanc")) {
 			couleur = capteurDeCouleur();
 			distance = regarde(distance);
-			System.out.println(Arrays.toString(distance));
+			//System.out.println(Arrays.toString(distance));
 			if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
 				if(derniereDistance<0.2) {
-					System.out.println("Alled 1");
+					//System.out.println("Alled 1");
 					flag = false;
 					avancerDe(-1,false);
 					Delay.msDelay(timeToWait);
 					distance = regarde(distance);
 					derniereDistance = distance[distance.length - 1];
 					if (derniereDistance<0.2 && !flag) {
-						System.out.println("alled 2");
+						//System.out.println("alled 2");
 						if (getX()<100) {
 							tournerDe(90, false);
 							avancerDe(100, false);
@@ -258,27 +260,41 @@ public class Mouvements extends Position {
 	 */
 	public boolean avancerWhileIsNotPressed(int dist) {
 		// Initialisation des capteurs et des distances
-		System.out.println("Je rentre dans avancerWHile");
+		//System.out.println("Je rentre dans avancerWHile");
 		float[] distance = regarde(new float[0]);
 		//System.out.println(pilot.getAngularSpeed());
 		pilot.setAngularSpeed(100);
 		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
 		ouvreBras();
-		this.avancerDe(dist + 50);
+		long currentTime = this.avancerDe(dist + 50);
 		// Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
 
-		while (isMoving() && !isPressed() && distanceDiminue(distance)) {
+		boolean flag = true;
+		while (isMoving() && !isPressed()){ //&& distanceDiminue(distance)) {
 			// Vérifie les distances uniquement si elles sont disponibles
 			distance = regarde(distance);
-			System.out.println(Arrays.toString(distance));
+			//System.out.println(Arrays.toString(distance));
 			if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
-				if (derniereDistance < 0.35 && !brasOuvert) {
-				}
-
-				else if(derniereDistance<0.2) {
+			//	System.out.println("DD : " + derniereDistance);
+				if(derniereDistance<0.2) {
+					flag = false;
 					avancerDe(-1,false);
-					break;
+					Delay.msDelay(timeToWait);
+					distance = regarde(distance);
+					derniereDistance = distance[distance.length - 1];
+					if (derniereDistance<0.2 && !flag) {
+							
+						recherche(360);
+						
+					}
+					else {
+				//		
+
+						int distanceRestante = (int)calculeDistRestante(currentTime,dist);
+						return avancerWhileIsNotPressed(distanceRestante);
+						
+					}
 				}
 			}       
 		}
@@ -289,6 +305,7 @@ public class Mouvements extends Position {
 		fermeBras();
 
 		Delay.msDelay(2000);
+		
 
 		return isPressed();
 
@@ -418,7 +435,7 @@ public class Mouvements extends Position {
 		long tempsEcoule = finTemps - debutTemps;
 
 		// Afficher ou retourner le temps écoulé
-		System.out.println("Temps de rotation pour " + angle + "dg : "+ tempsEcoule + " ms");
+		//System.out.println("Temps de rotation pour " + angle + "dg : "+ tempsEcoule + " ms");
 
 
 	}
@@ -665,7 +682,7 @@ public class Mouvements extends Position {
 		while(i.hasNext() && indice<idx) {
 			taille=taille+((ArrayList<Float>)(i.next())).size();
 		}
-		System.out.println(taille);
+		//System.out.println(taille);
 		return taille;
 	}
 
@@ -715,7 +732,7 @@ public class Mouvements extends Position {
 
 			}
 		}
-		System.out.println("Ici " + occurenceCumule);
+		//System.out.println("Ici " + occurenceCumule);
 		return occurenceCumule;
 	}
 
@@ -809,16 +826,17 @@ public class Mouvements extends Position {
 		//	tourneOptimise(angle,angleTrouve, dist);
 
 		for(int index=0;index<resume.size();index++) {
-			System.out.println(resume.get(index));
+		//	System.out.println(resume.get(index));
 		}
-		System.out.println("Il y a " + resume.size() + " discontinuites.");
+		//System.out.println("Il y a " + resume.size() + " discontinuites.");
 
-		System.out.println(tabAngle);
+		/*System.out.println(tabAngle);
 		System.out.println("theorique : " + tabAngleTh);
 		System.out.println("realite : " + tabAngleVu);
 		//System.out.println("indice plus proche theorique/realite : " + indicePlusProche(tabAngleTh, tabAngleVu));
 		System.out.println("La discontinuite la plus proche est : " + min + " d'un angle de " + angleVu + " que j'ai vu au bout de ma " + idxPlusProcheDisc + "e vision. J'ai vu " + totalSize + " fois au total. \nDonc l'angle a tourner est de : " + angleTrouve);
-
+*/
+	
 
 		return tourneOptimise(angle,angleTrouve,min+5);
 
@@ -910,7 +928,7 @@ public class Mouvements extends Position {
 		liste.add(sousListe);
 		//System.out.println(liste);
 		for(int i=0;i<liste.size();i++) {
-			System.out.println(liste.get(i));
+			//System.out.println(liste.get(i));
 		}
 		return liste;
 	}
@@ -922,7 +940,7 @@ public class Mouvements extends Position {
 		ArrayList<Float> dernierTab = list.get(list.size()-1);
 		float distanceCurrentElem = dernierTab.get(dernierTab.size()-1);
 		float premierElem = premierTab.get(0);
-		System.out.println("Premier element : " + premierElem + "\nDernier element : " + distanceCurrentElem);
+		//System.out.println("Premier element : " + premierElem + "\nDernier element : " + distanceCurrentElem);
 		return Math.abs(premierElem-distanceCurrentElem) < 5;
 
 	}
@@ -930,7 +948,7 @@ public class Mouvements extends Position {
 	public double angleDeRechercheOptimise () {
 		double x = getX(); 
 		double y = getY();
-		System.out.println("en x : "+x+" en y : "+y)
+		//System.out.println("en x : "+x+" en y : "+y);
 		if ((x>=0 && x<=50) && (y>=0)&&(y<=60)) {
 			double[] tab = plusPetitAngleAuRobot(50,180,150,60);
 			tournerDe((int)tab[0]);
@@ -977,18 +995,18 @@ public class Mouvements extends Position {
 	}
 
 	public void MiseAjourPos() {
-		System.out.println(isMoving());
+		//System.out.println(isMoving());
 		tournerDe(45, true);
 
-		System.out.println(isMoving());
+//		System.out.println(isMoving());
 		VitesseRepére();
 		tournerDe(90, true);
 		float [] valeurs= new float[0];
-		System.out.println(isMoving());
+//		System.out.println(isMoving());
 		while(isMoving()) {
 			valeurs = regarde(valeurs);
 		}
-		System.out.println("premiere recherche nombre de valeurs= "+valeurs.length);
+	//	System.out.println("premiere recherche nombre de valeurs= "+valeurs.length);
 		int x1 = recuperationCoordonnées(valeurs);
 		VitesseRepéreRESET();
 		tournerDe(90, true);
@@ -998,14 +1016,14 @@ public class Mouvements extends Position {
 		while(isMoving()) {
 			valeurs2 = regarde(valeurs2);
 		}
-		System.out.println("deuxieme recherche nombre de valeurs= "+valeurs.length);
+//		System.out.println("deuxieme recherche nombre de valeurs= "+valeurs.length);
 		int x2 = recuperationCoordonnées(valeurs2);
 		System.out.println(x1+"  "+x2);
 		int somme = x1+x2;
 		if ((somme>195)&&(somme<205)) {
 			this.setX(x1);
 		}
-		System.out.println(isMoving());
+//		System.out.println(isMoving());
 		tournerDe(45,true);
 	}
 
@@ -1038,7 +1056,7 @@ public class Mouvements extends Position {
 
 			}
 		}
-		System.out.println("ont n'a pas reussi a trouver la coordonées");
+//		System.out.println("ont n'a pas reussi a trouver la coordonées");
 		return coordonées;
 	}
 
