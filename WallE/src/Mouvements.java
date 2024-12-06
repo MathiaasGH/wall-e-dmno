@@ -16,6 +16,7 @@ import lejos.utility.Delay;
 
 public class Mouvements extends Position {
 
+	private final static double vitesse=1338.55/20;
 	private final static double tailleDuPalet=6;
 	private final static int angleAjustement = 40;
 	private final static int timeToWait = 4000;
@@ -44,16 +45,22 @@ public class Mouvements extends Position {
 
 	}
 	
-	public int avanceChronometre(int dist) {
-		avancerDe(dist);
+	public void avanceChronometre() {
+		for(int i=0;i<10;i++) {
+			long tempsAvant= System.currentTimeMillis();
+			avancerDe(200,false);
+			long tempsApres = System.currentTimeMillis();
+			System.out.println(tempsApres-tempsAvant);
+		}
+		
 	}
 
 	/**
 	 * Méthode qui permet d'avancer de dist de manière asynchrone
 	 * @param dist en cm
 	 */
-	public void avancerDe(int dist) {
-		avancerDe(dist,true); // A VOIR
+	public long avancerDe(int dist) {
+		return avancerDe(dist,true); // A VOIR
 	}
 
 
@@ -62,12 +69,20 @@ public class Mouvements extends Position {
 	 * @param dist en cm
 	 * @param b si true asynchrone sinon non asynchrone
 	 */
-	public void avancerDe(int dist,boolean b) { // A VOIR
+	public long avancerDe(int dist,boolean b) { // A VOIR
 		pilot.setAngularSpeed(200);
 		pilot.setLinearSpeed(200);
+		long tempsAvant= System.currentTimeMillis();
 		pilot.travel(dist,b);                 
 		updatePosition(dist/10);
-
+		return tempsAvant;
+	}
+	
+	public float calculeDistRestante(long tempsAvantDeRouler, int distanceAavancer) {
+		long tempsMaintenant= System.currentTimeMillis();
+		long diffTemp = tempsMaintenant-tempsAvantDeRouler;
+		int distParcouru = (int)(diffTemp*vitesse);
+		return distanceAavancer-distParcouru;
 	}
 
 	/**

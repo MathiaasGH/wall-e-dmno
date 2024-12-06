@@ -36,7 +36,8 @@ public class Robot extends Mouvements{
 		//r.avancerDe(1200,false);	
 		//r.tournerDe(360,false);
 		//r.avancerWhileIsNotPressed(200);
-		r.recherche(90);
+		//r.recherche(90);
+		r.avanceChronometre();
 		//r.MiseAjourPos();
 		//System.out.println(r.angleTheorique(30));
 		//r.testTempsRotation(360);
