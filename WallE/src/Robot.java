@@ -12,16 +12,34 @@ public class Robot extends Mouvements{
 	 */
 	public void premierPalet() {
 		ouvreBras();
-		avancerWhileIsNotPressed(65);		
+		avancerWhileIsNotPressed(650);
 		fermeBras();
-		tournerDe(20);
-		avancerDe(10);
-		tournerDe(-20);
-		//avancerWhileIsNotWhite();
-		reOrientationMur();	
+		tournerDe(45, false);
+		avancerDe(200, false);
+		tournerDe(-45, false);
+		avancerVigilantAllerAuCamp();
+		reOrientationMur();
 		ouvreBras();
-		avancerDe(-10);
-		tournerDe(180);
+		avancerDe(-150, false);
+		tournerDe(180, false);
+		fermeBras();
+	}
+	
+	public void boucleRecherche() {
+		premierPalet(); 
+		int paletTrouvé = 1; 
+		while(paletTrouvé<9) {
+			if (recherche((int)angleDeRechercheOptimise())) {
+				paletTrouvé+=1;
+				continue;
+			}
+			if (recherche((int)angleDeRechercheOptimise())) {
+				paletTrouvé+=1; 
+				continue; 
+			}
+			allerAuCentre(); // est ce que quand il va au centre il recupere le palet qu'il trouve au centre ? ou pas ?
+			continue; 
+		}
 	}
 
 	public static void main(String[] args) {

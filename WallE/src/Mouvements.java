@@ -239,7 +239,8 @@ public class Mouvements extends Position {
 
 			}
 		}
-	}
+		setY(240); 
+	)
 
 	public void avancerJusquaCouleur(String couleur1) {
 		avancerDe(3000,true);
@@ -356,10 +357,10 @@ public class Mouvements extends Position {
 	 */
 	public void allerChezAdversaire() {
 		tournerDe((int)degresAuCampAdverse(),false);
-		//avancerWhileIsNotWhite(); ------------------------------> faut créer cette méthode
+		avancerVigilantAllerAuCamp();
 		ouvreBras();
 		reOrientationMur();
-		avancerDe(-5);
+		avancerDe(-150);
 		tournerDe(180,false);
 		tournerDe(90,false);
 	}
@@ -488,7 +489,7 @@ public class Mouvements extends Position {
 		while(isMoving()) {
 			valeurs = regarde(valeurs);
 		}	
-		/**
+		/*
 		float[] valeurs = new float[0];
 
 		long tempsParDegré = 3500/360; // Temps obtenu avec testTemmpsRotation sur un test sur 360dg
@@ -929,6 +930,7 @@ public class Mouvements extends Position {
 	public double angleDeRechercheOptimise () {
 		double x = getX(); 
 		double y = getY();
+		System.out.println("en x : "+x+" en y : "+y)
 		if ((x>=0 && x<=50) && (y>=0)&&(y<=60)) {
 			double[] tab = plusPetitAngleAuRobot(50,180,150,60);
 			tournerDe((int)tab[0]);
