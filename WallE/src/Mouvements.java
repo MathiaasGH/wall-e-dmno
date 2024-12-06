@@ -2,11 +2,8 @@ import lejos.robotics.navigation.MovePilot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
-
-import javax.swing.text.html.HTMLDocument.Iterator;
 
 import lejos.hardware.motor.Motor;
 import lejos.hardware.port.MotorPort;
@@ -15,13 +12,13 @@ import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.utility.Delay;
-import sun.tools.jconsole.Tab;
 
-import lejos.hardware.Sound;	
 
-public class Mouvements extends Position{
+public class Mouvements extends Position {
 
 	private final static double tailleDuPalet=6;
+	private final static int angleAjustement = 40;
+	private final static int timeToWait = 4000;
 	private final static int DELAY = 25;
 	private Wheel wheel1;
 	private Wheel wheel2;
@@ -43,7 +40,13 @@ public class Mouvements extends Position{
 	 * @param int id l’identité de l’objet
 	 * @return retourne la nouvelle position de l’objet
 	 */
-	public void actualiser(){}
+	public void actualiser(){
+
+	}
+	
+	public int avanceChronometre(int dist) {
+		avancerDe(dist);
+	}
 
 	/**
 	 * Méthode qui permet d'avancer de dist de manière asynchrone
@@ -81,6 +84,7 @@ public class Mouvements extends Position{
 	 * @param asynchrone si true asynchrone sinon non asynchrone
 	 */
 	public void tournerDe(int angle, boolean asynchrone) {
+		//40
 		pilot.setAngularSpeed(40);
 		pilot.setLinearSpeed(40);
 		pilot.rotate(angle, asynchrone); 
@@ -95,7 +99,7 @@ public class Mouvements extends Position{
 			return;
 		}
 		Motor.D.setSpeed(150000);
-		Motor.D.rotate(-1500);
+		Motor.D.rotate(-1200);
 		brasOuvert=false;
 	}
 
@@ -107,7 +111,7 @@ public class Mouvements extends Position{
 			return;
 		}
 		Motor.D.setSpeed(150000);
-		Motor.D.rotate(1500);
+		Motor.D.rotate(1200);
 		brasOuvert=true;
 	}
 
@@ -175,46 +179,109 @@ public class Mouvements extends Position{
 
 	public boolean distanceDiminue(float[] tab) {
 		if(tab.length>=2)
-			return tab[tab.length-1]<=tab[tab.length-2];
+			return Math.abs((int)(100*tab[tab.length-1])-(int)(100*tab[tab.length-2]))<=5;
 		return true;
+	}
+
+	public void avancerVigilantAllerAuCamp() {
+		float[] distance = regarde(new float[0]);
+		String couleur="";
+		System.out.println("je suis une grosse merde");
+		boolean flag=true;
+		this.avancerDe(3000);
+		while (isMoving() && !(couleur=="Blanc")) {
+			couleur = capteurDeCouleur();
+			distance = regarde(distance);
+			System.out.println(Arrays.toString(distance));
+			if (distance.length > 0) {
+				float derniereDistance = distance[distance.length - 1];
+				if(derniereDistance<0.2) {
+					System.out.println("Alled 1");
+					flag = false;
+					avancerDe(-1,false);
+					Delay.msDelay(timeToWait);
+					distance = regarde(distance);
+					derniereDistance = distance[distance.length - 1];
+					if (derniereDistance<0.2 && !flag) {
+						System.out.println("alled 2");
+						if (getX()<100) {
+							tournerDe(90, false);
+							avancerDe(100, false);
+							tournerDe(-90, false);
+							avancerJusquaCouleur("Blanc");
+						}
+						else {
+							tournerDe(-90, false);
+							avancerDe(100, false);
+							tournerDe(90, false);
+							avancerJusquaCouleur("Blanc");
+						}
+					}
+					else {
+						avancerJusquaCouleur("Blanc");
+					}
+				}
+
+			}
+		}
+	}
+
+	public void avancerJusquaCouleur(String couleur1) {
+		avancerDe(3000,true);
+		String couleur = capteurDeCouleur();
+		if (couleur1==couleur) {
+			setY(240);
+		avancerDe(-1,false);
+		}
+
 	}
 
 	/**
 	 * Méthode qui recherche un palet et avance tant que le palet n'a pas toucher le capteur de toucher
 	 * @param dist un int, la distance maximum à parcourir
 	 */
-	public void avancerWhileIsNotPressed(int dist) {
+	public boolean avancerWhileIsNotPressed(int dist) {
 		// Initialisation des capteurs et des distances
-
+		System.out.println("Je rentre dans avancerWHile");
 		float[] distance = regarde(new float[0]);
 		//System.out.println(pilot.getAngularSpeed());
 		pilot.setAngularSpeed(100);
 		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
-		this.avancerDe(dist + 100);
+		ouvreBras();
+		this.avancerDe(dist + 50);
 		// Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
+
 		while (isMoving() && !isPressed() && distanceDiminue(distance)) {
 			// Vérifie les distances uniquement si elles sont disponibles
 			distance = regarde(distance);
 			System.out.println(Arrays.toString(distance));
-				if (distance.length > 0) {
+			if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
 
 				//System.out.println(derniereDistance);
 				// Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
 				//System.out.println(derniereDistance);
-				
+
 				if (derniereDistance < 0.35 && !brasOuvert) {
-					ouvreBrasAsynchrone();
 				}
-				
-				if(derniereDistance<0.2) {
+
+				else if(derniereDistance<0.2) {
 					avancerDe(-1,false);
 					break;
 				}
 			}       
 		}
 		// Arrête le robot et ferme les bras une fois la boucle terminée
+		while(isMoving()) {
+		}
+
 		fermeBras();
+
+		Delay.msDelay(2000);
+
+		return isPressed();
+
+
 	}
 
 
@@ -285,7 +352,7 @@ public class Mouvements extends Position{
 		avancerDe(-5);
 		tournerDe(180,false);
 		tournerDe(90,false);
-		}
+	}
 
 
 
@@ -478,7 +545,7 @@ public class Mouvements extends Position{
 		valeurApresOrientation = regarde(valeurApresOrientation);
 		int dist = objet[2];
 		//if((int)(100*valeurApresOrientation[0])>=dist-10 && (int)(100*valeurApresOrientation[0])<=dist+10) {
-			avancerWhileIsNotPressed((int)(10*dist));
+		avancerWhileIsNotPressed((int)(10*dist));
 		//}
 		//else recherche(360);
 		//Delay.msDelay(10000);
@@ -486,12 +553,12 @@ public class Mouvements extends Position{
 
 
 
-	public void recherche(int angle) {
+	public boolean recherche(int angle) {
 		double angleDeBase = getDegres();
 		ArrayList<ArrayList<Float>> valeurs = decoupeValeursStricte(angle);
 		// true = le premier est la suite du dernier
 		boolean premierNestPasUneDisc = premierNestPasUneDisc(valeurs);
-		plusProcheDiscontinuite(valeurs, premierNestPasUneDisc, angle, (int)angleDeBase);
+		return plusProcheDiscontinuite(valeurs, premierNestPasUneDisc, angle, (int)angleDeBase);
 
 		//	System.out.println(valeurs);
 	}
@@ -500,7 +567,7 @@ public class Mouvements extends Position{
 		return 2*Math.atan(tailleDuPalet/(2*dist)) * 180/Math.PI;
 	}
 
-	
+
 	/**
 	 * Méthode qui renvoie true si le palet est accessible (en dehors des camp)
 	 * @param tab int[] qui contient la distance au palet en [0] et l'angle où on la vue en [1]
@@ -517,7 +584,7 @@ public class Mouvements extends Position{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Méthode qui permet au robot d'aller au centre du terrain
 	 */
@@ -554,12 +621,12 @@ public class Mouvements extends Position{
 		updateOrientation(angle);
 		updatePosition(distAParcourir);
 	}
-	
-	public static int minAngle(int[] tab) {
-		int min = tab[0];
+
+	public static int[] minAngle(int[] tab) {
+		int[] min = new int[] {tab[0],0};
 		for(int i=1;i<tab.length;i++) {
-			if(tab[i]<min)
-				min=tab[i];
+			if(tab[i]<min[0])
+				min=new int[]{tab[i],i};
 		}
 		return min;
 	}
@@ -590,47 +657,86 @@ public class Mouvements extends Position{
 		System.out.println(taille);
 		return taille;
 	}
-	
+
 	public static int indicePlusProche(List<Double> list1, List<Double> list2) {
-        if (list1 == null || list2 == null || list1.size() != list2.size() || list1.isEmpty()) {
-            throw new IllegalArgumentException("Les listes doivent être non nulles, de même taille et non vides.");
-        }
+		if (list1 == null || list2 == null || list1.size() != list2.size() || list1.isEmpty()) {
+			throw new IllegalArgumentException("Les listes doivent être non nulles, de même taille et non vides.");
+		}
 
-        int indicePlusProche = -1;
-        float ecartMinimal = Float.MAX_VALUE;
+		int indicePlusProche = -1;
+		float ecartMinimal = Float.MAX_VALUE;
 
-        for (int i = 0; i < list1.size(); i++) {
-        	double ecart = Math.abs(list1.get(i) - list2.get(i));
-            if (ecart < ecartMinimal) {
-                ecartMinimal = (float)ecart;
-                indicePlusProche = i;
-            }
-        }
+		for (int i = 0; i < list1.size(); i++) {
+			double ecart = Math.abs(list1.get(i) - list2.get(i));
+			if (ecart < ecartMinimal) {
+				ecartMinimal = (float)ecart;
+				indicePlusProche = i;
+			}
+		}
 
-        return indicePlusProche;
-    }
+		return indicePlusProche;
+	}
 
+	private int totalOccurence(ArrayList<ArrayList<Float>> tab, boolean premierNestPasUneDisc) {
+		int idx = (premierNestPasUneDisc)?1:0;
 
-	private void plusProcheDiscontinuite(ArrayList<ArrayList<Float>> tab, boolean premierNestPasUneDisc, int angle, int angleDeBase) {
+		int occurenceCumule= 0;
+		if(idx==1) {
+		}
+		else
+			occurenceCumule=tab.get(0).size()/2;
+		//(idx)
+		ListIterator i = tab.listIterator();
+
+		for(; i.hasNext() ;) {
+			ArrayList<Float> sousTab = (ArrayList<Float>)i.next();
+			if(i.nextIndex()-1 == tab.size()-1) {
+				if(premierNestPasUneDisc) {
+					int occurence=sousTab.size()/2;
+					occurenceCumule+=occurence/2;
+				}
+			}
+			try {
+				int occurence = sousTab.size();
+				occurenceCumule+=occurence;
+			}
+			catch(Exception e) {
+
+			}
+		}
+		System.out.println("Ici " + occurenceCumule);
+		return occurenceCumule;
+	}
+
+	private boolean plusProcheDiscontinuite(ArrayList<ArrayList<Float>> tab, boolean premierNestPasUneDisc, int angle, int angleDeBase) {
 		int idx = (premierNestPasUneDisc)?1:0;
 		int idxPlusProcheDisc = (idx==1)?tab.get(0).size()+1:0;
 		List<Integer> tabOcc = new ArrayList<Integer>();
+
+		int occurenceCumule= 0;
 		if(idx==1) {
 			tabOcc.add(idxPlusProcheDisc);
+
 		}
+		else
+			occurenceCumule=tab.get(0).size()/2;
 		double angleVu=0;
-		ListIterator i = tab.listIterator(idx);
+		//(idx)
+		ListIterator i = tab.listIterator();
 		ArrayList<Float> tabPlusProche = tab.get(idx);
 		float min=999999;
-		int totalSize=totalSize(tab);
-		idx=idxPlusProcheDisc;
+
+
+		//int totalSize=totalSize(tab);
+		int totalSize=totalOccurence(tab,premierNestPasUneDisc);
 
 		List<Double> tabAngleTh = new ArrayList<Double>();
 		List<Double> tabAngle = new ArrayList<Double>();
 		List<Float> tabDist = new ArrayList<Float>();
 		List<Double> tabAngleVu = new ArrayList<Double>();
-		
+
 		int angleTrouve=0;
+
 
 		List<String> resume = new ArrayList<String>();
 
@@ -641,28 +747,33 @@ public class Mouvements extends Position{
 					ArrayList<Float> newTab = (tab.get(0));
 					newTab.addAll(sousTab);
 					sousTab=newTab;
+					int occurence=sousTab.size()/2;
+					occurenceCumule+=occurence/2;
 				}
 			}
 			try {
 				int occurence = sousTab.size();
+				occurenceCumule+=occurence;
 				float distanceCurrentElem = sousTab.get(occurence/2);
 				float PremdistanceCurrentElem = sousTab.get(0);
 				float DeuxdistanceCurrentElem = sousTab.get(sousTab.size()-1);
 				//Y'avait pas le /2 j'ai fait un test là
-				double angleVuDeCetElem = (sousTab.size()/2)*angle/totalSize;
+				double angleVuDeCetElem = (occurence/2)*angle/totalSize;
+				//2*
 				double angleTheorique = angleTheorique(distanceCurrentElem);
-				//+occurence/2
-				int angleAtourner = ((idx)*angle/totalSize);
+				//idx au lieu de occurenceCumule-occurence/2
+				int angleAtourner = (occurenceCumule)*angle/totalSize;
 				//System.out.println(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) + " " + distanceCurrentElem +  " " + angleAtourner +  " " + angleDeBase + " fini");
 
-				if(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) && occurence>=5) {
-					resume.add("occurence : " + occurence + " | 1e distance : " + PremdistanceCurrentElem + " | 2e distance : " + DeuxdistanceCurrentElem + " | angle vu : " + angleVuDeCetElem + " | angleTheorique : " + angleTheorique + " | angle a tourner : " + angleAtourner);
+				if(//paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) &&
+						occurence>=5) {
+					resume.add("occurence cumule : " + occurenceCumule + " | occurence : " + occurence + " | 1e distance : " + PremdistanceCurrentElem + " | 2e distance : " + DeuxdistanceCurrentElem + " | angle vu : " + angleVuDeCetElem + " | angleTheorique : " + angleTheorique + " | angle a tourner : " + angleAtourner);
 					tabAngle.add((double)angleAtourner);
 					tabAngleVu.add(angleVuDeCetElem);
 					tabAngleTh.add(angleTheorique(distanceCurrentElem));
-					if(distanceCurrentElem>25 && distanceCurrentElem<min && isNotDifferent(angleVuDeCetElem,angleTheorique(distanceCurrentElem))) {
+					if(distanceCurrentElem>25 && distanceCurrentElem<min && isNotDifferent(angleVuDeCetElem,angleTheorique)) {
 						min=distanceCurrentElem;
-						idxPlusProcheDisc=idx;
+						idxPlusProcheDisc=occurenceCumule;
 						angleVu=angleVuDeCetElem;
 						tabPlusProche=sousTab;
 						angleTrouve=angleAtourner;
@@ -672,7 +783,7 @@ public class Mouvements extends Position{
 					tabOcc.add(idx);
 				}			
 				idx+=sousTab.size();
-				
+
 			}
 			catch(Exception e) {
 
@@ -696,20 +807,22 @@ public class Mouvements extends Position{
 		System.out.println("realite : " + tabAngleVu);
 		//System.out.println("indice plus proche theorique/realite : " + indicePlusProche(tabAngleTh, tabAngleVu));
 		System.out.println("La discontinuite la plus proche est : " + min + " d'un angle de " + angleVu + " que j'ai vu au bout de ma " + idxPlusProcheDisc + "e vision. J'ai vu " + totalSize + " fois au total. \nDonc l'angle a tourner est de : " + angleTrouve);
-		tourneOptimise(angle,angleTrouve,min);
+
+
+		return tourneOptimise(angle,angleTrouve,min+5);
 
 		//	System.out.println("La discontinuite la plus proche est : " + dist + " à l'angle " + angleTrouve);
 
 		//	System.out.println(tabAngle);
 		//	tourneOptimise(angle,angleTrouve,min);
-/*
+		/*
 		double sommeTourne=0;
 		for(int j=0;j<tabAngle.size();j++) {
 			tournerDe( (int)(tabAngle.get(j) - sommeTourne), false);
 			sommeTourne=tabAngle.get(j);
 			Delay.msDelay(2000);
 		}	
-*/
+		 */
 
 	}
 
@@ -724,7 +837,7 @@ public class Mouvements extends Position{
 	}
 
 	//A REVOIR POUR LES ANGLES < 360
-	private void tourneOptimise(int angle, int angleTrouve, float dist) {
+	private boolean tourneOptimise(int angle, int angleTrouve, float dist) {
 		if(angleTrouve<angle/2) {
 			this.tournerDe(angleTrouve,false);
 		}
@@ -732,15 +845,16 @@ public class Mouvements extends Position{
 		float[] valeurApresOrientation = new float[0];
 		valeurApresOrientation = regarde(valeurApresOrientation);
 		float distMtn = dist;
-		if((int)(100*valeurApresOrientation[0])>=distMtn-10 && (int)(100*valeurApresOrientation[0])<=distMtn+10) {
-			System.out.println("je rentre");
-			avancerWhileIsNotPressed((int)(10*distMtn));
-		}
+		//if((int)(100*valeurApresOrientation[0])>=distMtn-10 && (int)(100*valeurApresOrientation[0])<=distMtn+10) {
+		//System.out.println("je rentre");
+		//avancerWhileIsNotPressed((int)(10*distMtn));
+		//}
 		/*	else {
 		System.out.println("Je ré-essaye");
 		recherche3(360);
 	}*/
 		//Delay.msDelay(10000);
+		return ajustement();
 	}
 
 
@@ -769,7 +883,7 @@ public class Mouvements extends Position{
 				if(i+1<valeurs.length)
 					croissant = valeurs[i]<=valeurs[i+1];
 			}
-			else if((croissant && valeurs[i-1]<=valeurs[i] || Math.abs(valeurs[i-1]-valeurs[i])<1) || (!croissant && valeurs[i-1]>=valeurs[i] || Math.abs(valeurs[i-1]-valeurs[i])<1)) {
+			else if((croissant && valeurs[i-1]<=valeurs[i] || Math.abs(valeurs[i-1]-valeurs[i])<5) || (!croissant && valeurs[i-1]>=valeurs[i] || Math.abs(valeurs[i-1]-valeurs[i])<5)) {
 				sousListe.add(valeurs[i]);
 			}
 			else {
@@ -850,10 +964,112 @@ public class Mouvements extends Position{
 		}
 	}
 
+	public void MiseAjourPos() {
+		System.out.println(isMoving());
+		tournerDe(45, true);
 
-	public static void main(String[] args) {
-
-		//Mouvements o = new Mouvements();
+		System.out.println(isMoving());
+		VitesseRepére();
+		tournerDe(90, true);
+		float [] valeurs= new float[0];
+		System.out.println(isMoving());
+		while(isMoving()) {
+			valeurs = regarde(valeurs);
+		}
+		System.out.println("premiere recherche nombre de valeurs= "+valeurs.length);
+		int x1 = recuperationCoordonnées(valeurs);
+		VitesseRepéreRESET();
+		tournerDe(90, true);
+		VitesseRepére();
+		tournerDe(90, true);
+		float [] valeurs2= new float[0];
+		while(isMoving()) {
+			valeurs2 = regarde(valeurs2);
+		}
+		System.out.println("deuxieme recherche nombre de valeurs= "+valeurs.length);
+		int x2 = recuperationCoordonnées(valeurs2);
+		System.out.println(x1+"  "+x2);
+		int somme = x1+x2;
+		if ((somme>195)&&(somme<205)) {
+			this.setX(x1);
+		}
+		System.out.println(isMoving());
+		tournerDe(45,true);
 	}
+
+	public int  recuperationCoordonnées (float[] données) {
+		int coordonées = 0;
+		//System.out.println("Je suis juste devant le for ");
+		int i =2;
+		while (i<données.length-2) {
+			float a = données[i-2];
+			float b = données[i-1];
+			float c = données[i];
+			float d = données[i+1];
+			float e = données[i+2];
+			//System.out.println("Je commence a traverser le tableau ");
+			if ((a<b)&&(b<c)&&(c>d)&&(d>e)) {
+				//System.out.println("ca croix puis ca decroix");
+				coordonées=(int)données[i];
+				return coordonées;
+			} else {
+				if ((a>b)&&(b>c)&&(c<d)&&(d<e)) {
+					//System.out.println("ca decroix puis ca croix");
+					coordonées=(int)données[i];
+					return coordonées;
+
+				}else {
+					i++;
+					//System.out.println("ont n'a pas reussi a trouver la coordonées");
+					//return coordonées;
+				}
+
+			}
+		}
+		System.out.println("ont n'a pas reussi a trouver la coordonées");
+		return coordonées;
+	}
+
+	public void VitesseRepére() {
+		pilot.setAngularAcceleration(50);
+		pilot.setLinearSpeed(50);
+
+
+	}
+
+	public void VitesseRepéreRESET() {
+		pilot.setAngularAcceleration(500);
+		pilot.setLinearSpeed(5000);
+	}
+
+	public boolean ajustement() {
+		//Tu vas a gauche de 5° puis tu tournes de 10° à droite tout en regardant et tu t'orientes au plus proche
+		tournerDe(-angleAjustement/2,false);
+
+		tournerDe(angleAjustement,true);
+		float[] valeurs = new float[0];
+		while(isMoving()) {
+			valeurs = regarde(valeurs);
+		}	
+		int[] tabVal=new int[valeurs.length];
+		for(int i=0;i<valeurs.length;i++) {
+			//On arrondit et on met en CM
+			tabVal[i]=(int)(100*valeurs[i]);
+		}		
+		int[] min = minAngle(tabVal);
+		int minDist = min[0];
+		int minIdx = min[1];
+
+		int angleAtourner = minIdx*angleAjustement/tabVal.length;
+
+		tournerDe(-(angleAjustement-angleAtourner), false);
+		System.out.println(Arrays.toString(valeurs));
+		System.out.println(minIdx + " " + minDist);
+
+		return avancerWhileIsNotPressed(minDist*10+10);
+
+
+	}
+
 
 }
