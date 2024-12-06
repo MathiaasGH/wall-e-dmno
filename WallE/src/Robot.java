@@ -1,14 +1,4 @@
 
-import java.util.Arrays;
-
-
-
-import lejos.hardware.*;
-import lejos.hardware.lcd.GraphicsLCD;
-import lejos.hardware.motor.Motor;
-import lejos.utility.Delay;
-import lejos.robotics.*;
-import lejos.robotics.navigation.DifferentialPilot;
 
 public class Robot extends Mouvements{
 
@@ -35,15 +25,22 @@ public class Robot extends Mouvements{
 	}
 
 	public static void main(String[] args) {
-		Robot r= new Robot(0,0,'b',false);
-		//r.fermeBras();
+		Robot r= new Robot(100,0,'b',false);
+		
+		//r.ouvreBras();
+		
 		//r.avancerIsPressed();
 		//r.fermeBras();
 		//r.avancerDe(100,false);
-		r.recherche(360);
+		//r.avancerWhileIsNotPressed(300);
+		//r.avancerDe(1200,false);	
+		//r.tournerDe(360,false);
+		//r.avancerWhileIsNotPressed(200);
+		r.recherche(90);
+		//r.MiseAjourPos();
 		//System.out.println(r.angleTheorique(30));
 		//r.testTempsRotation(360);
-	/**	r.tournerDe(360,true);
+	/*	r.tournerDe(360,true);
 		while(r.isMoving()) {
 			
 		}
@@ -54,7 +51,6 @@ public class Robot extends Mouvements{
 		//r.recherche(360);
 		//r.rechercheAngle2(360);
 		//r.rechercheA(360);
-		//.rechercheAngle(360);
 		//r.tournerDe(360);
 		//r.avancer();
 		//r.avancer(100, false);
@@ -63,7 +59,7 @@ public class Robot extends Mouvements{
 		//Delay.msDelay(5000);
 		//r.reOrientationMur();
 		//r.capteurDeCouleur(); 
+		//r.avancerJusquaCouleur("Blanc");
+		//r.avancerVigilantAllerAuCamp();
 	}
-
 }
-
