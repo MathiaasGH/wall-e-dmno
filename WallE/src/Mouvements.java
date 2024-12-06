@@ -841,7 +841,7 @@ public class Mouvements extends Position {
 				int angleAtourner = (occurenceCumule)*angle/totalSize;
 				//System.out.println(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) + " " + distanceCurrentElem +  " " + angleAtourner +  " " + angleDeBase + " fini");
 
-				if(//paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) &&
+				if(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) &&
 						occurence>=5) {
 					resume.add(((isNotDifferent(angleVuDeCetElem,angleTheorique, (int)distanceCurrentElem))?"palet " : "mur ") + " occurence cumule : " + occurenceCumule + " | occurence : " + occurence + " | 1e distance : " + PremdistanceCurrentElem + " | 2e distance : " + DeuxdistanceCurrentElem + " | angle vu : " + angleVuDeCetElem + " | angleTheorique : " + angleTheorique + " | angle a tourner : " + angleAtourner);
 					tabAngle.add((double)angleAtourner);
