@@ -29,11 +29,15 @@ public class Robot extends Mouvements{
 		premierPalet(); 
 		int paletTrouvé = 1; 
 		while(paletTrouvé<9) {
+			//System.out.println("angleOpti : "+ (int)angleDeRechercheOptimise());
 			if (recherche((int)angleDeRechercheOptimise())) {
+				allerChezAdversaire();
 				paletTrouvé+=1;
+				//System.out.println(getDegres());
 				continue;
 			}
 			if (recherche((int)angleDeRechercheOptimise())) {
+				allerChezAdversaire();
 				paletTrouvé+=1; 
 				continue; 
 			}
@@ -43,42 +47,9 @@ public class Robot extends Mouvements{
 	}
 
 	public static void main(String[] args) {
-		Robot r= new Robot(100,0,'b',false);
-		
-		//r.ouvreBras();
-		
-		//r.avancerIsPressed();
+		Robot r= new Robot(50,0,'b',true);
 		//r.fermeBras();
-		//r.avancerDe(100,false);
-		//r.avancerWhileIsNotPressed(300);
-		//r.avancerDe(1200,false);	
-		//r.tournerDe(360,false);
-		//r.avancerWhileIsNotPressed(200);
-		System.out.println(r.recherche(360));
-		//r.avanceChronometre();
-		//r.MiseAjourPos();
-		//System.out.println(r.angleTheorique(30));
-		//r.testTempsRotation(360);
-	/*	r.tournerDe(360,true);
-		while(r.isMoving()) {
-			
-		}
-			*/
-		//r.tournerDe(1,true);
-		//r.decoupeValeurs(360);
-		//r.trouve();	
+		r.boucleRecherche();
 		//r.recherche(360);
-		//r.rechercheAngle2(360);
-		//r.rechercheA(360);
-		//r.tournerDe(360);
-		//r.avancer();
-		//r.avancer(100, false);
-		//r.avancerIsPressed();
-		//System.out.println(r.isPressed());
-		//Delay.msDelay(5000);
-		//r.reOrientationMur();
-		//r.capteurDeCouleur(); 
-		//r.avancerJusquaCouleur("Blanc");
-		//r.avancerVigilantAllerAuCamp();
 	}
 }

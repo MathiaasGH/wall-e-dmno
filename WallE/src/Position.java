@@ -170,7 +170,7 @@ public class Position extends Capteurs{
 		double produitScalaire = Xu*Xv+Yu*Yv;
 		double AB = Math.sqrt(Math.pow(Xu, 2)+Math.pow(Yu, 2));
 		double AC = Math.sqrt(Math.pow(Xv, 2)+Math.pow(Yv, 2));
-		return Math.acos(produitScalaire/(AB*AC));
+		return (180/Math.PI)*Math.acos(produitScalaire/(AB*AC));
 	}
 	
 	/**

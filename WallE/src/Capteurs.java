@@ -20,7 +20,7 @@ public class Capteurs {
 	private EV3UltrasonicSensor vue;
 	private EV3TouchSensor touche;
 	private EV3ColorSensor colorSensor;
-	private SampleProvider spVue;
+	public SampleProvider spVue;
 	private SampleProvider spTouche;
 	private SampleProvider colorProvider;
 
@@ -41,7 +41,7 @@ public class Capteurs {
 		float[] sample = new float[1];
 		touche.fetchSample(sample, 0);
 		//System.out.println(sample[0]!=0);
-		System.out.println(sample[0]!=0); //A retirer ? 
+		//System.out.println(sample[0]!=0); //A retirer ? 
 		return sample[0] != 0;
 	}
 
@@ -93,7 +93,7 @@ public class Capteurs {
 		while (Button.ESCAPE.isUp()){
 			colorProvider.fetchSample(colorSample,0);
 			String couleur = ConvertionCouleur(colorSample);
-			System.out.println(couleur);
+			//System.out.println(couleur);
 			return couleur;
 		}
 		return "rien";
