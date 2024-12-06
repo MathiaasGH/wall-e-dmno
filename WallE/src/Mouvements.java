@@ -224,7 +224,8 @@ public class Mouvements extends Position {
 
 			}
 		}
-	}
+		setY(240); 
+	)
 
 	public void avancerJusquaCouleur(String couleur1) {
 		avancerDe(3000,true);
@@ -346,10 +347,10 @@ public class Mouvements extends Position {
 	 */
 	public void allerChezAdversaire() {
 		tournerDe((int)degresAuCampAdverse(),false);
-		//avancerWhileIsNotWhite(); ------------------------------> faut créer cette méthode
+		avancerVigilantAllerAuCamp();
 		ouvreBras();
 		reOrientationMur();
-		avancerDe(-5);
+		avancerDe(-150);
 		tournerDe(180,false);
 		tournerDe(90,false);
 	}
