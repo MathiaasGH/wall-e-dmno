@@ -44,7 +44,7 @@ public class Mouvements extends Position {
 	public void actualiser(){
 
 	}
-	
+
 	public void avanceChronometre() {
 		for(int i=0;i<10;i++) {
 			long tempsAvant= System.currentTimeMillis();
@@ -52,7 +52,7 @@ public class Mouvements extends Position {
 			long tempsApres = System.currentTimeMillis();
 			System.out.println(tempsApres-tempsAvant);
 		}
-		
+
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class Mouvements extends Position {
 		updatePosition(dist/10);
 		return tempsAvant;
 	}
-	
+
 	public float calculeDistRestante(long tempsAvantDeRouler, int distanceAavancer) {
 		long tempsMaintenant= System.currentTimeMillis();
 		long diffTemp = tempsMaintenant-tempsAvantDeRouler;
@@ -246,7 +246,7 @@ public class Mouvements extends Position {
 		String couleur = capteurDeCouleur();
 		if (couleur1==couleur) {
 			setY(240);
-		avancerDe(-1,false);
+			avancerDe(-1,false);
 		}
 
 	}
@@ -272,11 +272,6 @@ public class Mouvements extends Position {
 			System.out.println(Arrays.toString(distance));
 			if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
-
-				//System.out.println(derniereDistance);
-				// Vérifie si la distance est inférieure à 30 cm pour ouvrir les bras
-				//System.out.println(derniereDistance);
-
 				if (derniereDistance < 0.35 && !brasOuvert) {
 				}
 
