@@ -45,7 +45,7 @@ public class Mouvements extends Position {
 
 	/**
 	 * Constructeur pour la classe Mouvements
-	 * Permet d'initialiser la position intiale, le coté de départ ('a'-'b') et l'état des bras initial.
+	 * Permet d'initialiser la position intiale et l'état des bras initial.
 	 * 
 	 * @param x un entier prenant une valeur suivante {50,100,150}
 	 * @param y un entier = 0

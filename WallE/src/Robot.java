@@ -16,7 +16,7 @@ public class Robot extends Mouvements{
 	
 	/**
 	 * Constructeur pour la classe robot
-	 * Permet d'initialiser la position initiale du robot, son côté de départ, ainsi
+	 * Permet d'initialiser la position initiale du robot ainsi
 	 * que l'état de ses bras
 	* @param x un entier prenant une valeur suivante {50,100,150}
 	 * @param y un entier = 0
