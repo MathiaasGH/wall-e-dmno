@@ -1,16 +1,13 @@
 import lejos.robotics.navigation.MovePilot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
 import lejos.hardware.motor.Motor;
-import lejos.hardware.port.MotorPort;
 import lejos.robotics.chassis.*;
 import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
-import lejos.robotics.navigation.DifferentialPilot;
 import lejos.utility.Delay;
 
 
@@ -408,16 +405,6 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Permet de savoir siu deux nombres sont significativement différents 
-	 * @param v1 le premier nombre
-	 * @param v2 le deuxième nombre
-	 * @return un boolean true si la différence entre les deux valeurs est plus grande que 10 exclu
-	 */
-	private static boolean isDifferent(float v1, float v2) {
-		return Math.abs(v1-v2)>=10;
-	}
-
-	/**
 	 * Permet de regarder le mur en face quand on pose un palet dans le camp adverse afin de retrouver l'angle 0 pour se 
 	 * replacer bien en face. 
 	 * Se place tout droit devant le mur et met à jour l'orientation à 0 degrès. 
@@ -468,30 +455,6 @@ public class Mouvements extends Position {
 		return nouveauTab;
 	}
 
-	/**
-	 * Permet de supprimer les premières valeurs d'un tableau tant qu'elles sont identiques
-	 * @param tab un tableau de float
-	 * @return un tableau de float comportant tous les éléments du tableau inital sans les premiers éléments identiques
-	 */
-	private float[] supprimerPremieresValeurs(float[] tab) {
-		int taille = tab.length;
-		while (tab.length < taille && tab.length>1 && tab[0] == tab[1]) {
-			tab = supprime(tab, tab.length - 1);
-		}
-		return tab;
-	}
-
-	/**
-	 * Permet de supprimer les dernières valeurs d'un tableau tant qu'elles sont identiques
-	 * @param tab un tableau de float
-	 * @return un tableau de float comportant tous les éléments du tableau inital sans les derniers éléments identiques
-	 */
-	private float[] supprimerDernieresValeurs(float[] tab) {
-		while (tab.length > 1 && tab[tab.length - 1] == tab[tab.length - 2]) {
-			tab = supprime(tab, tab.length - 1);
-		}
-		return tab;
-	}
 
 	/**
 	 * Permet de supprimer toutes les valeurs condidérées absurdes d'un tableau de float
@@ -572,25 +535,6 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Supprime un élément à un indice précis dans un tableau de tableau
-	 * @param tab le tableau dans lequel supprimer un objet
-	 * @param indiceAsupp l'indice de l'élément à supprimer
-	 * @return le tableau avec l'élément en moins
-	 */
-	private int[][] supprime(int[][] tab, int indiceAsupp) {
-		if (indiceAsupp < 0 || indiceAsupp >= tab.length) {
-			throw new IllegalArgumentException("Indice à supprimer hors des limites du tableau");
-		}
-		int[][] nouveauTab = new int[tab.length - 1][];
-		for (int i = 0, j = 0; i < tab.length; i++) {
-			if (i != indiceAsupp) {
-				nouveauTab[j++] = tab[i];
-			}
-		}
-		return nouveauTab;
-	}
-
-	/**
 	 * Permet de regarder autour de lui d'un certain angle et d'aller chercher l'objet situé à la discontinuité la plus proche.
 	 * @param angle l'angle auquel tourner
 	 * @return un boolean : true si le capteur de toucher a été activé durant la recherche, false sinon
@@ -647,69 +591,7 @@ public class Mouvements extends Position {
 		return min;
 	}
 
-	/**
-	 * Cherche le maximim dans une liste ainsi que son indice d'apparition
-	 * @param tab une liste de double
-	 * @return un tableau de double de 2 éléments correspondants respectivement au maximum trouvé, et à son indice
-	 */
-	private double[] max(List<Double> tab) {
-		double max=-1;
-		int idx=0;
-		int idxTrouve=idx;
-		ListIterator i = tab.listIterator();
-		while(i.hasNext()) {
-			double current = (double)i.next();
-			if(current > max && current<10) {
-				max=current;
-				idxTrouve=idx;
-			}
-			idx++;
-		}
-		return new double[] {max,idxTrouve};
-	}
-
-
-	/**
-	 * Calcule la somme des tailles des listes contenues dans une liste jusqu'à la i-ème liste.
-	 * @param list la liste de listes
-	 * @param idx l'indice jusqu'où sommer les tailles des listes. 
-	 * @return un entier correspondant à la somme des tailles des listes.
-	 */
-	private int getTotalIndiceJusqua(ArrayList<ArrayList<Float>> list,int idx) {
-		int taille=0;
-		ListIterator i = list.listIterator();
-		int indice = 0;
-		while(i.hasNext() && indice<idx) {
-			taille=taille+((ArrayList<Float>)(i.next())).size();
-		}
-		return taille;
-	}
-
-	/**
-	 * Cherche l'indice des éléments de deux listes de doubles qui sont les plus proches mathématiquement.
-	 * @param list1 une liste de double
-	 * @param list2 une liste de double
-	 * @return l'indice i où l'élément d'indice i de list1 est le plus proche de l'élément d'indice i de list2
-	 */
-	private static int indicePlusProche(List<Double> list1, List<Double> list2) {
-		if (list1 == null || list2 == null || list1.size() != list2.size() || list1.isEmpty()) {
-			throw new IllegalArgumentException("Les listes doivent être non nulles, de même taille et non vides.");
-		}
-
-		int indicePlusProche = -1;
-		float ecartMinimal = Float.MAX_VALUE;
-
-		for (int i = 0; i < list1.size(); i++) {
-			double ecart = Math.abs(list1.get(i) - list2.get(i));
-			if (ecart < ecartMinimal) {
-				ecartMinimal = (float)ecart;
-				indicePlusProche = i;
-			}
-		}
-
-		return indicePlusProche;
-	}
-
+	
 	/**
 	 * Compte le nombre total d'éléments d'une liste de liste de float 
 	 * @param tab la liste de liste de float
@@ -829,21 +711,6 @@ public class Mouvements extends Position {
 			}
 		}
 		return tourneOptimise(angle,angleTrouve,min+5);
-	}
-
-	/**
-	 * Permet de connaitre la somme des tailles des listes contenues dans une liste
-	 * @param tab une liste de listes de floats
-	 * @return la somme des tailles des listes
-	 */
-	private int totalSize(ArrayList<ArrayList<Float>> tab) {
-		int idx = 0;
-		ListIterator<ArrayList<Float>> i = tab.listIterator();
-		while (i.hasNext()) {
-			ArrayList<Float> sousTab = i.next();
-			idx += sousTab.size();
-		}
-		return idx;
 	}
 
 	/**
@@ -974,84 +841,6 @@ public class Mouvements extends Position {
 			return(90); 
 		}
 		return 360; 
-	}
-
-	/**
-	 * Permet de mettre à jour la position du robot
-	 */
-	private void MiseAjourPos() {
-		tournerDe(45, true);
-		VitesseRepére();
-		tournerDe(90, true);
-		float [] valeurs= new float[0];
-		while(isMoving()) {
-			valeurs = regarde(valeurs);
-		}
-		int x1 = recuperationCoordonnées(valeurs);
-		VitesseRepéreRESET();
-		tournerDe(90, true);
-		VitesseRepére();
-		tournerDe(90, true);
-		float [] valeurs2= new float[0];
-		while(isMoving()) {
-			valeurs2 = regarde(valeurs2);
-		}
-		int x2 = recuperationCoordonnées(valeurs2);
-		int somme = x1+x2;
-		if ((somme>195)&&(somme<205)) {
-			this.setX(x1);
-		}
-		tournerDe(45,true);
-	}
-
-	/**
-	 * Permet de récupérer la coordonnées de la première discontinuité trouvée
-	 * @param données le tableau des distances trouvées
-	 * @return un entier correspondant à la coordonnées de la première discontinuité 
-	 */
-	private int  recuperationCoordonnées (float[] données) {
-		int coordonées = 0;
-		int i =2;
-		while (i<données.length-2) {
-			float a = données[i-2];
-			float b = données[i-1];
-			float c = données[i];
-			float d = données[i+1];
-			float e = données[i+2];
-			if ((a<b)&&(b<c)&&(c>d)&&(d>e)) {
-				coordonées=(int)données[i];
-				return coordonées;
-			} else {
-				if ((a>b)&&(b>c)&&(c<d)&&(d<e)) {
-					coordonées=(int)données[i];
-					return coordonées;
-
-				}
-				else {
-					i++;
-				}
-
-			}
-		}
-		return coordonées;
-	}
-
-	/**
-	 * Méthode pour définir la vitesse du robot "normale"
-	 */
-	private void VitesseRepére() {
-		pilot.setAngularAcceleration(50);
-		pilot.setLinearSpeed(50);
-
-
-	}
-
-	/**
-	 * Méthode pour définir la vitesse du robot "rapide"
-	 */
-	private void VitesseRepéreRESET() {
-		pilot.setAngularAcceleration(500);
-		pilot.setLinearSpeed(5000);
 	}
 
 	/**
