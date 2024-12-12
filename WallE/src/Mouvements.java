@@ -1,13 +1,17 @@
+import lejos.robotics.navigation.MovePilot;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
-import lejos.hardware.motor.*;
+import lejos.hardware.motor.Motor;
+import lejos.hardware.port.MotorPort;
 import lejos.robotics.chassis.*;
-import lejos.robotics.chassis.*;
-import lejos.robotics.chassis.*;
-import lejos.robotics.navigation.*;
-import lejos.utility.*;
+import lejos.robotics.chassis.Wheel;
+import lejos.robotics.chassis.WheeledChassis;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.utility.Delay;
 
 
 /**

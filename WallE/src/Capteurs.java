@@ -1,12 +1,12 @@
 import java.util.Arrays;
 
 import lejos.hardware.*;
-import lejos.hardware.port.*;
-import lejos.hardware.sensor.*;
-import lejos.hardware.sensor.*;
-import lejos.hardware.sensor.*;
-import lejos.robotics.*;
-import lejos.utility.*;
+import lejos.hardware.port.SensorPort;
+import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.EV3TouchSensor;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.robotics.SampleProvider;
+import lejos.utility.Delay;
 
 /**
 * Cette classe permet de gérer les capteurs du robot.

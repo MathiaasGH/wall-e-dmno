@@ -1,4 +1,4 @@
-import lejos.hardware.*;
+import lejos.hardware.Button;
 
 /**
 * Cette classe permet de réaliser l'algorithme du robot.
