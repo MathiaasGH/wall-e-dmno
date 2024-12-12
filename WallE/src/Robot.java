@@ -1,39 +1,66 @@
+import lejos.hardware.*;
 
-
+/**
+* Cette classe permet de réaliser l'algorithme du robot.
+* Cette classe hérite de la classe mouvements.
+*
+* @see Robot
+* @author DEVILLIERS, MITTON, NDONG, OZTURK
+*/
 public class Robot extends Mouvements{
 
-	public Robot(int x, int y, char StartSide, boolean etatBras) {
-		super(x, y, StartSide, etatBras);
+	/** L'entier pour savoir si le robot tournera à droite (45) apres avoir pris
+	 * le premier palet ou alors si il tourner a gauche (-45).
+	 */
+	public static final int tourneDebut = 45;
+	
+	/**
+	 * Constructeur pour la classe robot
+	 * Permet d'initialiser la position initiale du robot, son côté de départ, ainsi
+	 * que l'état de ses bras
+	* @param x un entier prenant une valeur suivante {50,100,150}
+	 * @param y un entier = 0
+	 * @param etatBras un booléen représentant l'état des bras initial.
+	 */
+	public Robot(int x, int y, boolean etatBras) {
+		super(x, y, etatBras);
 		if(etatBras==true)
 			fermeBras();
 	}
+
 	/**
-	 * Méthode qui permet de récupérer le premier palet, qui sera directement en face du robot au début de l'épreuve
+	 * Permet de récupérer le premier palet, qui sera directement en face du robot au début de l'épreuve
 	 */
 	public void premierPalet() {
 		ouvreBras();
-		avancerWhileIsNotPressed(650);
+		avancerDeRapide(650, false);
 		fermeBras();
-		tournerDe(45, false);
-		avancerDe(200, false);
-		tournerDe(-45, false);
+		tournerDeRapide(tourneDebut, false);
+		avancerDeRapide(200, false);
+		tournerDeRapide(-tourneDebut, false);
 		avancerVigilantAllerAuCamp();
 		reOrientationMur();
 		ouvreBras();
-		avancerDe(-150, false);
-		tournerDe(180, false);
+		avancerDeRapide(-150, false);
+		tournerDeRapide(135, false);
 		fermeBras();
 	}
 	
+	/**
+	 * Correspond à l'algorithme principal du robot, permet d'effectuer une boucle 
+	 * pour récupérer le premier palet puis de faire des recherches optimisées de palets
+	 * pour les ramener dans le camps adverse.
+	 */
 	public void boucleRecherche() {
+		System.out.println("Appuyez sur entrer");
+		Button.ENTER.waitForPressAndRelease();
+		
 		premierPalet(); 
 		int paletTrouvé = 1; 
 		while(paletTrouvé<9) {
-			//System.out.println("angleOpti : "+ (int)angleDeRechercheOptimise());
 			if (recherche((int)angleDeRechercheOptimise())) {
 				allerChezAdversaire();
 				paletTrouvé+=1;
-				//System.out.println(getDegres());
 				continue;
 			}
 			if (recherche((int)angleDeRechercheOptimise())) {
@@ -41,15 +68,13 @@ public class Robot extends Mouvements{
 				paletTrouvé+=1; 
 				continue; 
 			}
-			allerAuCentre(); // est ce que quand il va au centre il recupere le palet qu'il trouve au centre ? ou pas ?
+			allerAuCentre();
 			continue; 
 		}
 	}
 
 	public static void main(String[] args) {
-		Robot r= new Robot(50,0,'b',true);
-		//r.fermeBras();
+		Robot r= new Robot(100,0,false);
 		r.boucleRecherche();
-		//r.recherche(360);
 	}
 }

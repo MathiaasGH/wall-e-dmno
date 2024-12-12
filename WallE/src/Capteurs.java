@@ -1,47 +1,52 @@
 import java.util.Arrays;
 
-import lejos.hardware.Button;
-import lejos.hardware.motor.Motor;
-import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.hardware.sensor.EV3TouchSensor;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.robotics.SampleProvider;
-import lejos.robotics.filter.MeanFilter;
-import lejos.utility.Delay;
-import lejos.robotics.Color;
-import lejos.remote.ev3.RMISampleProvider;
-import lejos.remote.ev3.RemoteEV3;
-import lejos.hardware.ev3.LocalEV3; 
-import lejos.hardware.port.Port;
+import lejos.hardware.*;
+import lejos.hardware.port.*;
+import lejos.hardware.sensor.*;
+import lejos.hardware.sensor.*;
+import lejos.hardware.sensor.*;
+import lejos.robotics.*;
+import lejos.utility.*;
 
+/**
+* Cette classe permet de gérer les capteurs du robot.
+*
+* @see Position
+* @author DEVILLIERS, MITTON, NDONG, OZTURK
+*/
 public class Capteurs {
 
+	/** L'EV3UltrasonicSensor correspondant au capteur visuel.*/
 	private EV3UltrasonicSensor vue;
+	/** L'EV3TouchSensor correspondant au capteur tactile.*/
 	private EV3TouchSensor touche;
+	/** L'EV3ColorSensor correspondant au capteur de colorimétrie.*/
 	private EV3ColorSensor colorSensor;
+	/** Le SampleProvider correspondant à la sortie des données captées par 
+	 * le capteur visuel.*/
 	public SampleProvider spVue;
-	private SampleProvider spTouche;
+	/** Le SampleProvider correspondant à la sortie des données captées par 
+	 * le capteur de colorimétrie.*/
 	private SampleProvider colorProvider;
 
+	/**
+	 * Constructeur de la classe Capteurs.
+	 * Permet d'initialiser tous les capteurs du robots aux ports correspondants.
+	 */
 	public Capteurs() {
 		touche = new EV3TouchSensor (SensorPort.S3);
 		vue = new EV3UltrasonicSensor(SensorPort.S4);
 		colorSensor = new EV3ColorSensor(SensorPort.S2);
 		spVue = vue.getDistanceMode();
-		spTouche = touche.getTouchMode();
-		System.out.println("Classe capteurs instanciée");
 	}
 
 	/**
-	 * Méthode qui renvoie true si le TouchCapteur est enclenché. 
+	 * Renvoie true si le TouchCapteur est enclenché. 
 	 * @return true si le ToucheCapteur est enclenché
 	 */
 	public boolean isPressed()	{
 		float[] sample = new float[1];
 		touche.fetchSample(sample, 0);
-		//System.out.println(sample[0]!=0);
-		//System.out.println(sample[0]!=0); //A retirer ? 
 		return sample[0] != 0;
 	}
 
@@ -49,11 +54,11 @@ public class Capteurs {
 	
 
 	/**
-	 * Méthode qui permet de récolter les données du capteur d'ultraSon dans un tableau de float
+	 * Permet de convertir un tableau de données d'ultrasons en chaine de caractère
+	 * correspondant à une couleur.
 	 * @param tab un tableau de float
-	 * @return le tableau de float contenant les valeur du capteur d'ultraSon
+	 * @return la couleur correspondant au tableau de données fourni en paramètres.
 	 */
-
 	public String ConvertionCouleur(float [] tabCouleurs) {
 		double r = tabCouleurs[0];
 		double v = tabCouleurs[1];
@@ -83,7 +88,7 @@ public class Capteurs {
 	}
 
 	/**
-	 * Méthode qui permet de renvoyer le codage RGB de la couleur
+	 * Permet de renvoyer le codage RGB de la couleur vue.
 	 * @param tab un tableau de float
 	 * @return le tableau de float contenant les valeur du capteur de couleur
 	 */
@@ -93,23 +98,27 @@ public class Capteurs {
 		while (Button.ESCAPE.isUp()){
 			colorProvider.fetchSample(colorSample,0);
 			String couleur = ConvertionCouleur(colorSample);
-			//System.out.println(couleur);
 			return couleur;
 		}
 		return "rien";
 		}
 
+	/**
+	 * Permet de regarder une valeur devant le robot et de la ranger dans le tableau
+	 * fourni en paramètres en l'aggrandissant d'une case.
+	 * @param tab le tableau ayant déjà (ou pas) des données.
+	 * @return un tableau de float ayant tous les éléments du tableau d'origine 
+	 * avec la distance lue devant le robot en dernier élément.
+	 */
 	public float[] regarde(float[] tab) {
-		//System.out.println("Je regarde de nouveau");
 		float[] newTab = Arrays.copyOf(tab, tab.length+1);
 		vue.fetchSample(newTab, newTab.length-1);
 		Delay.msDelay(25);
-		//System.out.println(newTab[newTab.length-1]);
 		return newTab;
 	}
 
 	/**
-	 * Méthode qui arrête les capteur d'ultraSon
+	 * Arrête les capteur d'ultraSon
 	 */
 	public void fermeLesYeux() {
 		vue.close(); 

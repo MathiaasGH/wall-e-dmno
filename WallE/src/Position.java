@@ -1,27 +1,42 @@
-
+/**
+* Cette classe permet de gérer les positions relatives au robot.
+* Cette classe hérite de la classe capteurs.
+*
+* @see Position
+* @author DEVILLIERS, MITTON, NDONG, OZTURK
+*/
 
 public class Position extends Capteurs{
+	/** Les entiers correspondant aux coordonnées horizontales et verticales du robot*/
 	private double x, y; 
+	/** Le double représentant l'anglee relatif formé entre le robot et la perpendiculaire
+	 * du mur de la table derrière la ligne adverse.
+	 */
 	private double degres; 
-	private char startSide; //b ou g pour blueSide ou greenSide
 	
-	public Position(int x, int y, char startSide) {
+	/**
+	 * Constructeur de la classe position.
+	 * Permet d'initialiser la position du robot avant de démarrer la course.
+	 * @param x un entier prenant une valeur suivante {50,100,150}
+	 * @param y un entier = 0
+	 */
+	public Position(int x, int y) {
 		super();
 		this.x=x; 
 		this.y=y;
 		degres = 0;
-		this.startSide=startSide; 
-		System.out.println("Classe position instanciée");
 	}
+	
 	/**
-	 * Méthode qui renvoie la valeur de x
+	 * Renvoie la valeur de l'abscisse du robot
 	 * @return x, la position en abscisse du robot
 	 */
 	public double getX() {
 		return this.x;
 	}
+	
 	/**
-	 * Méthode qui renvoie la valeur de y
+	 * Renvoie la valeur de l'ordonnée du robot
 	 * @return y, la position en ordonnée du robot
 	 */
 	public double getY() {
@@ -29,7 +44,7 @@ public class Position extends Capteurs{
 	}
 	
 	/**
-	 * Méthode qui renvoie la valeur de degres
+	 * Renvoie la valeur de degres
 	 * @return degres, l'orientation en degrès du robot
 	 */
 	public double getDegres() {
@@ -37,7 +52,7 @@ public class Position extends Capteurs{
 	}
 	
 	/**
-	 * Méthode qui permet de modifier la valeur de x qui représente la position en abscisse du robot
+	 * Permet de modifier la valeur de x qui représente la position en abscisse du robot
 	 * @param a la nouvelle valeur de x
 	 */
 	public void setX (double a) {
@@ -45,7 +60,7 @@ public class Position extends Capteurs{
 	}
 	
 	/**
-	 * Méthode qui permet de modifier la valeur de y qui représente la position en ordonnée du robot
+	 * Permet de modifier la valeur de y qui représente la position en ordonnée du robot
 	 * @param b la nouvelle valeur de y
 	 */
 	public void setY (double b) {
@@ -53,7 +68,7 @@ public class Position extends Capteurs{
 	}
 
 	/**
-	 * Méthode qui permet de modifier la valeur de degres qui représente l'orientation du robot
+	 * Permet de modifier la valeur de degres qui représente l'orientation du robot
 	 * @param d la nouvelle orientation en degrès du robot
 	 */
 	public void setDegres (double d) {
@@ -61,7 +76,7 @@ public class Position extends Capteurs{
 	}
 	
 	/**
-	 * Méthode qui permet de mettre à jour l'orientation du robot en fonction de l'angle duquel il a tourné
+	 * Permet de mettre à jour l'orientation du robot en fonction de l'angle duquel il a tourné
 	 * @param distanceTourne, l'angle que le robot a touré
 	 */
 	public void updateOrientation(double distanceTourne) {
@@ -83,7 +98,7 @@ public class Position extends Capteurs{
 	}
 
 	/**
-	 * Méthode qui permet de mettre à jour la position du robot en fonction d'une distance parcours et de son orientation
+	 * Permet de mettre à jour la position du robot en fonction d'une distance parcours et de son orientation
 	 * @param d, distance en double parcouru par le robot
 	 */
 	public void  updatePosition( double d ) {
@@ -93,10 +108,11 @@ public class Position extends Capteurs{
 	}
 	
 	/**
-	 * Méthode qui renvoie les coordonné en x et y d'un point en fonction d'un angle et d'une distance. 
+	 * Renvoie les coordonné en x et y d'un point en fonction d'un angle et d'une distance. 
 	 * @param d en cm la distance parcourue
 	 * @degres le degres sur le plateau
-	 * @return tab[] en idx 0 la position en x et en idx 1 la position en y 
+	 * @return un tableau de double qui possède en idx 0 la position en x
+	 *  et en idx 1 la position en y 
 	 */
 	public double[] calculerPositionPoint(double d, double degres) {
 		double[] tab = new double[2];
@@ -133,9 +149,10 @@ public class Position extends Capteurs{
 	}
 	
 	/**
-	 * Méthode qui permet de savoir si des coordonné sont proche à 2cm près du centre.
+	 * Permet de savoir si des coordonné sont proche à 2cm près du centre.
 	 * @param tab, tableau de deux double, x et y
-	 * @return true si les coordonné sont proche du centre false sinon 
+	 * @return un booleén : true si les coordonnées sont assez proches du centre (4cm de marge)
+	 * false sinon 
 	 */
 	public boolean procheDuCentre(double[] tab) {
 		if ((tab[0]<=102 && tab[0]>=98) && (tab[1]<=122 && tab[1]>=118)) {
@@ -145,8 +162,8 @@ public class Position extends Capteurs{
 	}
 
 	/**
-	 * Méthode qui renvoie l'angle duquel il faut tourner pour se retrouver face à la base adverse
-	 * @return l'angle en degrès duquel il faut tourner pour être face à la base adverse
+	 * Renvoie l'angle duquel il faut tourner pour se retrouver face à la base adverse
+	 * @return l'angle en degrés duquel il faut tourner pour être face au camps adverse
 	 */
 	public double degresAuCampAdverse() {
 		if (degres!=0) {
@@ -157,12 +174,12 @@ public class Position extends Capteurs{
 	}
 	
 	/**
-	 * Méthode qui permet de renvoyer un angle entre deux point grace à la position du robot
+	 * Permet de renvoyer un angle entre deux point grace à la position du robot
 	 * @param Xb position en x du point B
 	 * @param Yb position en y du point B
 	 * @param Xc position en x du point C
 	 * @param Yc position en y du point C
-	 * @return envoie l'angle entre les point B et C en degrès.
+	 * @return un double correspondant à l'angle entre les point B et C en degrés.
 	 */
 	public double angleEntreDeuxPoint(double Xb, double Yb, double Xc, double Yc) {
 		double Xu = Xb-x, Yu = Yb-y; 
@@ -174,8 +191,8 @@ public class Position extends Capteurs{
 	}
 	
 	/**
-	 * Méthode qui renvoie en fonction de l'orientation du robot l'angle dont il faut qu'il tourne pour ce retrouve face au point qui 
-	 * a le plus petit angle avec le robot
+	 * Renvoie l'angle dont il faut tourner pour se retrouver
+	 * face au point qui forme le plus petit angle visuel entre le robot et ce point.
 	 * @param Xb Xb position en x du point B
 	 * @param Yb Yb position en y du point B
 	 * @param Xc position en x du point C
@@ -199,6 +216,4 @@ public class Position extends Capteurs{
 		}
 	}
 
-	public static void main(String[] args) {
-	} 
 }

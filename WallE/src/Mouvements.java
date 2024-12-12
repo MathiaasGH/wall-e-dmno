@@ -1,100 +1,93 @@
-import lejos.robotics.navigation.MovePilot;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
-import lejos.hardware.motor.Motor;
-import lejos.hardware.port.MotorPort;
+import lejos.hardware.motor.*;
 import lejos.robotics.chassis.*;
-import lejos.robotics.chassis.Wheel;
-import lejos.robotics.chassis.WheeledChassis;
-import lejos.robotics.navigation.DifferentialPilot;
-import lejos.utility.Delay;
+import lejos.robotics.chassis.*;
+import lejos.robotics.chassis.*;
+import lejos.robotics.navigation.*;
+import lejos.utility.*;
 
+
+/**
+ * Cette classe permet de gérer tous les mouvements du robot.
+ * Cette classe hérite de la classe position.
+ *
+ * @see Mouvements
+ * @author DEVILLIERS, MITTON, NDONG, OZTURK
+ */
 
 public class Mouvements extends Position {
 
-	private final static double constanteDaccpetation=0;
+	/** Le réel représentant la vitesse du robot. */
 	private final static double vitesse=20/1338.55;
+	/** Le réel représentant le diamètre du palet. */
 	private final static double tailleDuPalet=6;
+	/** L'entier représentant l'angle à tourner pour réajuster la robot face au palet vu. */
 	private final static int angleAjustement = 40;
-	private final static int timeToWait = 4000;
-	private final static int DELAY = 25;
+	/** Le roue représentant la roue gauche.*/
 	private Wheel wheel1;
+	/** Le roue représentant la roue droite.*/
 	private Wheel wheel2;
+	/** Le chassis représentant le chassis liant les roues gauche et droite.*/
 	private Chassis chassis;
+	/** Le pilot pour avancer.*/
 	private MovePilot pilot; 
+	/** Le booléen représentant l'état des bras.*/
 	private boolean brasOuvert;
+	/** L'entier représentant le temps a attendre lorsqu'un obstacle est devant le robot*/
+	private final static int timeToWait = 4000;
 
-	public Mouvements(int x, int y, char StartSide, boolean etatBras) {
-		super(x, y, StartSide);
+	/**
+	 * Constructeur pour la classe Mouvements
+	 * Permet d'initialiser la position intiale, le coté de départ ('a'-'b') et l'état des bras initial.
+	 * 
+	 * @param x un entier prenant une valeur suivante {50,100,150}
+	 * @param y un entier = 0
+	 * @param etatBras un booléen représentant l'état des bras initial.
+	 */
+	public Mouvements(int x, int y, boolean etatBras) {
+		super(x, y);
 		brasOuvert = etatBras;
 		wheel1 = WheeledChassis.modelWheel(Motor.B, 56).offset(-62);
 		wheel2 = WheeledChassis.modelWheel(Motor.C, 56).offset(62);
 		chassis = new WheeledChassis(new Wheel[]{wheel1, wheel2}, WheeledChassis.TYPE_DIFFERENTIAL); 
 		pilot = new MovePilot(chassis);
-		System.out.println("Classe mouvement instanciee");
 	}
-	
-	/////////////////////////
 
-    public void caca(int angle) {
-    	tournerDe(angle);
-    	
-    	float[] valeurs = new float[0];
-    	
-    	while(isMoving()) {
-    		valeurs=regarde(valeurs);
-    	}
-    	
-    	
-    	
-    }
-	
-	
-	
-	
-	
-	
-	
-	
-	/////////////////////////
-
-	/** Méthode qui renvoie la nouvelle position d’un objet
-	 * @param int id l’identité de l’objet
-	 * @return retourne la nouvelle position de l’objet
+	/**
+	 * Avance 10 fois de 20 cm et 
+	 * affiche le temps pour avancer de 20cm avec une vitesse définie.
 	 */
-	public void actualiser(){
-
-	}
-
-	public void avanceChronometre() {
+	private void avanceChronometre() {
 		for(int i=0;i<10;i++) {
 			long tempsAvant= System.currentTimeMillis();
 			avancerDe(200,false);
 			long tempsApres = System.currentTimeMillis();
-		//	System.out.println(tempsApres-tempsAvant);
+			System.out.println(tempsApres-tempsAvant);
 		}
 
 	}
 
 	/**
-	 * Méthode qui permet d'avancer de dist de manière asynchrone
-	 * @param dist en cm
+	 * Permet d'avancer d'une certaine distance de manière asynchrone
+	 * @param dist en dm
+	 * @return une distance en dm
 	 */
+
 	public long avancerDe(int dist) {
-		return avancerDe(dist,true); // A VOIR
+		return avancerDe(dist,true); 
 	}
 
 
 	/**
-	 * Méthode qui permet d'avancer de dist et de manière asynchrone ou non en fonction de b
-	 * @param dist en cm
-	 * @param b si true asynchrone sinon non asynchrone
+	 * Permet d'avancer d'une certaine distance de manière asynchrone ou pas
+	 * @param dist en dm
+	 * @param b si true asynchrone si false synchrone
+	 * @return le temps avant de commencer à avancer
 	 */
-	public long avancerDe(int dist,boolean b) { // A VOIR
+	public long avancerDe(int dist,boolean b) {
 		pilot.setAngularSpeed(200);
 		pilot.setLinearSpeed(200);
 		long tempsAvant= System.currentTimeMillis();
@@ -103,17 +96,41 @@ public class Mouvements extends Position {
 		return tempsAvant;
 	}
 
-	public float calculeDistRestante(long tempsAvantDeRouler, int distanceAavancer) {
+	/**
+	 * Permet d'avancer d'une certaine distance de manière asynchrone rapidement
+	 * @param dist en dm
+	 * @return le temps avant de commencer à avancer
+	 */
+	public void avancerDeRapide(int dist) {
+		avancerDeRapide(dist, true);
+	}
+
+	/**
+	 * Permet d'avancer d'une certaine distance de manière asynchrone ou pas mais rapidement
+	 * @param dist en dm
+	 * @param b si true asynchrone si false synchrone
+	 */
+	public void avancerDeRapide(int dist,boolean b) {
+		pilot.setAngularSpeed(500);
+		pilot.setLinearSpeed(500);
+		pilot.travel(dist,b);
+	}
+
+	/**
+	 * Calcule la distance restante à parcourir
+	 * @param tempsAvantDeRouler le temps auquel le robot a commencé à avancer
+	 * @param distanceAavancer la distance totale à parcourir pour le robot en dm
+	 * @return une distance en dm
+	 */
+	private float calculeDistRestante(long tempsAvantDeRouler, int distanceAavancer) {
 		long tempsMaintenant= System.currentTimeMillis();
 		long diffTemp = tempsMaintenant-tempsAvantDeRouler;
-		//System.out.println("temps avant " + tempsAvantDeRouler + " tempsApres : " + tempsMaintenant);
 		int distParcouru = (int)(diffTemp*vitesse);
-		//System.out.println("" + distanceAavancer + " " + distParcouru + " " + (distanceAavancer-distParcouru));
 		return distanceAavancer-distParcouru;
 	}
 
 	/**
-	 * Permet de tourner de angle de manière asynchrone
+	 * Permet de tourner d'un certain angle de manière asynchrone
 	 * @param angle en degrés
 	 */
 	public void tournerDe(int angle) {
@@ -121,28 +138,32 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Méthode qui permet de tourner de angle de manière asynchrone ou non en fonction de b
+	 * Permet de tourner d'un certain angle de manière asynchrone ou non
 	 * @param angle en degrés 
-	 * @param asynchrone si true asynchrone sinon non asynchrone
+	 * @param asynchrone si true asynchrone si false synchrone
 	 */
 	public void tournerDe(int angle, boolean asynchrone) {
-		//40
 		pilot.setAngularSpeed(40);
 		pilot.setLinearSpeed(40);
 		pilot.rotate(angle, asynchrone); 
 		updateOrientation(angle);
 	}
 
+	/**
+	 * Permet de tourner rapidement d'un certain agnle de manière asynchrone ou non
+	 * @param angle en degrés
+	 * @param asynchrone si true asynchrone, si false synchrone
+	 */
 	public void tournerDeRapide(int angle, boolean asynchrone) {
 		pilot.setAngularSpeed(500);
 		pilot.setLinearSpeed(500);
 		pilot.rotate(angle, asynchrone); 
 		updateOrientation(angle);
 	}
-	
-	
+
+
 	/**
-	 * Méthode qui permet de fermer les bras si ils ne sont pas déjà fermé
+	 * Permet de fermer les bras si ils ne sont pas déjà fermés
 	 */
 	public void fermeBras() {
 		if (brasOuvert==false) {
@@ -154,7 +175,7 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Méthode qui permet d'ouvrir les bras si ils ne sont pas déjà ouvert
+	 * Permet d'ouvrir les bras si ils ne sont pas déjà ouverts
 	 */
 	public void ouvreBras() {
 		if (brasOuvert==true) {
@@ -166,7 +187,7 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Méthode qui permet d'ouvrir les bras si ils ne sont pas déjà ouvert de manière asynchrone
+	 * Permet d'ouvrir les bras si ils ne sont pas déjà ouverts de manière asynchrone
 	 */
 	public void ouvreBrasAsynchrone() {
 		//System.out.println("je rentre pour ouvrir les bras asynchrone et " + brasOuvert);
@@ -179,31 +200,24 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Méthode qui permet de savoir si le robot est en mouvement 
-	 * @return boolean true si le robot bouge, false sinon
+	 * Permet de savoir si le robot est en mouvement 
+	 * @return un boolean true si le robot bouge, false sinon
 	 */
-	public boolean isMoving() {
+	private boolean isMoving() {
 		return pilot.isMoving();
 	}
 
 	/**
-	 * Méthode qui permet de faire stopper les mouvement du robot
+	 * Permet de faire stopper les mouvement du robot
 	 */
 	private void stop() {
 		pilot.stop(); 
 	}
 
 	/**
-	 * Méthode qui permet de créer un délaie
-	 */
-	private void delay(){
-		Delay.msDelay(DELAY);
-	}
-
-	/**
-	 * Méthode qui renvoie le minimum d'un tableau de float ainsi que l'indice auquel il à été trouvé
-	 * @param tab tableau de float avec des distance et les indices auquel elles ont été trouvé
-	 * @return tableau de float avec le minimum de tab et l'indice auquel le robot la trouvé
+	 * Renvoie le minimum d'un tableau de float ainsi que l'indice auquel il à été trouvé
+	 * @param tab tableau de float avec des distances
+	 * @return un tableau de float de taille 2 avec le minimum du tableau passé en paramètre ainsi que son indice
 	 */
 	private static float[] min(float[] tab) {
 		float min=100000;
@@ -216,44 +230,87 @@ public class Mouvements extends Position {
 		}
 		float[] tabR = new float[2];
 		tabR[0] = min;
-		//System.out.println("L'indice : " + indice);
 		tabR[1] = indice;
 		return tabR;
 	}
 
 	/**
-	 * Méthode qui renvoie un boolean qui indique si la distance à un objet diminue.
-	 * @param tab tableau de float
+	 * Renvoie un boolean qui indique si la distance à un objet diminue.
+	 * @param tab un tableau de float
 	 * @return true si la distance diminue, false sinon
 	 */
-
-	public boolean distanceDiminue(float[] tab) {
+	private boolean distanceDiminue(float[] tab) {
 		if(tab.length>=2)
 			return Math.abs((int)(100*tab[tab.length-1])-(int)(100*tab[tab.length-2]))<=5;
 		return true;
 	}
 
+	/**
+	 * Va au centre du terrain
+	 */
+	public void allerAuCentre() { 
+		double x= getX();
+		double y=getY();
+		if ((x>=0&&x<100) && (y>=0&&y<120)) {
+			if (!(getDegres()==45)){
+				tournerDeRapide((int)-getDegres()+45, false); 
+				avancerDeRapide(500, false); 
+			}
+			else {
+				avancerDeRapide(500, false);  
+			}
+		}
+		else if ((x>=100&&x<=200)&&(y>=0&&y<120)) {
+			if (!(getDegres()==-45)) {
+				tournerDeRapide((int)-getDegres()-45, false); 
+				avancerDeRapide(500, false); 
+			}
+			else {
+				avancerDeRapide(500, false);
+			}
+		}
+		else if ((x>=100&&x<=200)&&(y>=120&&y<=200)) {
+			if (!(getDegres()==-135)) {
+				tournerDeRapide((int)-getDegres()-135, false); 
+				avancerDeRapide(500, false); 
+			}
+			else {
+				avancerDeRapide(500, false);
+			}
+		}
+		else {
+			if (!(getDegres()==135)) {
+				tournerDeRapide((int)-getDegres()+135, false); 
+				avancerDeRapide(500, false); 
+			}
+			else {
+				avancerDeRapide(500, false);
+			}
+		}
+
+	}
+
+	/**
+	 * Permet d'avancer jusqu'au camp adverse en s'arrêtant si un obstacle est présent 
+	 * (et tourner pour se ré-ajuster si l'obstacle persiste au bout de 4 secondes.
+	 */
 	public void avancerVigilantAllerAuCamp() {
 		float[] distance = regarde(new float[0]);
 		String couleur="";
-		//System.out.println("je suis une grosse merde");
 		boolean flag=true;
-		this.avancerDe(3000);
+		this.avancerDeRapide(3000);
 		while (isMoving() && !(couleur=="Blanc")) {
 			couleur = capteurDeCouleur();
 			distance = regarde(distance);
-			//System.out.println(Arrays.toString(distance));
 			if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
 				if(derniereDistance<0.2) {
-					//System.out.println("Alled 1");
 					flag = false;
 					avancerDe(-1,false);
 					Delay.msDelay(timeToWait);
 					distance = regarde(distance);
 					derniereDistance = distance[distance.length - 1];
 					if (derniereDistance<0.2 && !flag) {
-						//System.out.println("alled 2");
 						if (getX()<100) {
 							tournerDe(90, false);
 							avancerDe(100, false);
@@ -277,8 +334,12 @@ public class Mouvements extends Position {
 		setY(240); 
 	}
 
-	public void avancerJusquaCouleur(String couleur1) {
-		avancerDe(3000,true);
+	/**
+	 * Permet d'avancer jusqu'à vision d'une couleur
+	 * @param couleur1 une chaîne de caractères correspondant à la couleur souhaitée ("blanc","rouge","noir",...)
+	 */
+	private void avancerJusquaCouleur(String couleur1) {
+		avancerDeRapide(3000,true);
 		String couleur = capteurDeCouleur();
 		if (couleur1==couleur) {
 			setY(240);
@@ -288,33 +349,24 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Méthode qui recherche un palet et avance tant que le palet n'a pas toucher le capteur de toucher
-	 * @param dist un int, la distance maximum à parcourir
+	 * Avance tant que le capteur de toucher n'a pa sété activé
+	 * @param dist la distance en dm
+	 * @return un boolean true si le capteur a été activé, false sinon
 	 */
 	public boolean avancerWhileIsNotPressed(int dist) {
-		// Initialisation des capteurs et des distances
-		//System.out.println("Je rentre dans avancerWHile");
 		float[] distance = regarde(new float[0]);
-		//System.out.println(pilot.getAngularSpeed());
-	//	pilot.setAngularSpeed(100);
-		// Avancer de manière asynchrone sur la distance spécifiée + 5 cm
 		ouvreBras();
 		long currentTime = this.avancerDe(dist + 50);
-		// Boucle tant que le robot est en mouvement et que le capteur de toucher n'est pas pressé
-
 		boolean flag = true;
 		boolean retour=false;
-		while (isMoving() && !isPressed()){ //&& distanceDiminue(distance)) {
-			// Vérifie les distances uniquement si elles sont disponibles
+		while (isMoving() && !isPressed()){
 			distance = regarde(distance);
 			if(isPressed()) {
 				avancerDe(-1,false);
 				retour=true;
 			}
-			//System.out.println(Arrays.toString(distance));
 			if (distance.length > 0) {
 				float derniereDistance = distance[distance.length - 1];
-			//	System.out.println("DD : " + derniereDistance);
 				if(derniereDistance<0.2) {
 					flag = false;
 					avancerDe(-1,false);
@@ -327,101 +379,82 @@ public class Mouvements extends Position {
 						return recherche(360);
 					}
 					else {
-				//
+						//
 						int distanceRestante = (int)calculeDistRestante(currentTime,dist);
 						return avancerWhileIsNotPressed(distanceRestante);
-						
+
 					}
 				}
 			}       
 		}
-		// Arrête le robot et ferme les bras une fois la boucle terminée
 		while(isMoving()) {
 		}
-
 		fermeBras();
-
-		Delay.msDelay(2000);
-		
-
-	return retour;
-
+		return retour;
 	}
 
-
-	public static boolean isNotDifferent(double v1, double v2, int distanceCurrentElem) {
-		//10dg
+	/**
+	 * Permet de savoir siu deux nombres ne sont pas significativement différents 
+	 * @param v1 le premier nombre
+	 * @param v2 le deuxième nombre
+	 * @return un boolean true si la différence entre les deux valeurs est comprise entre 0 et 10
+	 */
+	private static boolean isNotDifferent(double v1, double v2, int distanceCurrentElem) {
 		return Math.abs((int)v1-(int)v2)<=10;
 	}
 
-
-
-	public static boolean isDifferent(float v1, float v2) {
-		//10 cm
+	/**
+	 * Permet de savoir siu deux nombres sont significativement différents 
+	 * @param v1 le premier nombre
+	 * @param v2 le deuxième nombre
+	 * @return un boolean true si la différence entre les deux valeurs est plus grande que 10 exclu
+	 */
+	private static boolean isDifferent(float v1, float v2) {
 		return Math.abs(v1-v2)>=10;
 	}
 
 	/**
-	 * Méthode qui permet d'avancer vers un palet tant que le robot ne le touche pas en vérifiant que la distnace diminue
-	 * @param d int en cm, distance maximum à parcourir
-	 */
-	public void chercherpalet(int d) {
-		float[] valeurs = new float[2];
-		valeurs[0] = 1000000;
-		valeurs[1] = 1000000;
-		avancerDe(d);
-		while(isMoving() && (valeurs[valeurs.length-1]<= valeurs[valeurs.length-2]) && !isPressed()) {
-			valeurs = regarde(valeurs);
-		}
-		pilot.stop();
-	}
-	/**
-	 * Méthode qui permet de regarder le mur en face quand on pose un palet dans le camp adverse afin de retrouver l'angle 0 pour se 
+	 * Permet de regarder le mur en face quand on pose un palet dans le camp adverse afin de retrouver l'angle 0 pour se 
 	 * replacer bien en face. 
-	 * Ce place tout droit devant le mur et met à jour l'orientation à 0 degrès. 
+	 * Se place tout droit devant le mur et met à jour l'orientation à 0 degrès. 
 	 */
 	public void reOrientationMur() {
 		tournerDe(-45, false);
 		pilot.setAngularSpeed(40);
-		//Je tourne de angle de manière asynchrone
 		tournerDe(90, true);
-		//J'initialise un tableau dans lequel on range les distances que l'on voit
 		float[] valeurs = new float[0];
 		int indice = 0;
-		//Tant que le robot bouge...
 		while(isMoving()) {
-			//On remplit le tableau de distances
 			valeurs = regarde(valeurs);
 			indice++;
 		}
-		//Je récupère la plus petite distane ainsi que l'indice de cette distance dans le tableau
 		float[] min = min(valeurs);
-		//Je déduis l'angle grâce à un produit en croix
 		int angleMin = ((int)min[1] * 90 ) / (int)indice;
 		tournerDe(angleMin-85,false);
 		setDegres(0);
 	}
 
 	/**
-	 * A TESTER
-	 * Méthode qui fait tourner le robot vers le camp adverse puis qui avance jusqu'à la ligne blanche. Il lache le palet, recule
-	 * de 5 cm puis fait un demi tour complet arpès avoir appelé reOrientationMur() pour update l'orientation. 
-	 * 
+	 * Tourne vers le camp adverse puis qui avance jusqu'à la ligne blanche. Relache le palet, recule
+	 * de 5 cm puis fait un demi tour complet arpès avoir appelé reOrientationMur() pour actualiser l'orientation. 
 	 */
 	public void allerChezAdversaire() {
-		System.out.println("Aller chez adversaire");
-		tournerDe((int)degresAuCampAdverse(),false);
+		tournerDeRapide((int)degresAuCampAdverse(),false);
 		avancerVigilantAllerAuCamp();
-		reOrientationMur();
 		ouvreBras();
+		reOrientationMur();
 		avancerDe(-150,false);
 		tournerDe(135,false);
 		fermeBras();
 	}
 
-
-
-	public float[] supprime(float[] tab, int indiceAsupp) {
+	/**
+	 * Permet de supprimer l'élément d'un tableau situé à un indice donné
+	 * @param tab un tableau de float dans lequel on retrouve l'élément à supprimer
+	 * @param indiceAsupp un entier correspondant à l'indice auquel se trouve l'élément à supprimer
+	 * @return un tableau de float comportant tous les éléments du tableau initial sans l'élément à supprimer
+	 */
+	private float[] supprime(float[] tab, int indiceAsupp) {
 		float[] nouveauTab = new float[tab.length - 1];
 		for (int i = 0, j = 0; i < tab.length; i++) {
 			if (i != indiceAsupp) {
@@ -431,7 +464,12 @@ public class Mouvements extends Position {
 		return nouveauTab;
 	}
 
-	public float[] supprimerPremieresValeurs(float[] tab) {
+	/**
+	 * Permet de supprimer les premières valeurs d'un tableau tant qu'elles sont identiques
+	 * @param tab un tableau de float
+	 * @return un tableau de float comportant tous les éléments du tableau inital sans les premiers éléments identiques
+	 */
+	private float[] supprimerPremieresValeurs(float[] tab) {
 		int taille = tab.length;
 		while (tab.length < taille && tab.length>1 && tab[0] == tab[1]) {
 			tab = supprime(tab, tab.length - 1);
@@ -439,72 +477,51 @@ public class Mouvements extends Position {
 		return tab;
 	}
 
-	public float[] supprimerDernieresValeurs(float[] tab) {
+	/**
+	 * Permet de supprimer les dernières valeurs d'un tableau tant qu'elles sont identiques
+	 * @param tab un tableau de float
+	 * @return un tableau de float comportant tous les éléments du tableau inital sans les derniers éléments identiques
+	 */
+	private float[] supprimerDernieresValeurs(float[] tab) {
 		while (tab.length > 1 && tab[tab.length - 1] == tab[tab.length - 2]) {
 			tab = supprime(tab, tab.length - 1);
 		}
 		return tab;
 	}
 
-	public float[] nettoyageDesValeursAbsurdes(float[] valeurs) {
+	/**
+	 * Permet de supprimer toutes les valeurs condidérées absurdes d'un tableau de float
+	 * @param valeurs le tableau de float
+	 * @return un tableau de float comportant tous les éléments du tableau inital sans les valeurs nulles 
+	 */
+	private float[] nettoyageDesValeursAbsurdes(float[] valeurs) {
 		for (int i = 0; i < valeurs.length; i++) {
-			//|| valeurs[i] > 300
 			if (valeurs[i] == 0 ) {
 				valeurs = supprime(valeurs, i);
-				i--; // Revenir en arrière pour réévaluer après suppression
+				i--;
 			}
 		}
 		return valeurs;
 	}
 
-
-	public void testTempsRotation(int angle) {
-		// Mesurer le temps avant de faire tourner le robot
-		long debutTemps = System.currentTimeMillis();  // ou System.nanoTime() pour une plus grande précision
-
-		// Faire tourner le robot de 360° (par exemple)
+	/**
+	 * Permet d'afficher le temps de rotation du robot sur 360 degrés.
+	 * @param angle l'angle à tourner
+	 */
+	private void testTempsRotation(int angle) {
+		long debutTemps = System.currentTimeMillis();
 		tournerDe(angle, false);
-
-		// Mesurer le temps après avoir terminé la rotation
-		long finTemps = System.currentTimeMillis();  // ou System.nanoTime()
-
-		// Calculer le temps écoulé
+		long finTemps = System.currentTimeMillis();
 		long tempsEcoule = finTemps - debutTemps;
-
-		// Afficher ou retourner le temps écoulé
-		//System.out.println("Temps de rotation pour " + angle + "dg : "+ tempsEcoule + " ms");
-
-
+		System.out.println("Temps de rotation pour " + angle + "dg : "+ tempsEcoule + " ms");
 	}
 
-
-
-	public float[] arronditAuPlusHaut(float[] tab) {
-		if (tab == null) {
-			return null; // Retourne null si le tableau d'entrée est null
-		}
-
-		float[] result = new float[tab.length]; // Créer un tableau pour les résultats
-
-		for (int i = 0; i < tab.length; i++) {
-			float valeur = tab[i];
-
-			// Limite la valeur à 0 si elle est en dessous
-			if (valeur < 0) {
-				result[i] = 0;
-			} else if (valeur > 300) {
-				// Limite la valeur à 300 si elle dépasse
-				result[i] = 300;
-			} else {
-				// Arrondir au multiple de 5 supérieur
-				result[i] = (float) (Math.ceil(valeur / 5) * 5);
-			}
-		}
-
-		return result;
-	}
-
-	public static float[] supprimerDoublonsSuccessifs(float[] tab) {
+	/**
+	 * Permet de supprimer les doublons successifs d'un tableau
+	 * @param tab un tableau de float
+	 * @return un tableau de float comportant tous les éléments du tableau initial sans doublons successifs
+	 */
+	private static float[] supprimerDoublonsSuccessifs(float[] tab) {
 		if (tab == null || tab.length == 0) {
 			return new float[0]; // Gérer le cas où le tableau est null ou vide
 		}
@@ -532,58 +549,31 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Méthode qui renvoie renvoit un tableau de toutes les distances autour de lui
+	 * Permet de renvoyer un tableau de toutes les distances autour du robot
 	 * @param angle l'angle à tourner  
 	 * @return un tableau de float contenant les distances
 	 */
-	public float[] rechercheDistances(int angle) {
+	private float[] rechercheDistances(int angle) {
 		tournerDe(angle, true);
 
 		float[] valeurs = new float[0];
 		while(isMoving()) {
 			valeurs = regarde(valeurs);
-		}	
-		/*
-		float[] valeurs = new float[0];
-
-		long tempsParDegré = 3500/360; // Temps obtenu avec testTemmpsRotation sur un test sur 360dg
-		long tempsDerniereMesure = System.currentTimeMillis();
-
-		tournerDe(angle, true);
-
-		while(isMoving()) {
-			//System.out.println(System.currentTimeMillis() + " " + tempsDerniereMesure);
-			// Vérifie si suffisamment de temps est passé depuis la dernière mesure (pour chaque degré)
-			if (System.currentTimeMillis() - tempsDerniereMesure >= tempsParDegré) {
-				valeurs = regarde(valeurs);  // Prendre la mesure
-				tempsDerniereMesure = System.currentTimeMillis();  // Met à jour le temps de la dernière mesure
-			}
 		}
-		 */
-
-
-
-		//valeurs = supprimerDernieresValeurs(valeurs);
-		//valeurs = supprimerPremieresValeurs(valeurs);
 		for(int i=0;i<valeurs.length;i++) {
-			//On arrondit et on met en CM
 			valeurs[i]=(100*valeurs[i]);
 		}
-		//valeurs = nettoyageDesValeursAbsurdes(valeurs);
-		//System.out.println(Arrays.toString(valeurs));
-		//valeurs = arronditAuPlusHaut(valeurs);
 		valeurs = supprimerDoublonsSuccessifs(valeurs);
-		//System.out.println(Arrays.toString(valeurs));
 		return valeurs;
 	}
 
 	/**
-	 * Méthoe pour supprimer un objet à un indice précis dans un tableau
+	 * Supprime un élément à un indice précis dans un tableau de tableau
 	 * @param tab le tableau dans lequel supprimer un objet
-	 * @param indiceAsupp l'indice de l'objet à supprimer
-	 * @return le tableau avec l'objet en moins
+	 * @param indiceAsupp l'indice de l'élément à supprimer
+	 * @return le tableau avec l'élément en moins
 	 */
-	public int[][] supprime(int[][] tab, int indiceAsupp) {
+	private int[][] supprime(int[][] tab, int indiceAsupp) {
 		if (indiceAsupp < 0 || indiceAsupp >= tab.length) {
 			throw new IllegalArgumentException("Indice à supprimer hors des limites du tableau");
 		}
@@ -597,60 +587,42 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Méthode permettant au robot de tourner d'un certain angle et d'avancer jusqu'à l'objet passé en paramètre
-	 * @param angle l'angle total duquel le robot a tourné pour trouver l'objet
-	 * @param angleTrouve l'anle vers lequel l'objet doit s'orienter
-	 * @param objet le tableau représentant l'objet à attraper
+	 * Permet de regarder autour de lui d'un certain angle et d'aller chercher l'objet situé à la discontinuité la plus proche.
+	 * @param angle l'angle auquel tourner
+	 * @return un boolean : true si le capteur de toucher a été activé durant la recherche, false sinon
 	 */
-	public void tourneEtAvanceVersLobjet(int angle, int angleTrouve, int[] objet) {
-		if(angleTrouve<angle/2) {
-			this.tournerDe(angleTrouve,false);
-		}
-		else	this.tournerDe(-(angle-angleTrouve), false);
-		float[] valeurApresOrientation = new float[0];
-		valeurApresOrientation = regarde(valeurApresOrientation);
-		int dist = objet[2];
-		//if((int)(100*valeurApresOrientation[0])>=dist-10 && (int)(100*valeurApresOrientation[0])<=dist+10) {
-		avancerWhileIsNotPressed((int)(10*dist));
-		//}
-		//else recherche(360);
-		//Delay.msDelay(10000);
-	}
-
-
-
 	public boolean recherche(int angle) {
-		System.out.println("Recherche(" + angle + ")");
 		double angleDeBase = getDegres();
 		ArrayList<ArrayList<Float>> valeurs = decoupeValeursStricte(angle);
-		// true = le premier est la suite du dernier
 		if(valeurs.size()<2) {
 			return recherche((int)this.angleDeRechercheOptimise());
 		}
 		boolean premierNestPasUneDisc = premierNestPasUneDisc(valeurs);
 		boolean retour=plusProcheDiscontinuite(valeurs, premierNestPasUneDisc, angle, (int)angleDeBase);
-	//System.out.println(retour);
-		System.out.println("......." + (retour?"reussi":"echec"));
 		return retour;
-		//	System.out.println(valeurs);
 	}
 
+	/**
+	 * Permet de calculer le double d'un angle de vision théorique pour un objet 
+	 * situé à une certaine distance.
+	 * @param la distance de l'objet
+	 * @return un double correspondant à l'angle théorique
+	 */
 	private double angleTheorique(float dist) {
 		return 2*Math.atan(tailleDuPalet/(2*dist)) * 180/Math.PI;
 	}
 
 
 	/**
-	 * Méthode qui renvoie true si le palet est accessible (en dehors des camp)
-	 * @param tab int[] qui contient la distance au palet en [0] et l'angle où on la vue en [1]
-	 * 		  orientaitonAvantDeTourner renvoie l'angle auquel était le robot avant de chercher
+	 * Renvoie true si le palet est accessible (en dehors des camps)
+	 * @param tab un tableau de double qui contient la distance au palet en [0] et l'angle où le robot l'a vu en [1]
+	 * @param orientationAvantDeTourner l'angle relatif duquel était le robot avant de chercher
 	 * @return boolean true si le palet n'est pas dans un camp adverse false sinon 
 	 */
-	public boolean paletValide(double[] tab, double orientationAvantDeTourner) {
+	private boolean paletValide(double[] tab, double orientationAvantDeTourner) {
 		double degres = tab[1]+ orientationAvantDeTourner;
 		double degresrad= degres*Math.PI/180;
 		double posY = (Math.cos(degresrad) * tab[0])+getY() ;
-		//System.out.println(posY);
 		if (posY<240 && posY>0) {
 			return true;
 		}
@@ -658,44 +630,11 @@ public class Mouvements extends Position {
 	}
 
 	/**
-	 * Méthode qui permet au robot d'aller au centre du terrain
+	 * Cherche le minimum dans un tableau ainsi que son indice d'apparition
+	 * @param tab un tableau d'entiers
+	 * @return un tableau d'entiers de 2 éléments correspondants respectivement au minimum trouvé, et à son indice
 	 */
-	public void allerAuCentre() { 
-		System.out.println("allerAuCentre");
-		double[] tab = calculerPositionPoint(10, getDegres());
-		double m1;
-		double m2;
-		if (tab[1]==getY()) {
-			m1=0;
-		}
-		else { m1 = (tab[0]-getX())/(tab[1]-getY());
-		}
-		if (getY()==120) {
-			m2=0;
-		}
-		else { m2 = (100-getX())/(120-getY());
-		}
-		double angle =(Math.atan(Math.abs((m1-m2)/(1+m1*m2))));
-		angle = angle * (180/Math.PI);
-		double distAParcourir = Math.sqrt(Math.pow(100-getX(), 2)+Math.pow(120-getY(), 2));
-		if (procheDuCentre(calculerPositionPoint(distAParcourir, (180-angle+getDegres())))) {
-			angle = 180-angle;
-		}
-		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (-angle+getDegres())))) {
-			angle = -angle;
-		}
-		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (-(180-angle)+getDegres())))) {
-			angle =-(180-angle);
-		}
-		else if (procheDuCentre(calculerPositionPoint(distAParcourir, (angle+getDegres())))) {
-		}
-		tournerDe((int)angle, false);
-		avancerDe((int)distAParcourir*10, false);
-		updateOrientation(angle);
-		updatePosition(distAParcourir);
-	}
-
-	public static int[] minAngle(int[] tab) {
+	private static int[] minAngle(int[] tab) {
 		int[] min = new int[] {tab[0],0};
 		for(int i=1;i<tab.length;i++) {
 			if(tab[i]<min[0])
@@ -704,6 +643,11 @@ public class Mouvements extends Position {
 		return min;
 	}
 
+	/**
+	 * Cherche le maximim dans une liste ainsi que son indice d'apparition
+	 * @param tab une liste de double
+	 * @return un tableau de double de 2 éléments correspondants respectivement au maximum trouvé, et à son indice
+	 */
 	private double[] max(List<Double> tab) {
 		double max=-1;
 		int idx=0;
@@ -720,6 +664,13 @@ public class Mouvements extends Position {
 		return new double[] {max,idxTrouve};
 	}
 
+
+	/**
+	 * Calcule la somme des tailles des listes contenues dans une liste jusqu'à la i-ème liste.
+	 * @param list la liste de listes
+	 * @param idx l'indice jusqu'où sommer les tailles des listes. 
+	 * @return un entier correspondant à la somme des tailles des listes.
+	 */
 	private int getTotalIndiceJusqua(ArrayList<ArrayList<Float>> list,int idx) {
 		int taille=0;
 		ListIterator i = list.listIterator();
@@ -727,11 +678,16 @@ public class Mouvements extends Position {
 		while(i.hasNext() && indice<idx) {
 			taille=taille+((ArrayList<Float>)(i.next())).size();
 		}
-		//System.out.println(taille);
 		return taille;
 	}
 
-	public static int indicePlusProche(List<Double> list1, List<Double> list2) {
+	/**
+	 * Cherche l'indice des éléments de deux listes de doubles qui sont les plus proches mathématiquement.
+	 * @param list1 une liste de double
+	 * @param list2 une liste de double
+	 * @return l'indice i où l'élément d'indice i de list1 est le plus proche de l'élément d'indice i de list2
+	 */
+	private static int indicePlusProche(List<Double> list1, List<Double> list2) {
 		if (list1 == null || list2 == null || list1.size() != list2.size() || list1.isEmpty()) {
 			throw new IllegalArgumentException("Les listes doivent être non nulles, de même taille et non vides.");
 		}
@@ -750,6 +706,13 @@ public class Mouvements extends Position {
 		return indicePlusProche;
 	}
 
+	/**
+	 * Compte le nombre total d'éléments d'une liste de liste de float 
+	 * @param tab la liste de liste de float
+	 * @param premierNestPasUneDisc un boolean affirmant si la première valeur de tab correspond à une discontinuité du champ 
+	 * visuel ou non
+	 * @return le nombre total d'éléments de la liste passsée en paramètres
+	 */
 	private int totalOccurence(ArrayList<ArrayList<Float>> tab, boolean premierNestPasUneDisc) {
 		int idx = (premierNestPasUneDisc)?1:0;
 
@@ -758,7 +721,6 @@ public class Mouvements extends Position {
 		}
 		else
 			occurenceCumule=tab.get(0).size()/2;
-		//(idx)
 		ListIterator i = tab.listIterator();
 
 		for(; i.hasNext() ;) {
@@ -777,10 +739,17 @@ public class Mouvements extends Position {
 
 			}
 		}
-		//System.out.println("Ici " + occurenceCumule);
 		return occurenceCumule;
 	}
 
+	/**
+	 * Relève toutes les discontinuités remarquées dans une liste de liste de valeurs telles que les discontinuités sont assez visibles
+	 * @param tab une liste de liste de float correspondant au cluster de distances
+	 * @param premierNestPasUneDisc un boolean affirmant si la première valeur de tab correspond à une discontinuité du champ 
+	 * visuel ou non 
+	 * @param angle l'angle total duquel le robot a du tourner
+	 * @param angleDeBase l'angle relatif auquel le robot se trouvait avant de tourner
+	 */
 	private boolean plusProcheDiscontinuite(ArrayList<ArrayList<Float>> tab, boolean premierNestPasUneDisc, int angle, int angleDeBase) {
 		int idx = (premierNestPasUneDisc)?1:0;
 		int idxPlusProcheDisc = (idx==1)?tab.get(0).size()+1:0;
@@ -794,13 +763,9 @@ public class Mouvements extends Position {
 		else
 			occurenceCumule=tab.get(0).size()/2;
 		double angleVu=0;
-		//(idx)
 		ListIterator i = tab.listIterator();
 		ArrayList<Float> tabPlusProche = tab.get(idx);
 		float min=999999;
-
-
-		//int totalSize=totalSize(tab);
 		int totalSize=totalOccurence(tab,premierNestPasUneDisc);
 
 		List<Double> tabAngleTh = new ArrayList<Double>();
@@ -830,19 +795,13 @@ public class Mouvements extends Position {
 				float distanceCurrentElem = sousTab.get(occurence/2);
 				float PremdistanceCurrentElem = sousTab.get(0);
 				float DeuxdistanceCurrentElem = sousTab.get(sousTab.size()-1);
-				//Y'avait pas le /2 j'ai fait un test là
 				double angleVuDeCetElem = (occurence/2)*angle/totalSize;
-				//2*
 				double angleTheorique;
 				if(distanceCurrentElem>30)
 					angleTheorique= angleTheorique(distanceCurrentElem);
 				else angleTheorique= 2*angleTheorique(distanceCurrentElem)*distanceCurrentElem/30;
-				//idx au lieu de occurenceCumule-occurence/2
 				int angleAtourner = (occurenceCumule)*angle/totalSize;
-				//System.out.println(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) + " " + distanceCurrentElem +  " " + angleAtourner +  " " + angleDeBase + " fini");
-
-				if(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) &&
-						occurence>=5) {
+				if(paletValide(new double[] {distanceCurrentElem, angleAtourner}, angleDeBase) && occurence>=5) {
 					resume.add(((isNotDifferent(angleVuDeCetElem,angleTheorique, (int)distanceCurrentElem))?"palet " : "mur ") + " occurence cumule : " + occurenceCumule + " | occurence : " + occurence + " | 1e distance : " + PremdistanceCurrentElem + " | 2e distance : " + DeuxdistanceCurrentElem + " | angle vu : " + angleVuDeCetElem + " | angleTheorique : " + angleTheorique + " | angle a tourner : " + angleAtourner);
 					tabAngle.add((double)angleAtourner);
 					tabAngleVu.add(angleVuDeCetElem);
@@ -865,27 +824,32 @@ public class Mouvements extends Position {
 
 			}
 		}
-
-//System.out.println("La discontinuite la plus proche est : " + min + " d'un angle de " + angleVu + " que j'ai vu au bout de ma " + idxPlusProcheDisc + "e vision. J'ai vu " + totalSize + " fois au total. \nDonc l'angle a tourner est de : " + angleTrouve);
-
-	
-
 		return tourneOptimise(angle,angleTrouve,min+5);
-
-		//	System.out.println("La discontinuite la plus proche est : " + dist + " à l'angle " + angleTrouve);
 	}
 
+	/**
+	 * Permet de connaitre la somme des tailles des listes contenues dans une liste
+	 * @param tab une liste de listes de floats
+	 * @return la somme des tailles des listes
+	 */
 	private int totalSize(ArrayList<ArrayList<Float>> tab) {
 		int idx = 0;
 		ListIterator<ArrayList<Float>> i = tab.listIterator();
 		while (i.hasNext()) {
 			ArrayList<Float> sousTab = i.next();
-			idx += sousTab.size(); // Ajoute simplement la taille de sousTab
+			idx += sousTab.size();
 		}
-		return idx; // Le calcul de idx donne déjà la bonne taille totale
+		return idx;
 	}
 
-	//A REVOIR POUR LES ANGLES < 360
+	/**
+	 * Tourner de façon optimisée vers un angle (à droite si l'angle a tourner est à  droite, à gauche sinon) et avancer 
+	 * en direction de cet angle.
+	 * @param angle un entier correspondant à l'angle total duquel le robot a tourné
+	 * @param angleTrouve un entier correspondant à l'angle à tourner
+	 * @param dist un float correspondant à la distance de l'objet trouvé situé à l'angle duquel le robot doit tourner
+	 * @return un boolean affirmant si le capteur de palet a été touché durant son voyage ou pas
+	 */
 	private boolean tourneOptimise(int angle, int angleTrouve, float dist) {
 		if(angleTrouve<angle/2) {
 			this.tournerDe(angleTrouve,false);
@@ -893,25 +857,19 @@ public class Mouvements extends Position {
 		else	this.tournerDe(-(angle-angleTrouve), false);
 		float[] valeurApresOrientation = new float[0];
 		valeurApresOrientation = regarde(valeurApresOrientation);
-		float distMtn = dist;
-		//if((int)(100*valeurApresOrientation[0])>=distMtn-10 && (int)(100*valeurApresOrientation[0])<=distMtn+10) {
-		//System.out.println("je rentre");
-		//avancerWhileIsNotPressed((int)(10*distMtn));
-		//}
-		/*	else {
-		System.out.println("Je ré-essaye");
-		recherche3(360);
-	}*/
-		//Delay.msDelay(10000);
 		return ajustement();
 	}
 
-
-	public ArrayList<ArrayList<Float>> decoupeValeursStricte(int angle) {
+	/**
+	 * Permet d'effectuer un clustering sur les distances trouvées autour du robot
+	 * @param angle un entier correspondant à l'angle total duquel le robot doit tourner pour effectuer sa recherche des distances
+	 * @return une liste de listes contenant les clusters des distances
+	 */
+	private ArrayList<ArrayList<Float>> decoupeValeursStricte(int angle) {
 		float[] valeurs = rechercheDistances(angle);
-	
+
 		if(valeurs.length<2) {
-	
+
 			ArrayList<ArrayList<Float>> list = new ArrayList<ArrayList<Float>>();
 			try {
 				ArrayList<Float> sousList = new ArrayList<Float>();
@@ -949,13 +907,17 @@ public class Mouvements extends Position {
 			}	
 		}
 		liste.add(sousListe);
-		//System.out.println(liste);
 		for(int i=0;i<liste.size();i++) {
-		//	System.out.println(liste.get(i));
 		}
 		return liste;
 	}
 
+	/**
+	 * Permet d'affirmer si la première valeur de l'ensemble des clusters des distances correspond à une discontinuité
+	 * @param list la liste de listes des distances
+	 * @return un boolean : true si la premire valeur est une discontinuité (le premier element est plus loin 
+	 * ou plus proche du denrier élément de 5cm), false sinon.
+	 */
 	private boolean premierNestPasUneDisc(ArrayList<ArrayList<Float>> list){
 		if(list.size()==0)
 			return false;
@@ -963,128 +925,64 @@ public class Mouvements extends Position {
 		ArrayList<Float> dernierTab = list.get(list.size()-1);
 		float distanceCurrentElem = dernierTab.get(dernierTab.size()-1);
 		float premierElem = premierTab.get(0);
-		//System.out.println("Premier element : " + premierElem + "\nDernier element : " + distanceCurrentElem);
 		return Math.abs(premierElem-distanceCurrentElem) < 5;
 
 	}
 
-	/*public double angleDeRechercheOptimise () {
-		double x = getX(); 
-		double y = getY();
-		System.out.println("en x : "+x+" en y : "+y);
-		if ((x>=0 && x<=50) && (y>=0)&&(y<=60)) {
-			double[] tab = plusPetitAngleAuRobot(50,180,150,60);
-			System.out.println("Je tourne de :"+tab[0]);
-			tournerDe((int)tab[0]);
-			System.out.println(angleEntreDeuxPoint(50,180,150,60));
-			return (tab[1]*angleEntreDeuxPoint(50,180,150,60));
-		}
-		else if ((x>50&& x<150) && (y>=0)&&(y<=60)) {
-			double[] tab = plusPetitAngleAuRobot(50,60,150,60);
-			System.out.println("Je tourne de :"+tab[0]);
-			tournerDe((int)tab[0]);
-			System.out.println(angleEntreDeuxPoint(50,60,150,60));
-			return (tab[1]*angleEntreDeuxPoint(50,60,150,60));
-		}
-		else if ((x>=150&& x<=200) && (y>=0)&&(y<=60)) {
-			double[] tab = plusPetitAngleAuRobot(50,60,150,180);
-			System.out.println("Je tourne de :"+tab[0]);
-			tournerDe((int)tab[0]);
-			System.out.println(angleEntreDeuxPoint(50,60,150,180));
-			return (tab[1]*angleEntreDeuxPoint(50,60,150,180));
-		}
-		else if ((x>=150&& x<=200) && (y>60)&&(y<180)) {
-			double[] tab = plusPetitAngleAuRobot(150,60,150,180);
-			System.out.println("Je tourne de :"+tab[0]);
-			tournerDe((int)tab[0]);
-			System.out.println(angleEntreDeuxPoint(150,60,150,180));
-			return (tab[1]*angleEntreDeuxPoint(150,60,150,180));
-		}
-		else if ((x>=150&& x<=200) && (y>=180)&&(y<=240)) {
-			double[] tab = plusPetitAngleAuRobot(150,60,50,180);
-			System.out.println("Je tourne de :"+tab[0]);
-			tournerDe((int)tab[0]);
-			System.out.println(angleEntreDeuxPoint(150,60,50,180));
-			return (tab[1]*angleEntreDeuxPoint(150,60,50,180));
-		}
-		else if ((x>50&& x<150) && (y>=180)&&(y<=240)) {
-			double[] tab = plusPetitAngleAuRobot(150,180,50,180);
-			System.out.println("Je tourne de :"+tab[0]);
-			tournerDe((int)tab[0]);
-			System.out.println(angleEntreDeuxPoint(150,180,50,180));
-			return (tab[1]*angleEntreDeuxPoint(150,180,50,180));
-		}
-		else if ((x>=0&& x<=50) && (y>=180)&&(y<=240)) {
-			double[] tab = plusPetitAngleAuRobot(150,180,50,60);
-			System.out.println("Je tourne de :"+tab[0]);
-			tournerDe((int)tab[0]);
-			System.out.println(angleEntreDeuxPoint(150,180,50,60));
-			return (tab[1]*angleEntreDeuxPoint(150,180,50,60));
-		}
-		else if ((x>=0&& x<=50) && (y>60)&&(y<180)) {
-			double[] tab = plusPetitAngleAuRobot(50,180,50,60);
-			System.out.println("Je tourne de :"+tab[0]);
-			tournerDe((int)tab[0]);
-			System.out.println(angleEntreDeuxPoint(50,180,50,60));
-			return (tab[1]*angleEntreDeuxPoint(50,180,50,60));
-		}
-		else {
-			return 360;
-		}
-	}*/
-	
+	/** Permet de retourner un angle à tourner pour effectuer une recherche optimisée en fonction de notre position sur le terrain
+	 * pour éviter un maximum de regarder les murs.
+	 * @return un double correspondant à l'angle à tourner.
+	 */
 	public double angleDeRechercheOptimise() {
 		System.out.println("Angle de recherche opti");
 		double x = getX();
 		double y = getY(); 
 		if ((x>=0 && x<=50) && (y>=0)&&(y<=60)) {
-			tournerDe((int)-getDegres()+20, false); 
+			tournerDeRapide((int)-getDegres()+20, false); 
 			return(90);
 		}
 		else if ((x>50&& x<150) && (y>=0)&&(y<=60)) {
-			tournerDe((int)-getDegres()-35, false); 
+			tournerDeRapide((int)-getDegres()-35, false); 
 			return(90);
 		}
 		else if ((x>=150&& x<=200) && (y>=0)&&(y<=60)) {
-			tournerDe((int)-getDegres()-45, false); 
+			tournerDeRapide((int)-getDegres()-45, false); 
 			return(90);
 		}
 		else if ((x>=150&& x<=200) && (y>60)&&(y<180)) {
-			tournerDe((int)-getDegres()-135, false); 
+			tournerDeRapide((int)-getDegres()-135, false); 
 			return(90);
 		}
 		else if ((x>=150&& x<=200) && (y>=180)&&(y<=240)) {
-			tournerDe((int)-getDegres()-150, false); 
+			tournerDeRapide((int)-getDegres()-150, false); 
 			recherche(90);
 		}
 		else if ((x>50&& x<150) && (y>=180)&&(y<=240)) {
-			tournerDe((int)-getDegres()+135, false); 
+			tournerDeRapide((int)-getDegres()+135, false); 
 			return(90);
 		}
 		else if ((x>=0&& x<=50) && (y>=180)&&(y<=240)) {
-			tournerDe((int)-getDegres()+115, false); 
+			tournerDeRapide((int)-getDegres()+115, false); 
 			return(90);
 		}
 		else if ((x>=0&& x<=50) && (y>60)&&(y<180)) {
-			tournerDe((int)-getDegres()+35, false); 
+			tournerDeRapide((int)-getDegres()+35, false); 
 			return(90); 
 		}
 		return 360; 
 	}
 
-	public void MiseAjourPos() {
-		//System.out.println(isMoving());
+	/**
+	 * Permet de mettre à jour la position du robot
+	 */
+	private void MiseAjourPos() {
 		tournerDe(45, true);
-
-//		System.out.println(isMoving());
 		VitesseRepére();
 		tournerDe(90, true);
 		float [] valeurs= new float[0];
-//		System.out.println(isMoving());
 		while(isMoving()) {
 			valeurs = regarde(valeurs);
 		}
-	//	System.out.println("premiere recherche nombre de valeurs= "+valeurs.length);
 		int x1 = recuperationCoordonnées(valeurs);
 		VitesseRepéreRESET();
 		tournerDe(90, true);
@@ -1094,20 +992,21 @@ public class Mouvements extends Position {
 		while(isMoving()) {
 			valeurs2 = regarde(valeurs2);
 		}
-//		System.out.println("deuxieme recherche nombre de valeurs= "+valeurs.length);
 		int x2 = recuperationCoordonnées(valeurs2);
-	//	System.out.println(x1+"  "+x2);
 		int somme = x1+x2;
 		if ((somme>195)&&(somme<205)) {
 			this.setX(x1);
 		}
-//		System.out.println(isMoving());
 		tournerDe(45,true);
 	}
 
-	public int  recuperationCoordonnées (float[] données) {
+	/**
+	 * Permet de récupérer la coordonnées de la première discontinuité trouvée
+	 * @param données le tableau des distances trouvées
+	 * @return un entier correspondant à la coordonnées de la première discontinuité 
+	 */
+	private int  recuperationCoordonnées (float[] données) {
 		int coordonées = 0;
-		//System.out.println("Je suis juste devant le for ");
 		int i =2;
 		while (i<données.length-2) {
 			float a = données[i-2];
@@ -1115,45 +1014,48 @@ public class Mouvements extends Position {
 			float c = données[i];
 			float d = données[i+1];
 			float e = données[i+2];
-			//System.out.println("Je commence a traverser le tableau ");
 			if ((a<b)&&(b<c)&&(c>d)&&(d>e)) {
-				//System.out.println("ca croix puis ca decroix");
 				coordonées=(int)données[i];
 				return coordonées;
 			} else {
 				if ((a>b)&&(b>c)&&(c<d)&&(d<e)) {
-					//System.out.println("ca decroix puis ca croix");
 					coordonées=(int)données[i];
 					return coordonées;
 
-				}else {
+				}
+				else {
 					i++;
-					//System.out.println("ont n'a pas reussi a trouver la coordonées");
-					//return coordonées;
 				}
 
 			}
 		}
-//		System.out.println("ont n'a pas reussi a trouver la coordonées");
 		return coordonées;
 	}
 
-	public void VitesseRepére() {
+	/**
+	 * Méthode pour définir la vitesse du robot "normale"
+	 */
+	private void VitesseRepére() {
 		pilot.setAngularAcceleration(50);
 		pilot.setLinearSpeed(50);
 
 
 	}
 
-	public void VitesseRepéreRESET() {
+	/**
+	 * Méthode pour définir la vitesse du robot "rapide"
+	 */
+	private void VitesseRepéreRESET() {
 		pilot.setAngularAcceleration(500);
 		pilot.setLinearSpeed(5000);
 	}
 
-	public boolean ajustement() {
-		//Tu vas a gauche de 5° puis tu tournes de 10° à droite tout en regardant et tu t'orientes au plus proche
+	/**
+	 * Permet de regarder à droite puis à gauche et d'avancer vers la distance la plus proche
+	 * @return un booléen : true si le capteur de toucher à été activé pendant sont trajet, fale sinon.
+	 */
+	private boolean ajustement() {
 		tournerDe(-angleAjustement/2,false);
-
 		tournerDe(angleAjustement,true);
 		float[] valeurs = new float[0];
 		while(isMoving()) {
@@ -1161,23 +1063,13 @@ public class Mouvements extends Position {
 		}	
 		int[] tabVal=new int[valeurs.length];
 		for(int i=0;i<valeurs.length;i++) {
-			//On arrondit et on met en CM
 			tabVal[i]=(int)(100*valeurs[i]);
 		}		
 		int[] min = minAngle(tabVal);
 		int minDist = min[0];
 		int minIdx = min[1];
-
 		int angleAtourner = minIdx*angleAjustement/tabVal.length;
-
 		tournerDe(-(angleAjustement-angleAtourner), false);
-//		System.out.println(Arrays.toString(valeurs));
-	//	System.out.println(minIdx + " " + minDist);
-
 		return avancerWhileIsNotPressed(minDist*10+10);
-
-
 	}
-
-
 }
